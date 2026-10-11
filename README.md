@@ -6,6 +6,8 @@ Recursos educativos interactivos para el aprendizaje de Química General, orient
 
 **[https://gghona.github.io/quimica/](https://gghona.github.io/quimica/)**
 
+https://ggahona.github.io/quimica/
+
 ## Temas disponibles
 
 - **[Estructura Atómica y Propiedades Periódicas](https://gghona.github.io/quimica/01_estructura-atomica/)**
