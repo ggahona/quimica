@@ -1,0 +1,980 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estructura Atómica · Bloque 2</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --espacio-xl: 4rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.barra-progreso {
+  position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--borde); z-index: 1000;
+}
+.barra-progreso__relleno {
+  height: 100%; background: var(--azul-medio); width: 0%;
+  transition: width 0.4s ease;
+}
+
+.contenedor-slides {
+  flex: 1; position: relative; display: flex;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-lg); padding-top: 2rem;
+}
+
+.slide {
+  display: none; width: 100%; max-width: 1100px;
+  background: var(--superficie); border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  padding: var(--espacio-xl) var(--espacio-lg);
+  animation: fadeIn 0.5s ease;
+  min-height: 70vh; max-height: 85vh; overflow-y: auto;
+}
+.slide.activo { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide__numero {
+  display: inline-block; background: var(--azul-profundo); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0.25rem 0.75rem; border-radius: 999px;
+  margin-bottom: var(--espacio-md);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.slide__titulo {
+  font-size: 2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm); line-height: 1.2;
+}
+.slide__subtitulo {
+  font-size: 1.1rem; color: var(--texto-suave);
+  margin-bottom: var(--espacio-lg);
+}
+.slide__cuerpo { font-size: 1rem; }
+
+.navegacion {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: var(--superficie); border-top: 1px solid var(--borde);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  z-index: 999; box-shadow: 0 -2px 10px rgba(26,58,107,0.05);
+}
+.navegacion__boton {
+  background: var(--azul-profundo); color: #fff; border: none;
+  padding: 0.6rem 1.4rem; border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.navegacion__boton:hover { background: var(--azul-medio); }
+.navegacion__boton:active { transform: scale(0.97); }
+.navegacion__boton:disabled {
+  background: var(--borde); color: var(--texto-suave); cursor: not-allowed;
+}
+.navegacion__contador {
+  font-size: 0.9rem; color: var(--texto-suave); font-weight: 600;
+}
+.navegacion__indice {
+  background: transparent; border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo); padding: 0.5rem 1rem;
+  border-radius: var(--radio-md); font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.navegacion__indice:hover { background: var(--azul-profundo); color: #fff; }
+
+.indice {
+  position: fixed; top: 0; right: -380px; width: 380px; height: 100vh;
+  background: var(--superficie); box-shadow: -4px 0 20px rgba(26,58,107,0.15);
+  z-index: 1001; transition: right 0.3s ease;
+  overflow-y: auto; padding: var(--espacio-lg);
+}
+.indice.abierto { right: 0; }
+.indice__titulo {
+  font-size: 1.2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-md);
+  padding-bottom: var(--espacio-sm);
+  border-bottom: 2px solid var(--borde);
+}
+.indice__lista { list-style: none; }
+.indice__item {
+  padding: 0.6rem 0.75rem; border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem; color: var(--texto);
+  transition: background 0.2s; margin-bottom: 0.25rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.indice__item:hover { background: var(--azul-muy-claro); }
+.indice__item.activo { background: var(--azul-profundo); color: #fff; font-weight: 600; }
+.indice__item-num { font-weight: 700; font-size: 0.8rem; min-width: 1.5rem; }
+.indice__cerrar {
+  position: absolute; top: var(--espacio-md); right: var(--espacio-md);
+  background: transparent; border: none; font-size: 1.2rem;
+  cursor: pointer; color: var(--texto-suave);
+  line-height: 1; font-family: var(--fuente-base);
+}
+.overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(26,58,107,0.4); z-index: 1000; display: none;
+}
+.overlay.visible { display: block; }
+
+.caja-concepto {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-concepto__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-concepto__texto { font-size: 1rem; color: var(--texto); line-height: 1.8; }
+.caja-concepto__texto strong { color: var(--azul-profundo); }
+
+.caja-ejemplo {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-ejemplo__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-ejemplo__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.caja-idea {
+  background: #fff8e1; border-left: 4px solid #d97706;
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-idea__titulo {
+  font-size: 0.85rem; font-weight: 700; color: #92400e;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-idea__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.alerta {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+.exito {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.tabla-datos {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: var(--espacio-md); font-size: 0.9rem;
+  box-shadow: var(--sombra-sm); border-radius: var(--radio-md);
+  overflow: hidden;
+}
+.tabla-datos thead { background: var(--azul-medio); color: #fff; }
+.tabla-datos th {
+  padding: 0.75rem 0.5rem; text-align: left;
+  font-weight: 600; font-size: 0.85rem;
+}
+.tabla-datos td {
+  padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.tabla-datos tbody tr:hover { background: var(--fondo); }
+.tabla-datos .centro { text-align: center; }
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.tarjeta {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: var(--radio-md); padding: var(--espacio-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tarjeta:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
+.tarjeta__titulo {
+  font-size: 0.95rem; font-weight: 700; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-xs);
+}
+.tarjeta__texto { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.6; }
+
+.mapa-conceptual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.mapa-nodo {
+  background: var(--superficie);
+  border: 2px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  text-align: center; transition: all 0.3s;
+  cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 70px;
+}
+.mapa-nodo:hover {
+  background: var(--azul-profundo); color: #fff; transform: scale(1.05);
+}
+.mapa-nodo__texto { font-size: 0.85rem; font-weight: 600; }
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  .slide { padding: var(--espacio-lg) var(--espacio-md); min-height: 80vh; }
+  .slide__titulo { font-size: 1.4rem; }
+  .slide__subtitulo { font-size: 0.95rem; }
+  .navegacion { padding: var(--espacio-sm) var(--espacio-md); }
+  .navegacion__boton { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+  .tabla-datos { font-size: 0.75rem; }
+  .grid-tarjetas { grid-template-columns: 1fr; }
+  .indice { width: 300px; right: -300px; }
+  .mapa-conceptual { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="barra-progreso">
+    <div class="barra-progreso__relleno" id="progreso"></div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="indice" id="indice">
+    <button class="indice__cerrar" id="cerrarIndice" aria-label="Cerrar índice">Cerrar</button>
+    <h2 class="indice__titulo">Índice — Bloque 2</h2>
+    <ul class="indice__lista" id="listaIndice"></ul>
+  </aside>
+
+  <main class="contenedor-slides" id="contenedorSlides">
+
+    <!-- Slide 1: Portada -->
+    <section class="slide activo" data-titulo="Portada">
+      <span class="slide__numero">Bloque 2 · Química</span>
+      <h1 class="slide__titulo">Estructura Atómica</h1>
+      <p class="slide__subtitulo">Núcleo, corteza, partículas fundamentales y átomos especiales.</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Objetivo de aprendizaje</div>
+          <div class="caja-concepto__texto">
+            Al terminar esta secuencia podrás <strong>describir la estructura del átomo</strong>,
+            <strong>calcular número atómico, número de masa y partículas subatómicas</strong>,
+            <strong>diferenciar iones, isótopos, isóbaros, isótonos, isodiáferos e isóelectrónicos</strong>
+            y <strong>aplicar estos conceptos en ejercicios</strong>.
+          </div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Idea central</div>
+          <div class="caja-idea__texto">
+            El átomo es un sistema energético, eléctricamente neutro, con un núcleo central
+            (protones y neutrones) y una corteza electrónica (electrones en orbitales).
+            Se describe mediante un modelo matemático y probabilístico.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Notación de partículas.</strong> Los símbolos $p^+$, $e^-$ y $n^0$ designan
+          al protón, electrón y neutrón. El superíndice indica el signo de la carga:
+          $+$ positiva, $-$ negativa, $0$ nula. En las fórmulas, estos símbolos representan
+          el <em>número</em> de cada partícula.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: El átomo -->
+    <section class="slide" data-titulo="El átomo">
+      <span class="slide__numero">Slide 2</span>
+      <h1 class="slide__titulo">El átomo</h1>
+      <p class="slide__subtitulo">Sistema energético, eléctricamente neutro</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Definición</div>
+          <div class="caja-concepto__texto">
+            El átomo es la <strong>mínima expresión de un elemento químico</strong>. Es la porción
+            hasta donde el elemento conserva sus propiedades químicas. Se manifiesta como un
+            sistema material, dinámico y energético en equilibrio.
+          </div>
+        </div>
+
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Núcleo atómico</div>
+            <div class="tarjeta__texto">
+              Parte interna. Contiene protones ($p^+$) y neutrones ($n^0$). Concentra toda la
+              carga positiva y casi toda la masa (99,99%). Es ~10 000 veces más pequeño que el átomo.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Corteza atómica</div>
+            <div class="tarjeta__texto">
+              Parte externa. También llamada envoltura electrónica, nube electrónica,
+              zona cortical o zona extranuclear. Contiene los electrones ($e^-$) en orbitales.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si el núcleo de un átomo de hidrógeno tuviera el tamaño de una canica ($1\ \text{cm}$),
+            la corteza electrónica abarcaría aproximadamente $100\ \text{m}$ de diámetro.
+            Esa proporción muestra por qué decimos que el átomo es <strong>casi vacío</strong>.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Modelo matemático y probabilístico.</strong> Los electrones se ubican en
+          <strong>REEMPE</strong> (Región Espacio Energética de Máxima Probabilidad Electrónica),
+          también llamados orbitales.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Z, A y carga nuclear -->
+    <section class="slide" data-titulo="Número atómico, número de masa y carga nuclear">
+      <span class="slide__numero">Slide 3</span>
+      <h1 class="slide__titulo">Número atómico, número de masa y carga nuclear</h1>
+      <p class="slide__subtitulo">Las coordenadas fundamentales del átomo</p>
+
+      <div class="slide__cuerpo">
+        <div class="alerta">
+          <strong>Notación.</strong> $p^+$ indica protones (carga positiva), $e^-$ electrones
+          (carga negativa) y $n^0$ neutrones (carga nula). En las fórmulas, estos símbolos
+          representan el <em>número</em> de cada partícula.
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Número atómico ($Z$)</div>
+          <div class="caja-concepto__texto">
+            Equivale al <strong>número de protones</strong>. Identifica al elemento químico.
+            $$Z = p^+$$
+            En un átomo neutro:
+            $$p^+ = e^-$$
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Número de masa ($A$)</div>
+          <div class="caja-concepto__texto">
+            Es la suma del número de protones y del número de neutrones. Representa el total de
+            <strong>nucleones</strong>.
+            $$A = (\text{número de protones}) + (\text{número de neutrones})$$
+            Como el número de protones es $Z$, la fórmula se escribe:
+            $$A = Z + n^0$$
+            De donde:
+            $$n^0 = A - Z$$
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Carga nuclear absoluta ($Q_{\text{nuclear}}$)</div>
+          <div class="caja-concepto__texto">
+            Es la <strong>carga eléctrica total del núcleo</strong>, igual al número de protones
+            multiplicado por la carga de un protón.
+            $$Q_{\text{nuclear}} = p^+ \times q_{p^+}$$
+            donde $q_{p^+} = +1{,}6 \times 10^{-19}\ \text{C}$.
+            <br>De aquí:
+            $$p^+ = \frac{Q_{\text{nuclear}}}{q_{p^+}}$$
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Un átomo tiene $Z = 13$ y $A = 27$. Calcula $p^+$, $e^-$ y $n^0$.
+            <br><br>
+            $p^+ = Z = 13$
+            <br>$e^- = p^+ = 13$ (átomo neutro)
+            <br>$n^0 = A - Z = 27 - 13 = 14$
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Un átomo tiene $Z = 11$ y $A = 23$. Calcula $p^+$, $e^-$ y $n^0$.
+            <br><br>
+            $p^+ = 11$
+            <br>$e^- = 11$
+            <br>$n^0 = 23 - 11 = 12$
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            La carga nuclear absoluta de un átomo es $1{,}28 \times 10^{-18}\ \text{C}$.
+            Calcula su número atómico.
+            <br><br>
+            $$p^+ = \frac{Q_{\text{nuclear}}}{q_{p^+}} = \frac{1{,}28 \times 10^{-18}}{1{,}6 \times 10^{-19}} = 8$$
+            Por lo tanto, $Z = 8$ (oxígeno).
+          </div>
+        </div>
+
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Especie</th>
+              <th>$Z$</th>
+              <th>$A$</th>
+              <th class="centro">$p^+$</th>
+              <th class="centro">$e^-$</th>
+              <th class="centro">$n^0$</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>$^{23}_{11}\text{Na}$</td><td>11</td><td>23</td><td class="centro">11</td><td class="centro">11</td><td class="centro">12</td></tr>
+            <tr><td>$^{31}_{15}\text{P}$</td><td>15</td><td>31</td><td class="centro">15</td><td class="centro">15</td><td class="centro">16</td></tr>
+            <tr><td>$^{65}_{30}\text{Zn}$</td><td>30</td><td>65</td><td class="centro">30</td><td class="centro">30</td><td class="centro">35</td></tr>
+          </tbody>
+        </table>
+
+        <div class="alerta">
+          <strong>Ojo.</strong> El número de masa ($A$) es un conteo entero y es diferente a la masa
+          atómica (que es decimal y se expresa en u.m.a.).
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Partículas fundamentales -->
+    <section class="slide" data-titulo="Partículas fundamentales">
+      <span class="slide__numero">Slide 4</span>
+      <h1 class="slide__titulo">Partículas fundamentales</h1>
+      <p class="slide__subtitulo">Protón, neutrón y electrón</p>
+
+      <div class="slide__cuerpo">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Partícula</th>
+              <th>Masa absoluta (kg)</th>
+              <th>Carga absoluta (C)</th>
+              <th>Descubridor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Neutrón</strong> ($n^0$)</td>
+              <td>$1{,}67482 \times 10^{-27}$</td>
+              <td>$0$</td>
+              <td>Chadwick</td>
+            </tr>
+            <tr>
+              <td><strong>Protón</strong> ($p^+$)</td>
+              <td>$1{,}67252 \times 10^{-27}$</td>
+              <td>$+1{,}6 \times 10^{-19}$</td>
+              <td>Rutherford</td>
+            </tr>
+            <tr>
+              <td><strong>Electrón</strong> ($e^-$)</td>
+              <td>$9{,}1 \times 10^{-31}$</td>
+              <td>$-1{,}6 \times 10^{-19}$</td>
+              <td>Thomson</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Comparemos la masa del protón con la del electrón:
+            $$\frac{m_{p^+}}{m_{e^-}} = \frac{1{,}67252 \times 10^{-27}}{9{,}1 \times 10^{-31}} \approx 1836$$
+            La masa del protón es aproximadamente <strong>1836 veces mayor</strong> que la del
+            electrón. Por eso casi toda la masa del átomo está concentrada en el núcleo.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si un átomo tiene $6$ protones, $6$ electrones y $6$ neutrones, su masa estará
+            concentrada casi por completo en el núcleo:
+            $$m_{\text{núcleo}} \approx 6\,m_{p^+} + 6\,m_{n^0}$$
+            La contribución de los $6$ electrones es despreciable frente a la del núcleo.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Aporte histórico.</strong> <strong>Santiago Antúnez de Mayolo</strong> (sabio
+          peruano) predijo la existencia del neutrón. <strong>Chadwick</strong> lo descubrió.
+          <strong>Rutherford</strong> descubrió el protón y <strong>Thomson</strong> el electrón.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Iones -->
+    <section class="slide" data-titulo="Iones atómicos">
+      <span class="slide__numero">Slide 5</span>
+      <h1 class="slide__titulo">Iones atómicos</h1>
+      <p class="slide__subtitulo">Cationes y aniones</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Catión (ión positivo)</div>
+            <div class="tarjeta__texto">
+              El átomo <strong>pierde electrones</strong>.
+              $$E^0 \rightarrow E^{n+} + n\,e^-$$
+              Ejemplos: $\text{Al}^{3+}$, $\text{S}^{6+}$, $\text{P}^{5+}$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Anión (ión negativo)</div>
+            <div class="tarjeta__texto">
+              El átomo <strong>gana electrones</strong>.
+              $$E^0 + n\,e^- \rightarrow E^{n-}$$
+              Ejemplos: $\text{Cl}^{1-}$, $\text{S}^{2-}$, $\text{P}^{3-}$.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Cálculo de electrones en un ion</div>
+          <div class="caja-concepto__texto">
+            $$e^- = Z - q$$
+            donde $q$ es la carga del ion (positiva para cationes, negativa para aniones).
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            ¿Cuántos electrones tiene el ion $^{27}_{13}\text{Al}^{3+}$?
+            <br><br>
+            $Z = 13$, $q = +3$
+            $$e^- = Z - q = 13 - 3 = 10$$
+            El ion $\text{Al}^{3+}$ ha perdido $3$ electrones.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            ¿Cuántos electrones tiene el ion $^{35}_{17}\text{Cl}^{1-}$?
+            <br><br>
+            $Z = 17$, $q = -1$
+            $$e^- = Z - q = 17 - (-1) = 18$$
+            El ion $\text{Cl}^{1-}$ ha ganado $1$ electrón.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            ¿Cuántos electrones tiene el ion $^{80}_{35}\text{Br}^{1-}$?
+            <br><br>
+            $Z = 35$, $q = -1$
+            $$e^- = 35 - (-1) = 36$$
+            El ion $\text{Br}^{1-}$ ha ganado $1$ electrón.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Nota.</strong> En la electrólisis, los cationes se orientan hacia el cátodo y los
+          aniones hacia el ánodo. Los iones poliatómicos están formados por varios átomos:
+          $\text{PO}_4^{3-}$ (anión fosfato), $\text{PH}_4^+$ (catión fosfonio).
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Átomos especiales -->
+    <section class="slide" data-titulo="Átomos especiales">
+      <span class="slide__numero">Slide 6</span>
+      <h1 class="slide__titulo">Átomos especiales</h1>
+      <p class="slide__subtitulo">Isótopos, isóbaros, isótonos, isodiáferos e isóelectrónicos</p>
+
+      <div class="slide__cuerpo">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Tipo</th>
+              <th>¿Qué comparten?</th>
+              <th>¿Qué difiere?</th>
+              <th>Ejemplo real</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Isótopos</strong></td>
+              <td>Mismo $Z$ (igual $p^+$)</td>
+              <td>Diferente $A$ (diferente $n^0$)</td>
+              <td>$^{12}_{6}\text{C}$ y $^{14}_{6}\text{C}$</td>
+            </tr>
+            <tr>
+              <td><strong>Isóbaros</strong></td>
+              <td>Mismo $A$ (igual número de nucleones)</td>
+              <td>Diferente $Z$</td>
+              <td>$^{40}_{18}\text{Ar}$ y $^{40}_{19}\text{K}$</td>
+            </tr>
+            <tr>
+              <td><strong>Isótonos</strong></td>
+              <td>Mismo $n^0$</td>
+              <td>Diferente $Z$ y $A$</td>
+              <td>$^{112}_{48}\text{Cd}$ y $^{113}_{49}\text{In}$</td>
+            </tr>
+            <tr>
+              <td><strong>Isodiáferos</strong></td>
+              <td>Mismo exceso $n^0 - p^+$</td>
+              <td>Diferente $Z$ y $A$</td>
+              <td>$^{44}_{20}\text{Ca}$ y $^{45}_{21}\text{Sc}$</td>
+            </tr>
+            <tr>
+              <td><strong>Isóelectrónicos</strong></td>
+              <td>Mismo $e^-$ (igual configuración)</td>
+              <td>Diferente $Z$</td>
+              <td>$^{31}_{15}\text{P}^{3-}$, $^{40}_{18}\text{Ar}$, $^{40}_{20}\text{Ca}^{2+}$</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            <strong>Isótopos.</strong>
+            <br>$^{12}_{6}\text{C}$: $Z = 6$, $A = 12$ → $n^0 = 12 - 6 = 6$
+            <br>$^{14}_{6}\text{C}$: $Z = 6$, $A = 14$ → $n^0 = 14 - 6 = 8$
+            <br><br>Mismo $Z$, diferente $A$. Son isótopos del carbono.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            <strong>Isóbaros.</strong>
+            <br>$^{40}_{18}\text{Ar}$: $Z = 18$, $A = 40$
+            <br>$^{40}_{19}\text{K}$: $Z = 19$, $A = 40$
+            <br><br>Mismo $A$, diferente $Z$. Son isóbaros.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            <strong>Isótonos.</strong>
+            <br>$^{112}_{48}\text{Cd}$: $n^0 = 112 - 48 = 64$
+            <br>$^{113}_{49}\text{In}$: $n^0 = 113 - 49 = 64$
+            <br><br>Mismo número de neutrones. Son isótonos.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            <strong>Isodiáferos.</strong>
+            <br>$^{44}_{20}\text{Ca}$: $n^0 - p^+ = 24 - 20 = 4$
+            <br>$^{45}_{21}\text{Sc}$: $n^0 - p^+ = 25 - 21 = 4$
+            <br><br>Mismo exceso de neutrones. Son isodiáferos.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            <strong>Isóelectrónicos.</strong>
+            <br>$^{31}_{15}\text{P}^{3-}$: $e^- = 15 - (-3) = 18$
+            <br>$^{40}_{18}\text{Ar}$: $e^- = 18$
+            <br>$^{40}_{20}\text{Ca}^{2+}$: $e^- = 20 - 2 = 18$
+            <br><br>Los tres tienen $18$ electrones. Son isóelectrónicos.
+          </div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Cómo distinguirlos rápidamente</div>
+          <div class="caja-idea__texto">
+            <strong>Isótopos:</strong> mismo elemento, diferente masa.<br>
+            <strong>Isóbaros:</strong> diferente elemento, misma masa.<br>
+            <strong>Isótonos:</strong> diferente elemento, mismos neutrones.<br>
+            <strong>Isodiáferos:</strong> mismo exceso de neutrones.<br>
+            <strong>Isóelectrónicos:</strong> mismos electrones.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Cierre -->
+    <section class="slide" data-titulo="Cierre">
+      <span class="slide__numero">Slide 7 — Cierre</span>
+      <h1 class="slide__titulo">Isótopos del hidrógeno y síntesis</h1>
+      <p class="slide__subtitulo">Protio, deuterio y tritio. Cierre del bloque.</p>
+
+      <div class="slide__cuerpo">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Nombre</th>
+              <th>Notación</th>
+              <th>$p^+$</th>
+              <th>$n^0$</th>
+              <th>Abundancia</th>
+              <th>Tipo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Protio</strong></td>
+              <td>$^{1}_{1}\text{H}$</td>
+              <td class="centro">1</td>
+              <td class="centro">0</td>
+              <td class="centro">99,98 %</td>
+              <td>Estable</td>
+            </tr>
+            <tr>
+              <td><strong>Deuterio</strong></td>
+              <td>$^{2}_{1}\text{H}$</td>
+              <td class="centro">1</td>
+              <td class="centro">1</td>
+              <td class="centro">0,018 %</td>
+              <td>Estable</td>
+            </tr>
+            <tr>
+              <td><strong>Tritio</strong></td>
+              <td>$^{3}_{1}\text{H}$</td>
+              <td class="centro">1</td>
+              <td class="centro">2</td>
+              <td class="centro">0,002 %</td>
+              <td>Inestable (radiactivo)</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="alerta">
+          <strong>Aplicación.</strong> Tipos de agua según el isótopo de hidrógeno presente:
+          $\text{H}_2\text{O}$ (agua común, oxidano), $\text{D}_2\text{O}$ (agua pesada) y
+          $\text{T}_2\text{O}$ (agua hiperpesada, triitíada).
+        </div>
+
+        <div class="mapa-conceptual">
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Átomo: núcleo + corteza</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">$Z = p^+$</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">$A = Z + n^0$</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Iones: cationes y aniones</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Isótopos, isóbaros, isótonos</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Isodiáferos e isóelectrónicos</div></div>
+        </div>
+
+        <div class="exito">
+          <strong>Has completado el Bloque 2.</strong> Ahora sabes describir la estructura del átomo,
+          calcular número atómico, número de masa y partículas subatómicas, diferenciar iones y
+          reconocer los átomos especiales.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="navegacion">
+    <button class="navegacion__boton" id="btnAnterior" onclick="Slides.anterior()">Anterior</button>
+    <div style="display: flex; align-items: center; gap: var(--espacio-md);">
+      <button class="navegacion__indice" onclick="abrirIndice()">Índice</button>
+      <span class="navegacion__contador" id="contador">1 / 7</span>
+    </div>
+    <button class="navegacion__boton" id="btnSiguiente" onclick="Slides.siguiente()">Siguiente</button>
+  </nav>
+
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+const Slides = {
+  actual: 0,
+  slides: [],
+  total: 0,
+
+  init() {
+    this.slides = document.querySelectorAll('.slide');
+    this.total = this.slides.length;
+    this.render();
+    this.bindKeys();
+    this.bindHash();
+    this.construirIndice();
+  },
+
+  ir(n) {
+    if (n < 0 || n >= this.total) return;
+    this.slides[this.actual].classList.remove('activo');
+    this.actual = n;
+    this.slides[this.actual].classList.add('activo');
+    this.render();
+  },
+
+  siguiente() { this.ir(this.actual + 1); },
+  anterior() { this.ir(this.actual - 1); },
+
+  render() {
+    document.getElementById('contador').textContent = (this.actual + 1) + ' / ' + this.total;
+    document.getElementById('btnAnterior').disabled = this.actual === 0;
+    document.getElementById('btnSiguiente').disabled = this.actual === this.total - 1;
+    const pct = ((this.actual + 1) / this.total) * 100;
+    document.getElementById('progreso').style.width = pct + '%';
+    document.querySelectorAll('.indice__item').forEach((item, i) => {
+      item.classList.toggle('activo', i === this.actual);
+    });
+    history.replaceState(null, '', '#slide-' + (this.actual + 1));
+    this.slides[this.actual].scrollTop = 0;
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+  },
+
+  bindKeys() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        this.siguiente();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.anterior();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        this.ir(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        this.ir(this.total - 1);
+      }
+    });
+  },
+
+  bindHash() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#slide-')) {
+      const n = parseInt(hash.replace('#slide-', '')) - 1;
+      if (n >= 0 && n < this.total) {
+        this.ir(n);
+      }
+    }
+  },
+
+  construirIndice() {
+    const lista = document.getElementById('listaIndice');
+    lista.innerHTML = '';
+    this.slides.forEach((slide, i) => {
+      const titulo = slide.dataset.titulo || ('Slide ' + (i + 1));
+      const li = document.createElement('li');
+      li.className = 'indice__item' + (i === this.actual ? ' activo' : '');
+      li.innerHTML = '<span class="indice__item-num">' + (i + 1) + '.</span> ' + titulo;
+      li.onclick = () => {
+        this.ir(i);
+        cerrarIndice();
+      };
+      lista.appendChild(li);
+    });
+  }
+};
+
+/* ============================================================
+   ÍNDICE LATERAL
+   ============================================================ */
+function abrirIndice() {
+  document.getElementById('indice').classList.add('abierto');
+  document.getElementById('overlay').classList.add('visible');
+}
+
+function cerrarIndice() {
+  document.getElementById('indice').classList.remove('abierto');
+  document.getElementById('overlay').classList.remove('visible');
+}
+
+document.getElementById('cerrarIndice').onclick = cerrarIndice;
+document.getElementById('overlay').onclick = cerrarIndice;
+
+/* ============================================================
+   INICIALIZACIÓN
+   ============================================================ */
+function inicializarTodo() {
+  Slides.init();
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>

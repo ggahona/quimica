@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Del cuanto a Bohr y Sommerfeld · Bloque 3</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --espacio-xl: 4rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.barra-progreso {
+  position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--borde); z-index: 1000;
+}
+.barra-progreso__relleno {
+  height: 100%; background: var(--azul-medio); width: 0%;
+  transition: width 0.4s ease;
+}
+
+.contenedor-slides {
+  flex: 1; position: relative; display: flex;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-lg); padding-top: 2rem;
+}
+
+.slide {
+  display: none; width: 100%; max-width: 1100px;
+  background: var(--superficie); border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  padding: var(--espacio-xl) var(--espacio-lg);
+  animation: fadeIn 0.5s ease;
+  min-height: 70vh; max-height: 85vh; overflow-y: auto;
+}
+.slide.activo { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide__numero {
+  display: inline-block; background: var(--azul-profundo); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0.25rem 0.75rem; border-radius: 999px;
+  margin-bottom: var(--espacio-md);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.slide__titulo {
+  font-size: 2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm); line-height: 1.2;
+}
+.slide__subtitulo {
+  font-size: 1.1rem; color: var(--texto-suave);
+  margin-bottom: var(--espacio-lg);
+}
+.slide__cuerpo { font-size: 1rem; }
+
+.navegacion {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: var(--superficie); border-top: 1px solid var(--borde);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  z-index: 999; box-shadow: 0 -2px 10px rgba(26,58,107,0.05);
+}
+.navegacion__boton {
+  background: var(--azul-profundo); color: #fff; border: none;
+  padding: 0.6rem 1.4rem; border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.navegacion__boton:hover { background: var(--azul-medio); }
+.navegacion__boton:active { transform: scale(0.97); }
+.navegacion__boton:disabled {
+  background: var(--borde); color: var(--texto-suave); cursor: not-allowed;
+}
+.navegacion__contador {
+  font-size: 0.9rem; color: var(--texto-suave); font-weight: 600;
+}
+.navegacion__indice {
+  background: transparent; border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo); padding: 0.5rem 1rem;
+  border-radius: var(--radio-md); font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.navegacion__indice:hover { background: var(--azul-profundo); color: #fff; }
+
+.indice {
+  position: fixed; top: 0; right: -380px; width: 380px; height: 100vh;
+  background: var(--superficie); box-shadow: -4px 0 20px rgba(26,58,107,0.15);
+  z-index: 1001; transition: right 0.3s ease;
+  overflow-y: auto; padding: var(--espacio-lg);
+}
+.indice.abierto { right: 0; }
+.indice__titulo {
+  font-size: 1.2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-md);
+  padding-bottom: var(--espacio-sm);
+  border-bottom: 2px solid var(--borde);
+}
+.indice__lista { list-style: none; }
+.indice__item {
+  padding: 0.6rem 0.75rem; border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem; color: var(--texto);
+  transition: background 0.2s; margin-bottom: 0.25rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.indice__item:hover { background: var(--azul-muy-claro); }
+.indice__item.activo { background: var(--azul-profundo); color: #fff; font-weight: 600; }
+.indice__item-num { font-weight: 700; font-size: 0.8rem; min-width: 1.5rem; }
+.indice__cerrar {
+  position: absolute; top: var(--espacio-md); right: var(--espacio-md);
+  background: transparent; border: none; font-size: 1.2rem;
+  cursor: pointer; color: var(--texto-suave);
+  line-height: 1; font-family: var(--fuente-base);
+}
+.overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(26,58,107,0.4); z-index: 1000; display: none;
+}
+.overlay.visible { display: block; }
+
+.caja-concepto {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-concepto__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-concepto__texto { font-size: 1rem; color: var(--texto); line-height: 1.8; }
+.caja-concepto__texto strong { color: var(--azul-profundo); }
+
+.caja-ejemplo {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-ejemplo__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-ejemplo__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.caja-idea {
+  background: #fff8e1; border-left: 4px solid #d97706;
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-idea__titulo {
+  font-size: 0.85rem; font-weight: 700; color: #92400e;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-idea__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.alerta {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+.exito {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.tabla-datos {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: var(--espacio-md); font-size: 0.9rem;
+  box-shadow: var(--sombra-sm); border-radius: var(--radio-md);
+  overflow: hidden;
+}
+.tabla-datos thead { background: var(--azul-medio); color: #fff; }
+.tabla-datos th {
+  padding: 0.75rem 0.5rem; text-align: left;
+  font-weight: 600; font-size: 0.85rem;
+}
+.tabla-datos td {
+  padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.tabla-datos tbody tr:hover { background: var(--fondo); }
+.tabla-datos .centro { text-align: center; }
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.tarjeta {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: var(--radio-md); padding: var(--espacio-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tarjeta:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
+.tarjeta__titulo {
+  font-size: 0.95rem; font-weight: 700; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-xs);
+}
+.tarjeta__texto { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.6; }
+
+.mapa-conceptual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.mapa-nodo {
+  background: var(--superficie);
+  border: 2px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  text-align: center; transition: all 0.3s;
+  cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 70px;
+}
+.mapa-nodo:hover {
+  background: var(--azul-profundo); color: #fff; transform: scale(1.05);
+}
+.mapa-nodo__texto { font-size: 0.85rem; font-weight: 600; }
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  .slide { padding: var(--espacio-lg) var(--espacio-md); min-height: 80vh; }
+  .slide__titulo { font-size: 1.4rem; }
+  .slide__subtitulo { font-size: 0.95rem; }
+  .navegacion { padding: var(--espacio-sm) var(--espacio-md); }
+  .navegacion__boton { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+  .tabla-datos { font-size: 0.75rem; }
+  .grid-tarjetas { grid-template-columns: 1fr; }
+  .indice { width: 300px; right: -300px; }
+  .mapa-conceptual { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="barra-progreso">
+    <div class="barra-progreso__relleno" id="progreso"></div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="indice" id="indice">
+    <button class="indice__cerrar" id="cerrarIndice" aria-label="Cerrar índice">Cerrar</button>
+    <h2 class="indice__titulo">Índice — Bloque 3</h2>
+    <ul class="indice__lista" id="listaIndice"></ul>
+  </aside>
+
+  <main class="contenedor-slides" id="contenedorSlides">
+
+    <!-- Slide 1: Portada -->
+    <section class="slide activo" data-titulo="Portada">
+      <span class="slide__numero">Bloque 3 · Química</span>
+      <h1 class="slide__titulo">Del cuanto a Bohr y Sommerfeld</h1>
+      <p class="slide__subtitulo">La revolución cuántica y la estructura electrónica del átomo.</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Objetivo de aprendizaje</div>
+          <div class="caja-concepto__texto">
+            Al terminar esta secuencia podrás <strong>explicar la teoría cuántica de Planck</strong>,
+            <strong>describir el efecto fotoeléctrico</strong>, <strong>identificar las propiedades de las REM</strong>,
+            <strong>aplicar los cuatro postulados de Bohr</strong> y <strong>reconocer los aportes de Sommerfeld</strong>
+            en la estructura electrónica del átomo.
+          </div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Idea central</div>
+          <div class="caja-idea__texto">
+            La energía se entrega en <strong>paquetes discretos</strong> llamados cuantos.
+            Esta idea, nacida con Planck, transformó la física y permitió explicar
+            fenómenos que la física clásica no podía resolver.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Cómo navegar:</strong> Usa las flechas del teclado, los botones inferiores o el índice lateral.
+          Cada slide incluye ejemplos resueltos que clarifican los conceptos teóricos.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Planck y efecto fotoeléctrico -->
+    <section class="slide" data-titulo="Planck y efecto fotoeléctrico">
+      <span class="slide__numero">Slide 2</span>
+      <h1 class="slide__titulo">Planck y el efecto fotoeléctrico</h1>
+      <p class="slide__subtitulo">Los cuantos de energía y la explicación de Einstein</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Teoría cuántica de Planck (1900)</div>
+          <div class="caja-concepto__texto">
+            La energía es <strong>discontinua</strong>: la radiación electromagnética se emite o
+            absorbe en paquetes llamados <strong>cuantos o fotones</strong>.
+            $$E = h \cdot f = \frac{h \cdot c}{\lambda}$$
+            $h = 6{,}626 \times 10^{-34}\ \text{J}\cdot\text{s}$ (constante de Planck).
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Efecto fotoeléctrico (Einstein, 1905)</div>
+          <div class="caja-concepto__texto">
+            La luz incide sobre un metal y emite electrones. La energía del fotón se usa para:
+            <br>1) Arrancar el electrón (<strong>función trabajo $W_0$</strong>).<br>
+            2) Darle <strong>energía cinética</strong>.
+            $$E = h \cdot f = W_0 + E_c$$
+            Existe una <strong>frecuencia umbral $f_0$</strong>. Si $f < f_0$, no hay emisión.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Un metal tiene función trabajo $W_0 = 3{,}0 \times 10^{-19}\ \text{J}$ y se ilumina
+            con luz de frecuencia $f = 1{,}0 \times 10^{15}\ \text{Hz}$.
+            <br><br>
+            Energía del fotón: $E = h \cdot f = 6{,}626 \times 10^{-19}\ \text{J}$.<br>
+            Energía cinética: $E_c = E - W_0 = 3{,}626 \times 10^{-19}\ \text{J}$.
+            <br><br>
+            Como $E > W_0$, sí hay emisión de electrones.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si la frecuencia es $f = 3{,}0 \times 10^{14}\ \text{Hz}$, la energía del fotón
+            es $E = 1{,}99 \times 10^{-19}\ \text{J}$. Como $E < W_0$, no hay emisión.
+            <br><br>
+            Esto explica por qué no importa cuán intensa sea la luz si su frecuencia es
+            menor que la umbral.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: REM y parámetros -->
+    <section class="slide" data-titulo="REM y parámetros">
+      <span class="slide__numero">Slide 3</span>
+      <h1 class="slide__titulo">Radiaciones electromagnéticas (REM)</h1>
+      <p class="slide__subtitulo">Parámetros de onda: longitud, frecuencia, periodo y energía</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Longitud de onda ($\lambda$)</div>
+            <div class="tarjeta__texto">
+              Distancia entre dos crestas consecutivas. Se expresa en metros (m).
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Frecuencia ($f$)</div>
+            <div class="tarjeta__texto">
+              Número de ciclos por unidad de tiempo. Se expresa en hertz (Hz).
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Periodo ($T$)</div>
+            <div class="tarjeta__texto">
+              Tiempo que demora un ciclo. Se expresa en segundos (s). $f = 1/T$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Número de onda ($\bar{\nu}$)</div>
+            <div class="tarjeta__texto">
+              Recíproca de la longitud de onda. Se expresa en m⁻¹.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Relación fundamental</div>
+          <div class="caja-concepto__texto">
+            $$c = \lambda \cdot f \qquad ; \qquad E = h \cdot f$$
+            Las REM se propagan en el vacío a $c = 3 \times 10^{8}\ \text{m/s}$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Una onda electromagnética tiene $\lambda = 500\ \text{nm} = 5 \times 10^{-7}\ \text{m}$.
+            <br><br>
+            $f = \dfrac{c}{\lambda} = \dfrac{3 \times 10^{8}}{5 \times 10^{-7}} = 6 \times 10^{14}\ \text{Hz}$.
+            <br><br>
+            $E = h \cdot f = (6{,}626 \times 10^{-34})(6 \times 10^{14}) = 3{,}98 \times 10^{-19}\ \text{J}$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si $f = 1{,}5 \times 10^{15}\ \text{Hz}$, entonces $\lambda = c/f = 2 \times 10^{-7}\ \text{m} = 200\ \text{nm}$.
+            <br><br>
+            Esta longitud de onda corresponde a la región ultravioleta del espectro.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Modelo de Bohr -->
+    <section class="slide" data-titulo="Modelo de Bohr">
+      <span class="slide__numero">Slide 4</span>
+      <h1 class="slide__titulo">Modelo atómico de Bohr</h1>
+      <p class="slide__subtitulo">Los cuatro postulados y las fórmulas de radio y energía</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Contexto</div>
+          <div class="caja-concepto__texto">
+            El modelo de Rutherford no era estable: el electrón perdía energía en forma de
+            radiación. Bohr (1913) propuso un modelo basado en la <strong>mecánica cuántica de Planck</strong>,
+            válido para átomos con un solo electrón (como el hidrógeno).
+          </div>
+        </div>
+
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">1. Estabilidad del electrón</div>
+            <div class="tarjeta__texto">
+              El electrón gira en órbitas circulares en equilibrio. Su momento angular está
+              cuantizado: $m \cdot v \cdot r = n \cdot h / 2\pi$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">2. Radios cuantizados</div>
+            <div class="tarjeta__texto">
+              $r_n = 0{,}529 \cdot n^{2}\ \text{Å}$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">3. Niveles estacionarios</div>
+            <div class="tarjeta__texto">
+              $E_n = -13{,}6 / n^{2}\ \text{eV}$. El electrón no emite energía en una órbita permitida.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">4. Transiciones electrónicas</div>
+            <div class="tarjeta__texto">
+              El átomo absorbe o emite un fotón cuando el electrón salta de un nivel a otro.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Calcular el radio de la órbita $n = 3$:
+            <br><br>
+            $r_3 = 0{,}529 \cdot 3^{2}\ \text{Å} = 0{,}529 \cdot 9 = 4{,}761\ \text{Å}$.
+            <br><br>
+            Calcular la energía del nivel $n = 3$:
+            <br><br>
+            $E_3 = -13{,}6 / 3^{2} = -13{,}6 / 9 = -1{,}51\ \text{eV}$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Calcular la energía emitida cuando el electrón salta de $n = 3$ a $n = 1$:
+            <br><br>
+            $\Delta E = 13{,}6 \left( \dfrac{1}{1^{2}} - \dfrac{1}{3^{2}} \right) = 13{,}6 \cdot \dfrac{8}{9} = 12{,}09\ \text{eV}$.
+            <br><br>
+            Esta energía corresponde a una línea del espectro ultravioleta del hidrógeno.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Transiciones electrónicas -->
+    <section class="slide" data-titulo="Transiciones electrónicas">
+      <span class="slide__numero">Slide 5</span>
+      <h1 class="slide__titulo">Transiciones electrónicas</h1>
+      <p class="slide__subtitulo">Absorción y emisión de energía</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Cuarto postulado de Bohr</div>
+          <div class="caja-concepto__texto">
+            El átomo emite o absorbe energía únicamente cuando el electrón salta de un nivel a otro.
+            <strong>Un fotón por salto</strong>.
+            <br><br>
+            <strong>Absorción:</strong> salto de nivel inferior a superior.<br>
+            <strong>Emisión:</strong> salto de nivel superior a inferior.
+            $$\Delta E = 13{,}6\ \text{eV} \left( \frac{1}{n_b^{2}} - \frac{1}{n_a^{2}} \right)$$
+            donde $n_a$ es el nivel más lejano y $n_b$ el más cercano.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si el electrón salta de $n = 1$ a $n = 2$, absorbe energía:
+            <br><br>
+            $\Delta E = 13{,}6 \left( \dfrac{1}{1^{2}} - \dfrac{1}{2^{2}} \right) = 13{,}6 \cdot \dfrac{3}{4} = 10{,}20\ \text{eV}$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si el electrón salta de $n = 4$ a $n = 2$, emite energía:
+            <br><br>
+            $\Delta E = 13{,}6 \left( \dfrac{1}{2^{2}} - \dfrac{1}{4^{2}} \right) = 13{,}6 \cdot \dfrac{3}{16} = 2{,}55\ \text{eV}$.
+            <br><br>
+            Esta energía corresponde a una línea del espectro visible del hidrógeno.
+          </div>
+        </div>
+
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Transición</th>
+              <th>Tipo</th>
+              <th>ΔE (eV)</th>
+              <th>Región del espectro</th>
+            </tr>
+          </thead>
+          <tbody id="tablaTransiciones">
+            <!-- Se genera dinámicamente -->
+          </tbody>
+        </table>
+
+        <div class="alerta">
+          <strong>Nota:</strong> la tabla alterna aleatoriamente entre emisión y absorción cada
+          vez que se abre esta slide. Recarga la página o vuelve a entrar para ver otras
+          combinaciones.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Limitaciones y Sommerfeld -->
+    <section class="slide" data-titulo="Limitaciones y Sommerfeld">
+      <span class="slide__numero">Slide 6 — Cierre</span>
+      <h1 class="slide__titulo">Limitaciones de Bohr y modelo de Bohr-Sommerfeld</h1>
+      <p class="slide__subtitulo">La evolución hacia los subniveles de energía</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">1. Solo monoelectrónicos</div>
+            <div class="tarjeta__texto">
+              No explica los fenómenos de átomos con más de un electrón.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">2. No explica el efecto Zeeman</div>
+            <div class="tarjeta__texto">
+              No explica la existencia de subniveles energéticos.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">3. Contradice a Heisenberg</div>
+            <div class="tarjeta__texto">
+              Plantea trayectorias definidas, violando el principio de incertidumbre.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Bohr-Sommerfeld</div>
+          <div class="caja-concepto__texto">
+            <strong>Arnold Sommerfeld</strong> propuso que el electrón también puede girar en
+            <strong>trayectorias elípticas</strong>, lo que dio origen a los <strong>subniveles de energía</strong>.
+            En el modelo de Bohr, el nivel $n = 2$ tiene una sola energía; en Bohr-Sommerfeld se
+            divide en dos subniveles ($2s$ y $2p$), explicando el desdoblamiento de las líneas espectrales.
+          </div>
+        </div>
+
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Nivel ($n$)</th>
+              <th>Subniveles</th>
+              <th>Forma de las órbitas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>1</td><td>$s$</td><td>Circular</td></tr>
+            <tr><td>2</td><td>$s$, $p$</td><td>Circular y elíptica</td></tr>
+            <tr><td>3</td><td>$s$, $p$, $d$</td><td>Circular, elíptica y más elíptica</td></tr>
+            <tr><td>4</td><td>$s$, $p$, $d$, $f$</td><td>Múltiples elipses</td></tr>
+          </tbody>
+        </table>
+
+        <div class="mapa-conceptual">
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Planck: cuantos de energía</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Einstein: efecto fotoeléctrico</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">REM: $c = \lambda f$</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Bohr: 4 postulados</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Transiciones electrónicas</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Sommerfeld: subniveles</div></div>
+        </div>
+
+        <div class="exito">
+          <strong>Has completado el Bloque 3.</strong> Ahora comprendes la teoría cuántica de Planck,
+          el efecto fotoeléctrico, las propiedades de las REM, los cuatro postulados de Bohr
+          y la ampliación de Sommerfeld con órbitas elípticas y subniveles.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="navegacion">
+    <button class="navegacion__boton" id="btnAnterior" onclick="Slides.anterior()">Anterior</button>
+    <div style="display: flex; align-items: center; gap: var(--espacio-md);">
+      <button class="navegacion__indice" onclick="abrirIndice()">Índice</button>
+      <span class="navegacion__contador" id="contador">1 / 6</span>
+    </div>
+    <button class="navegacion__boton" id="btnSiguiente" onclick="Slides.siguiente()">Siguiente</button>
+  </nav>
+
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============================================================
+   TABLA DINÁMICA DE TRANSICIONES
+   ============================================================ */
+const transicionesBase = [
+  { a: 2, b: 1 },
+  { a: 3, b: 2 },
+  { a: 4, b: 2 },
+  { a: 5, b: 3 },
+  { a: 4, b: 1 },
+  { a: 3, b: 1 }
+];
+
+function regionEspectro(dE) {
+  if (dE >= 10) return 'Ultravioleta';
+  if (dE >= 1.8 && dE < 3.1) return 'Visible';
+  if (dE < 1.8) return 'Infrarrojo';
+  return 'Ultravioleta';
+}
+
+function generarTablaTransiciones() {
+  const tbody = document.getElementById('tablaTransiciones');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  // Mezclar el orden de las transiciones y alternar emisión/absorción
+  const transicionesMezcladas = mezclar(transicionesBase);
+
+  transicionesMezcladas.forEach(({ a, b }) => {
+    // Alternar emisión / absorción pseudoaleatoriamente
+    const esEmision = Math.random() < 0.5;
+    const mayor = Math.max(a, b);
+    const menor = Math.min(a, b);
+    const dE = 13.6 * (1 / (menor * menor) - 1 / (mayor * mayor));
+
+    let transicionTexto, tipoTexto;
+    if (esEmision) {
+      transicionTexto = '$n = ' + mayor + ' \\to n = ' + menor + '$';
+      tipoTexto = 'Emisión';
+    } else {
+      transicionTexto = '$n = ' + menor + ' \\to n = ' + mayor + '$';
+      tipoTexto = 'Absorción';
+    }
+
+    const region = regionEspectro(dE);
+
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      '<td>' + transicionTexto + '</td>' +
+      '<td>' + tipoTexto + '</td>' +
+      '<td>' + dE.toFixed(2).replace('.', ',') + '</td>' +
+      '<td>' + region + '</td>';
+    tbody.appendChild(tr);
+  });
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+const Slides = {
+  actual: 0,
+  slides: [],
+  total: 0,
+
+  init() {
+    this.slides = document.querySelectorAll('.slide');
+    this.total = this.slides.length;
+    this.render();
+    this.bindKeys();
+    this.bindHash();
+    this.construirIndice();
+  },
+
+  ir(n) {
+    if (n < 0 || n >= this.total) return;
+    this.slides[this.actual].classList.remove('activo');
+    this.actual = n;
+    this.slides[this.actual].classList.add('activo');
+    this.render();
+  },
+
+  siguiente() { this.ir(this.actual + 1); },
+  anterior() { this.ir(this.actual - 1); },
+
+  render() {
+    document.getElementById('contador').textContent = (this.actual + 1) + ' / ' + this.total;
+    document.getElementById('btnAnterior').disabled = this.actual === 0;
+    document.getElementById('btnSiguiente').disabled = this.actual === this.total - 1;
+    const pct = ((this.actual + 1) / this.total) * 100;
+    document.getElementById('progreso').style.width = pct + '%';
+    document.querySelectorAll('.indice__item').forEach((item, i) => {
+      item.classList.toggle('activo', i === this.actual);
+    });
+    history.replaceState(null, '', '#slide-' + (this.actual + 1));
+    this.slides[this.actual].scrollTop = 0;
+
+    // Regenerar la tabla de transiciones al entrar a la slide 5
+    const slideActual = this.slides[this.actual];
+    if (slideActual.querySelector('#tablaTransiciones')) {
+      generarTablaTransiciones();
+    }
+
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+  },
+
+  bindKeys() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        this.siguiente();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.anterior();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        this.ir(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        this.ir(this.total - 1);
+      }
+    });
+  },
+
+  bindHash() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#slide-')) {
+      const n = parseInt(hash.replace('#slide-', '')) - 1;
+      if (n >= 0 && n < this.total) {
+        this.ir(n);
+      }
+    }
+  },
+
+  construirIndice() {
+    const lista = document.getElementById('listaIndice');
+    lista.innerHTML = '';
+    this.slides.forEach((slide, i) => {
+      const titulo = slide.dataset.titulo || ('Slide ' + (i + 1));
+      const li = document.createElement('li');
+      li.className = 'indice__item' + (i === this.actual ? ' activo' : '');
+      li.innerHTML = '<span class="indice__item-num">' + (i + 1) + '.</span> ' + titulo;
+      li.onclick = () => {
+        this.ir(i);
+        cerrarIndice();
+      };
+      lista.appendChild(li);
+    });
+  }
+};
+
+/* ============================================================
+   ÍNDICE LATERAL
+   ============================================================ */
+function abrirIndice() {
+  document.getElementById('indice').classList.add('abierto');
+  document.getElementById('overlay').classList.add('visible');
+}
+
+function cerrarIndice() {
+  document.getElementById('indice').classList.remove('abierto');
+  document.getElementById('overlay').classList.remove('visible');
+}
+
+document.getElementById('cerrarIndice').onclick = cerrarIndice;
+document.getElementById('overlay').onclick = cerrarIndice;
+
+/* ============================================================
+   INICIALIZACIÓN
+   ============================================================ */
+function inicializarTodo() {
+  Slides.init();
+  generarTablaTransiciones();
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>

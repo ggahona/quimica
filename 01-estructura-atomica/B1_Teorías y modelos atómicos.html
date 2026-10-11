@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teorías y Modelos Atómicos · Bloque 1</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --espacio-xl: 4rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.barra-progreso {
+  position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--borde); z-index: 1000;
+}
+.barra-progreso__relleno {
+  height: 100%; background: var(--azul-medio); width: 0%;
+  transition: width 0.4s ease;
+}
+
+.contenedor-slides {
+  flex: 1; position: relative; display: flex;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-lg); padding-top: 2rem;
+}
+
+.slide {
+  display: none; width: 100%; max-width: 1100px;
+  background: var(--superficie); border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  padding: var(--espacio-xl) var(--espacio-lg);
+  animation: fadeIn 0.5s ease;
+  min-height: 70vh; max-height: 85vh; overflow-y: auto;
+}
+.slide.activo { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide__numero {
+  display: inline-block; background: var(--azul-profundo); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0.25rem 0.75rem; border-radius: 999px;
+  margin-bottom: var(--espacio-md);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.slide__titulo {
+  font-size: 2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm); line-height: 1.2;
+}
+.slide__subtitulo {
+  font-size: 1.1rem; color: var(--texto-suave);
+  margin-bottom: var(--espacio-lg);
+}
+.slide__cuerpo { font-size: 1rem; }
+
+.navegacion {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: var(--superficie); border-top: 1px solid var(--borde);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  z-index: 999; box-shadow: 0 -2px 10px rgba(26,58,107,0.05);
+}
+.navegacion__boton {
+  background: var(--azul-profundo); color: #fff; border: none;
+  padding: 0.6rem 1.4rem; border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.navegacion__boton:hover { background: var(--azul-medio); }
+.navegacion__boton:active { transform: scale(0.97); }
+.navegacion__boton:disabled {
+  background: var(--borde); color: var(--texto-suave); cursor: not-allowed;
+}
+.navegacion__contador {
+  font-size: 0.9rem; color: var(--texto-suave); font-weight: 600;
+}
+.navegacion__indice {
+  background: transparent; border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo); padding: 0.5rem 1rem;
+  border-radius: var(--radio-md); font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.navegacion__indice:hover { background: var(--azul-profundo); color: #fff; }
+
+.indice {
+  position: fixed; top: 0; right: -380px; width: 380px; height: 100vh;
+  background: var(--superficie); box-shadow: -4px 0 20px rgba(26,58,107,0.15);
+  z-index: 1001; transition: right 0.3s ease;
+  overflow-y: auto; padding: var(--espacio-lg);
+}
+.indice.abierto { right: 0; }
+.indice__titulo {
+  font-size: 1.2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-md);
+  padding-bottom: var(--espacio-sm);
+  border-bottom: 2px solid var(--borde);
+}
+.indice__lista { list-style: none; }
+.indice__item {
+  padding: 0.6rem 0.75rem; border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem; color: var(--texto);
+  transition: background 0.2s; margin-bottom: 0.25rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.indice__item:hover { background: var(--azul-muy-claro); }
+.indice__item.activo { background: var(--azul-profundo); color: #fff; font-weight: 600; }
+.indice__item-num { font-weight: 700; font-size: 0.8rem; min-width: 1.5rem; }
+.indice__cerrar {
+  position: absolute; top: var(--espacio-md); right: var(--espacio-md);
+  background: transparent; border: none; font-size: 1.2rem;
+  cursor: pointer; color: var(--texto-suave);
+  line-height: 1; font-family: var(--fuente-base);
+}
+.overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(26,58,107,0.4); z-index: 1000; display: none;
+}
+.overlay.visible { display: block; }
+
+.caja-concepto {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-concepto__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-concepto__texto { font-size: 1rem; color: var(--texto); line-height: 1.8; }
+.caja-concepto__texto strong { color: var(--azul-profundo); }
+
+.caja-ejemplo {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-ejemplo__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-ejemplo__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.caja-idea {
+  background: #fff8e1; border-left: 4px solid #d97706;
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-idea__titulo {
+  font-size: 0.85rem; font-weight: 700; color: #92400e;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-idea__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.alerta {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+.exito {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.tabla-datos {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: var(--espacio-md); font-size: 0.9rem;
+  box-shadow: var(--sombra-sm); border-radius: var(--radio-md);
+  overflow: hidden;
+}
+.tabla-datos thead { background: var(--azul-medio); color: #fff; }
+.tabla-datos th {
+  padding: 0.75rem 0.5rem; text-align: left;
+  font-weight: 600; font-size: 0.85rem;
+}
+.tabla-datos td {
+  padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.tabla-datos tbody tr:hover { background: var(--fondo); }
+.tabla-datos .centro { text-align: center; }
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.tarjeta {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: var(--radio-md); padding: var(--espacio-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tarjeta:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
+.tarjeta__titulo {
+  font-size: 0.95rem; font-weight: 700; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-xs);
+}
+.tarjeta__texto { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.6; }
+
+.timeline {
+  display: flex; gap: var(--espacio-sm);
+  margin-bottom: var(--espacio-md);
+  overflow-x: auto; padding-bottom: var(--espacio-sm);
+  position: relative;
+}
+.timeline__item {
+  flex: 1; min-width: 110px; text-align: center; position: relative;
+  cursor: pointer; transition: transform 0.2s;
+}
+.timeline__item:hover { transform: translateY(-4px); }
+.timeline__item::after {
+  content: '\2192'; position: absolute; right: -0.75rem;
+  top: 30%; color: var(--borde); font-size: 1.2rem;
+}
+.timeline__item:last-child::after { display: none; }
+.timeline__circulo {
+  width: 55px; height: 55px; border-radius: 50%;
+  background: var(--azul-profundo); color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.9rem; font-weight: 700;
+  margin: 0 auto var(--espacio-sm); box-shadow: var(--sombra-md);
+  border: 3px solid transparent;
+}
+.timeline__circulo.filosofo { background: var(--azul-profundo); }
+.timeline__circulo.experimental { background: var(--azul-medio); }
+.timeline__circulo.modelo { background: var(--azul-claro); color: var(--azul-profundo); }
+.timeline__item:hover .timeline__circulo { border-color: var(--amarillo); }
+.timeline__titulo { font-size: 0.8rem; font-weight: 700; color: var(--azul-profundo); }
+.timeline__texto { font-size: 0.7rem; color: var(--texto-suave); }
+.timeline__detalle {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-top: var(--espacio-md);
+  font-size: 0.9rem;
+  display: none;
+}
+.timeline__detalle.visible { display: block; }
+
+.leyenda-timeline {
+  display: flex; flex-wrap: wrap; gap: var(--espacio-md);
+  margin-bottom: var(--espacio-md); font-size: 0.8rem;
+}
+.leyenda-timeline__item {
+  display: flex; align-items: center; gap: 0.4rem;
+  color: var(--texto-suave);
+}
+.leyenda-timeline__punto {
+  width: 14px; height: 14px; border-radius: 50%;
+  display: inline-block;
+}
+.leyenda-timeline__punto.filosofo { background: var(--azul-profundo); }
+.leyenda-timeline__punto.experimental { background: var(--azul-medio); }
+.leyenda-timeline__punto.modelo { background: var(--azul-claro); border: 1px solid var(--azul-profundo); }
+
+.mapa-conceptual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.mapa-nodo {
+  background: var(--superficie);
+  border: 2px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  text-align: center; transition: all 0.3s;
+  cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 70px;
+}
+.mapa-nodo:hover {
+  background: var(--azul-profundo); color: #fff; transform: scale(1.05);
+}
+.mapa-nodo__texto { font-size: 0.85rem; font-weight: 600; }
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  .slide { padding: var(--espacio-lg) var(--espacio-md); min-height: 80vh; }
+  .slide__titulo { font-size: 1.4rem; }
+  .slide__subtitulo { font-size: 0.95rem; }
+  .navegacion { padding: var(--espacio-sm) var(--espacio-md); }
+  .navegacion__boton { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+  .tabla-datos { font-size: 0.75rem; }
+  .grid-tarjetas { grid-template-columns: 1fr; }
+  .timeline { flex-direction: column; }
+  .timeline__item::after {
+    content: '\2193'; right: 50%; top: auto; bottom: -1rem;
+  }
+  .indice { width: 300px; right: -300px; }
+  .mapa-conceptual { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="barra-progreso">
+    <div class="barra-progreso__relleno" id="progreso"></div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="indice" id="indice">
+    <button class="indice__cerrar" id="cerrarIndice" aria-label="Cerrar índice">Cerrar</button>
+    <h2 class="indice__titulo">Índice — Bloque 1</h2>
+    <ul class="indice__lista" id="listaIndice"></ul>
+  </aside>
+
+  <main class="contenedor-slides" id="contenedorSlides">
+
+    <!-- Slide 1: Portada -->
+    <section class="slide activo" data-titulo="Portada">
+      <span class="slide__numero">Bloque 1 · Química</span>
+      <h1 class="slide__titulo">Teorías y Modelos Atómicos</h1>
+      <p class="slide__subtitulo">De las ideas filosóficas al núcleo cuántico.</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Objetivo de aprendizaje</div>
+          <div class="caja-concepto__texto">
+            Al terminar esta secuencia podrás <strong>identificar las principales teorías y modelos atómicos</strong>,
+            <strong>describir los experimentos clave</strong> que llevaron a su formulación y
+            <strong>diferenciar los aportes de cada científico</strong> en la evolución del modelo atómico.
+          </div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Idea central</div>
+          <div class="caja-idea__texto">
+            La idea del átomo ha evolucionado con cada experimento. Cada modelo corrigió las
+            limitaciones del anterior, y cada error abrió paso a una comprensión más profunda
+            de la materia.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Cómo navegar:</strong> Usa las flechas del teclado, los botones inferiores o el índice lateral.
+          Cada slide incluye ejemplos resueltos que clarifican los conceptos teóricos.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Antecedentes filosóficos -->
+    <section class="slide" data-titulo="Antecedentes filosóficos">
+      <span class="slide__numero">Slide 2</span>
+      <h1 class="slide__titulo">Antecedentes filosóficos</h1>
+      <p class="slide__subtitulo">De los griegos a Aristóteles</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Leucipo y Demócrito (s. V a.C.)</div>
+            <div class="tarjeta__texto">
+              Sostenían que la materia está formada por partículas muy pequeñas,
+              indivisibles e indestructibles, a las que llamaron <strong>átomos</strong>.
+              <br><em>"Átomos" = sin división.</em>
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Empédocles y Aristóteles (s. IV a.C.)</div>
+            <div class="tarjeta__texto">
+              La materia se divide en forma infinita y está formada por <strong>cuatro elementos</strong>:
+              agua, tierra, aire y fuego. Se combinan según cuatro propiedades:
+              <strong>sequedad, humedad, calor y frío</strong>.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si partimos una piedra por la mitad, y luego otra vez, y así sucesivamente,
+            llegará un momento en que no se pueda dividir más. Esa partícula última sería el
+            <strong>átomo</strong> según Leucipo y Demócrito.
+            <br><br>
+            Según Aristóteles, al quemar madera el fuego (caliente + seco) se libera y queda
+            la ceniza (tierra, frío + seco).
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si la materia estuviera formada por 4 elementos, podríamos explicar por qué el
+            agua apaga el fuego (agua = húmedo + frío; fuego = seco + caliente: se anulan)
+            o por qué la tierra es sólida (frío + seco).
+          </div>
+        </div>
+
+        <div class="alerta">
+          La idea atomista fue puramente filosófica, sin experimentación. La teoría aristotélica
+          dominó el pensamiento occidental por casi 2000 años.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Dalton -->
+    <section class="slide" data-titulo="Dalton">
+      <span class="slide__numero">Slide 3</span>
+      <h1 class="slide__titulo">Teoría atómico-molecular de John Dalton</h1>
+      <p class="slide__subtitulo">Los cuatro postulados fundamentales</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">1er postulado</div>
+          <div class="caja-concepto__texto">
+            Todo cuerpo material está formado por <strong>átomos indivisibles e indestructibles</strong>,
+            incluso en la reacción química más violenta.
+          </div>
+        </div>
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">2do postulado</div>
+          <div class="caja-concepto__texto">
+            Átomos del mismo elemento tienen <strong>iguales propiedades</strong> (tamaño y masa).
+          </div>
+        </div>
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">3er postulado</div>
+          <div class="caja-concepto__texto">
+            Átomos de elementos diferentes tienen <strong>propiedades diferentes</strong>.
+          </div>
+        </div>
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">4to postulado</div>
+          <div class="caja-concepto__texto">
+            Elementos diferentes se combinan en <strong>relaciones sencillas</strong> para formar
+            moléculas de compuestos.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Todos los átomos de hidrógeno son iguales entre sí (mismo tamaño y masa), y
+            distintos de los átomos de oxígeno. Si combinamos hidrógeno y oxígeno en
+            proporción 2:1, obtenemos agua ($\text{H}_2\text{O}$). Esa es la esencia del
+            cuarto postulado: relaciones sencillas de números enteros.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Un átomo de carbono se une con dos átomos de oxígeno para formar dióxido de
+            carbono ($\text{CO}_2$). La relación 1:2 es sencilla. Eso encaja con el
+            cuarto postulado de Dalton.
+          </div>
+        </div>
+
+        <div class="alerta">
+          Dalton publicó su obra <em>The New System of Chemical Philosophy</em>, donde usó
+          símbolos arbitrarios (círculos con letras o marcas) para representar átomos y
+          moléculas.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Faraday, rayos catódicos y Thomson -->
+    <section class="slide" data-titulo="Faraday, rayos catódicos y Thomson">
+      <span class="slide__numero">Slide 4</span>
+      <h1 class="slide__titulo">Naturaleza eléctrica y descubrimiento del electrón</h1>
+      <p class="slide__subtitulo">Faraday, los rayos catódicos y el modelo de Thomson</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Michael Faraday</div>
+            <div class="tarjeta__texto">
+              En sus experimentos de <strong>electrólisis</strong> observó que la materia se
+              descomponía al paso de la corriente eléctrica. Esto daba indicios de partículas
+              negativas (electrones).
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Rayos catódicos</div>
+            <div class="tarjeta__texto">
+              Julius Plücker y William Crookes los estudiaron. Son chorros de electrones que
+              viajan del cátodo al ánodo a ~$150\,000\ \text{km/s}$, con voltajes de
+              $5\,000$–$10\,000\ \text{V}$.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">J.J. Thomson — descubrimiento del electrón</div>
+          <div class="caja-concepto__texto">
+            Tras experimentar con rayos catódicos, Thomson descubrió el <strong>electrón</strong>
+            (carga negativa) y demostró que son desviados por campos eléctricos y magnéticos.
+            Propuso el modelo del <strong>"budín de pasas"</strong>: una esfera positiva con
+            electrones negativos incrustados.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            En un tubo de descarga, los rayos catódicos hacen girar un molinete, demostrando
+            que tienen masa y se mueven en línea recta. Si lanzas una canica por un tubo y la
+            desvías con un imán, compruebas que los electrones tienen carga y masa.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Faraday observó que al pasar corriente por agua con sal, se separaba en hidrógeno
+            y oxígeno. Eso sugería que la corriente estaba formada por partículas con carga.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Millikan, Perrin/Nagaoka y rayos anódicos -->
+    <section class="slide" data-titulo="Millikan, Perrin/Nagaoka y rayos anódicos">
+      <span class="slide__numero">Slide 5</span>
+      <h1 class="slide__titulo">Otras contribuciones al modelo atómico</h1>
+      <p class="slide__subtitulo">Millikan, Perrin/Nagaoka, rayos anódicos y tabla comparativa</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Millikan y la gota de aceite (1911)</div>
+            <div class="tarjeta__texto">
+              Junto a Harvey Fletcher determinaron la carga elemental del electrón:
+              $q = 1{,}6 \times 10^{-19}\ \text{C}$. Usaron gotas de aceite entre placas cargadas.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Perrin y Nagaoka</div>
+            <div class="tarjeta__texto">
+              Propusieron un átomo con esfera positiva y electrones
+              <strong>tangentes a su superficie</strong>, como los anillos de Saturno.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Rayos anódicos o canales</div>
+            <div class="tarjeta__texto">
+              Descubiertos por Eugene Goldstein. Son iones positivos (cationes) que viajan del
+              ánodo al cátodo y producen fluorescencia detrás del cátodo.
+            </div>
+          </div>
+        </div>
+
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Científico / Modelo</th>
+              <th>Estructura del átomo</th>
+              <th>Electrones</th>
+              <th>Aporte clave</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Dalton</strong><br><em>Esfera maciza</em></td>
+              <td>Esfera indivisible e indestructible. Sin estructura interna.</td>
+              <td>No los considera (no se conocían).</td>
+              <td>4 postulados: átomos iguales en un mismo elemento.</td>
+            </tr>
+            <tr>
+              <td><strong>Thomson</strong><br><em>Budín de pasas</em></td>
+              <td>Esfera cargada positivamente.</td>
+              <td>Incrustados dentro de la esfera positiva.</td>
+              <td>Descubrió el electrón.</td>
+            </tr>
+            <tr>
+              <td><strong>Perrin y Nagaoka</strong><br><em>Saturnino</em></td>
+              <td>Esfera cargada positivamente.</td>
+              <td>Tangentes a la superficie de la esfera positiva.</td>
+              <td>Primera propuesta de electrones fuera de la esfera positiva.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Millikan midió la carga del electrón con gotas de aceite en suspensión: al
+            ionizarlas y aplicar un campo eléctrico, podía hacerlas subir o bajar. Con la
+            velocidad de subida y bajada calculó la carga elemental
+            $q = 1{,}6 \times 10^{-19}\ \text{C}$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            En un tubo de descarga con gas hidrógeno, los rayos anódicos están formados por
+            iones $\text{H}^+$ (protones). Si se cambia el gas por helio, aparecen iones
+            $\text{He}^+$ o $\text{He}^{2+}$. Esto demuestra que los rayos canales son iones
+            positivos del gas residual.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Truco mnemotécnico:</strong> Dalton = "bola", Thomson = "budín",
+          Perrin/Nagaoka = "anillos", Rutherford = "planetas".
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Rutherford + error -->
+    <section class="slide" data-titulo="Rutherford y el núcleo">
+      <span class="slide__numero">Slide 6</span>
+      <h1 class="slide__titulo">Descubrimiento del núcleo atómico</h1>
+      <p class="slide__subtitulo">Rutherford y el error que abrió paso a la mecánica cuántica</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Experimento de la lámina de oro (1911)</div>
+          <div class="caja-concepto__texto">
+            Bombardeó láminas de oro con partículas alfa ($\alpha$) y observó:
+            <ul style="margin-top: 0.5rem; padding-left: 1.5rem;">
+              <li>La mayoría pasaban sin desviarse.</li>
+              <li>Algunas se desviaban ligeramente.</li>
+              <li>Muy pocas rebotaban.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Conclusión</div>
+          <div class="caja-concepto__texto">
+            El átomo tiene un <strong>núcleo</strong> pequeño, macizo y positivo, que concentra
+            casi toda la masa. Los electrones giran alrededor en órbitas, como planetas alrededor del Sol.
+            El átomo es casi vacío.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Si el núcleo de un átomo de hidrógeno tuviera el tamaño de una canica (1 cm),
+            la corteza electrónica abarcaría unos 100 m de diámetro. Esa proporción muestra
+            por qué decimos que el átomo es <strong>casi vacío</strong>.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            En el experimento de Rutherford, si el átomo fuera una esfera maciza como
+            proponía Thomson, todas las partículas alfa deberían atravesarla sin desviarse.
+            Sin embargo, algunas rebotaron, lo cual solo se explica si existe un núcleo
+            pequeño y positivo que las repele.
+          </div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Error del modelo</div>
+          <div class="caja-idea__texto">
+            Según la física clásica, una partícula cargada que acelera emite energía (REM).
+            El electrón debería perder energía y caer en espiral sobre el núcleo. Pero esto
+            no ocurre: fue necesario recurrir a la <strong>mecánica cuántica</strong>.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 7: Cierre -->
+    <section class="slide" data-titulo="Cierre">
+      <span class="slide__numero">Slide 7 — Cierre</span>
+      <h1 class="slide__titulo">Síntesis del Bloque 1</h1>
+      <p class="slide__subtitulo">Línea de tiempo, mapa conceptual y cierre</p>
+
+      <div class="slide__cuerpo">
+        <div class="leyenda-timeline">
+          <span class="leyenda-timeline__item"><span class="leyenda-timeline__punto filosofo"></span> Filosófico</span>
+          <span class="leyenda-timeline__item"><span class="leyenda-timeline__punto experimental"></span> Experimental</span>
+          <span class="leyenda-timeline__item"><span class="leyenda-timeline__punto modelo"></span> Modelo atómico</span>
+        </div>
+
+        <div class="timeline" id="timeline">
+          <div class="timeline__item" onclick="mostrarDetalle(0)">
+            <div class="timeline__circulo filosofo">V a.C.</div>
+            <div class="timeline__titulo">Leucipo y Demócrito</div>
+            <div class="timeline__texto">Átomo indivisible</div>
+          </div>
+          <div class="timeline__item" onclick="mostrarDetalle(1)">
+            <div class="timeline__circulo filosofo">s. IV a.C.</div>
+            <div class="timeline__titulo">Aristóteles</div>
+            <div class="timeline__texto">4 elementos</div>
+          </div>
+          <div class="timeline__item" onclick="mostrarDetalle(2)">
+            <div class="timeline__circulo modelo">1808</div>
+            <div class="timeline__titulo">Dalton</div>
+            <div class="timeline__texto">4 postulados</div>
+          </div>
+          <div class="timeline__item" onclick="mostrarDetalle(3)">
+            <div class="timeline__circulo experimental">1830s</div>
+            <div class="timeline__titulo">Faraday</div>
+            <div class="timeline__texto">Electrólisis</div>
+          </div>
+          <div class="timeline__item" onclick="mostrarDetalle(4)">
+            <div class="timeline__circulo modelo">1897</div>
+            <div class="timeline__titulo">Thomson</div>
+            <div class="timeline__texto">Electrón</div>
+          </div>
+          <div class="timeline__item" onclick="mostrarDetalle(5)">
+            <div class="timeline__circulo experimental">1911</div>
+            <div class="timeline__titulo">Millikan</div>
+            <div class="timeline__texto">Carga del electrón</div>
+          </div>
+          <div class="timeline__item" onclick="mostrarDetalle(6)">
+            <div class="timeline__circulo modelo">1911</div>
+            <div class="timeline__titulo">Rutherford</div>
+            <div class="timeline__texto">Núcleo atómico</div>
+          </div>
+        </div>
+
+        <div class="timeline__detalle" id="detalleTimeline"></div>
+
+        <div class="mapa-conceptual" style="margin-top: var(--espacio-lg);">
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Griegos: átomo indivisible</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Aristóteles: 4 elementos</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Dalton: 4 postulados</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Thomson: electrón y budín</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Millikan: carga del electrón</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Rutherford: núcleo</div></div>
+        </div>
+
+        <div class="exito">
+          <strong>Has completado el Bloque 1.</strong> Ahora conoces la evolución de las teorías
+          y modelos atómicos, desde los griegos hasta Rutherford, y comprendes por qué la
+          mecánica cuántica fue necesaria.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="navegacion">
+    <button class="navegacion__boton" id="btnAnterior" onclick="Slides.anterior()">Anterior</button>
+    <div style="display: flex; align-items: center; gap: var(--espacio-md);">
+      <button class="navegacion__indice" onclick="abrirIndice()">Índice</button>
+      <span class="navegacion__contador" id="contador">1 / 7</span>
+    </div>
+    <button class="navegacion__boton" id="btnSiguiente" onclick="Slides.siguiente()">Siguiente</button>
+  </nav>
+
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+const Slides = {
+  actual: 0,
+  slides: [],
+  total: 0,
+
+  init() {
+    this.slides = document.querySelectorAll('.slide');
+    this.total = this.slides.length;
+    this.render();
+    this.bindKeys();
+    this.bindHash();
+    this.construirIndice();
+  },
+
+  ir(n) {
+    if (n < 0 || n >= this.total) return;
+    this.slides[this.actual].classList.remove('activo');
+    this.actual = n;
+    this.slides[this.actual].classList.add('activo');
+    this.render();
+  },
+
+  siguiente() { this.ir(this.actual + 1); },
+  anterior() { this.ir(this.actual - 1); },
+
+  render() {
+    document.getElementById('contador').textContent = (this.actual + 1) + ' / ' + this.total;
+    document.getElementById('btnAnterior').disabled = this.actual === 0;
+    document.getElementById('btnSiguiente').disabled = this.actual === this.total - 1;
+    const pct = ((this.actual + 1) / this.total) * 100;
+    document.getElementById('progreso').style.width = pct + '%';
+    document.querySelectorAll('.indice__item').forEach((item, i) => {
+      item.classList.toggle('activo', i === this.actual);
+    });
+    history.replaceState(null, '', '#slide-' + (this.actual + 1));
+    this.slides[this.actual].scrollTop = 0;
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+  },
+
+  bindKeys() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        this.siguiente();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.anterior();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        this.ir(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        this.ir(this.total - 1);
+      }
+    });
+  },
+
+  bindHash() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#slide-')) {
+      const n = parseInt(hash.replace('#slide-', '')) - 1;
+      if (n >= 0 && n < this.total) {
+        this.ir(n);
+      }
+    }
+  },
+
+  construirIndice() {
+    const lista = document.getElementById('listaIndice');
+    lista.innerHTML = '';
+    this.slides.forEach((slide, i) => {
+      const titulo = slide.dataset.titulo || ('Slide ' + (i + 1));
+      const li = document.createElement('li');
+      li.className = 'indice__item' + (i === this.actual ? ' activo' : '');
+      li.innerHTML = '<span class="indice__item-num">' + (i + 1) + '.</span> ' + titulo;
+      li.onclick = () => {
+        this.ir(i);
+        cerrarIndice();
+      };
+      lista.appendChild(li);
+    });
+  }
+};
+
+/* ============================================================
+   ÍNDICE LATERAL
+   ============================================================ */
+function abrirIndice() {
+  document.getElementById('indice').classList.add('abierto');
+  document.getElementById('overlay').classList.add('visible');
+}
+function cerrarIndice() {
+  document.getElementById('indice').classList.remove('abierto');
+  document.getElementById('overlay').classList.remove('visible');
+}
+document.getElementById('cerrarIndice').onclick = cerrarIndice;
+document.getElementById('overlay').onclick = cerrarIndice;
+
+/* ============================================================
+   LÍNEA DE TIEMPO
+   ============================================================ */
+const detallesTimeline = [
+  { titulo: 'Leucipo y Demócrito (s. V a.C.)',
+    texto: 'Propusieron que la materia está formada por partículas indivisibles e indestructibles llamadas <strong>átomos</strong>. Idea puramente filosófica, sin experimentación.' },
+  { titulo: 'Empédocles y Aristóteles (s. IV a.C.)',
+    texto: 'Los 4 elementos (agua, tierra, aire, fuego) se combinan según 4 propiedades: <strong>sequedad, humedad, calor y frío</strong>. Dominó el pensamiento occidental por casi 2000 años.' },
+  { titulo: 'John Dalton (1808)',
+    texto: 'Teoría atómico-molecular con <strong>4 postulados</strong>: átomos indivisibles, iguales en un mismo elemento, diferentes entre elementos, y se combinan en relaciones sencillas.' },
+  { titulo: 'Michael Faraday (1830s)',
+    texto: 'Con la <strong>electrólisis</strong> observó que la materia se descompone al paso de la corriente eléctrica. Dio indicios de partículas negativas.' },
+  { titulo: 'J.J. Thomson (1897)',
+    texto: 'Descubrió el <strong>electrón</strong> y propuso el modelo del <strong>budín de pasas</strong>: esfera positiva con electrones incrustados.' },
+  { titulo: 'Robert A. Millikan (1911)',
+    texto: 'Con el experimento de la <strong>gota de aceite</strong> determinó la carga del electrón: <strong>$q = 1{,}6 \\times 10^{-19}\\ \\text{C}$</strong>.' },
+  { titulo: 'Ernest Rutherford (1911)',
+    texto: 'Con el bombardeo de láminas de oro con partículas alfa descubrió el <strong>núcleo atómico</strong>: pequeño, macizo y positivo.' }
+];
+
+function mostrarDetalle(i) {
+  const detalle = document.getElementById('detalleTimeline');
+  const d = detallesTimeline[i];
+  detalle.innerHTML = '<strong>' + d.titulo + '</strong><br>' + d.texto;
+  detalle.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   INICIALIZACIÓN
+   ============================================================ */
+function inicializarTodo() {
+  Slides.init();
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>

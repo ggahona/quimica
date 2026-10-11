@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App · Propiedades Periódicas · Bloque 5</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --verde: #16a34a;
+  --rojo: #dc2626;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: var(--espacio-lg);
+}
+
+.contenedor { max-width: 1100px; margin: 0 auto; }
+
+.encabezado {
+  background: linear-gradient(135deg, var(--azul-profundo), var(--azul-medio));
+  color: #fff;
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  margin-bottom: var(--espacio-lg);
+  box-shadow: var(--sombra-lg);
+  text-align: center;
+}
+.encabezado__titulo {
+  font-size: 1.8rem; font-weight: 700; margin-bottom: var(--espacio-xs);
+}
+.encabezado__subtitulo { font-size: 1rem; opacity: 0.9; }
+
+.tabs {
+  display: flex; gap: var(--espacio-sm);
+  margin-bottom: var(--espacio-md);
+  border-bottom: 2px solid var(--borde);
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 0.7rem 1.4rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--texto-suave);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.tab:hover { color: var(--azul-profundo); }
+.tab.activo {
+  color: var(--azul-profundo);
+  border-bottom-color: var(--azul-profundo);
+}
+
+.panel { display: none; }
+.panel.activo { display: block; }
+
+.tarjeta {
+  background: var(--superficie);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  box-shadow: var(--sombra-md);
+  margin-bottom: var(--espacio-lg);
+}
+
+.tarjeta__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espacio-md);
+  margin-bottom: var(--espacio-md);
+  flex-wrap: wrap;
+}
+.tarjeta__texto { flex: 1; min-width: 240px; }
+.tarjeta__titulo {
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--azul-profundo); margin-bottom: var(--espacio-sm);
+}
+.tarjeta__descripcion {
+  font-size: 0.9rem; color: var(--texto-suave);
+}
+
+.boton-ayuda-calc,
+.boton-ayuda-sim,
+.boton-ayuda-exa {
+  background: var(--azul-profundo);
+  color: #fff;
+  border: 2px solid var(--azul-profundo);
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radio-md);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(26,58,107,0.25);
+  align-self: flex-start;
+}
+.boton-ayuda-calc:hover,
+.boton-ayuda-sim:hover,
+.boton-ayuda-exa:hover {
+  background: var(--superficie);
+  color: var(--azul-profundo);
+}
+
+.campo { margin-bottom: var(--espacio-md); }
+.campo label {
+  display: block; font-size: 0.9rem; font-weight: 700;
+  color: var(--azul-profundo); margin-bottom: 0.3rem;
+}
+.campo input, .campo select {
+  width: 100%; padding: 0.6rem;
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--fuente-base);
+  font-size: 0.95rem;
+  background: var(--superficie); color: var(--texto);
+}
+.campo input:focus, .campo select:focus {
+  outline: none; border-color: var(--azul-medio);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espacio-md); }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--espacio-md); }
+
+.boton {
+  background: var(--azul-profundo); color: #fff;
+  border: none; padding: 0.7rem 1.6rem;
+  border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.boton:hover { background: var(--azul-medio); }
+.boton:active { transform: scale(0.97); }
+.boton.secundario {
+  background: transparent;
+  border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo);
+}
+.boton.secundario:hover { background: var(--azul-profundo); color: #fff; }
+.boton.grupo { display: flex; gap: var(--espacio-sm); flex-wrap: wrap; }
+
+.resultado {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-top: var(--espacio-md);
+  font-size: 0.95rem; line-height: 1.8;
+  display: none;
+}
+.resultado.visible { display: block; }
+.resultado strong { color: var(--azul-profundo); }
+.resultado .paso {
+  font-family: var(--fuente-mono);
+  background: var(--superficie);
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radio-sm);
+  margin: 0.4rem 0;
+  border-left: 3px solid var(--azul-medio);
+  font-size: 0.9rem; line-height: 1.7;
+}
+.resultado .destacado {
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--azul-profundo);
+  font-family: var(--fuente-mono);
+  text-align: center; margin: var(--espacio-sm) 0;
+}
+
+.sim-radios {
+  display: flex; flex-direction: column; gap: var(--espacio-md);
+}
+.sim-radios__selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-md);
+}
+.sim-radios__svg {
+  background: radial-gradient(circle at center, #f7f9fc 0%, #e6eef8 100%);
+  border-radius: var(--radio-md);
+  border: 1px solid var(--borde);
+  padding: var(--espacio-sm);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 260px;
+}
+.sim-radios__resultado {
+  background: var(--superficie);
+  border: 2px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  text-align: center;
+}
+.sim-radios__mayor {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm);
+}
+.sim-radios__detalle {
+  font-size: 0.85rem;
+  color: var(--texto-suave);
+}
+
+.recuadro-estado {
+  margin-top: var(--espacio-md);
+  padding: 0.7rem 1rem;
+  border-radius: var(--radio-md);
+  font-size: 0.9rem; font-weight: 600;
+  line-height: 1.6;
+  display: flex; align-items: center; gap: 0.6rem;
+  border-left: 4px solid var(--azul-medio);
+  background: var(--azul-muy-claro); color: var(--azul-profundo);
+}
+.recuadro-estado::before {
+  content: 'ℹ'; font-size: 1.2rem; flex-shrink: 0;
+}
+
+.examen-acciones {
+  display: flex; justify-content: flex-start;
+  margin-bottom: var(--espacio-md);
+}
+
+.pregunta {
+  background: var(--superficie);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-bottom: var(--espacio-md);
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--borde);
+  transition: all 0.3s;
+}
+.pregunta.correcta {
+  border-left: 4px solid var(--verde);
+  background: #f0fdf4;
+}
+.pregunta.incorrecta {
+  border-left: 4px solid var(--rojo);
+  background: #fef2f2;
+}
+.pregunta__texto {
+  font-weight: 600; margin-bottom: var(--espacio-sm);
+  font-size: 0.95rem;
+}
+.pregunta__opciones {
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.opcion {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--fondo);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.opcion:hover:not(.locked) {
+  border-color: var(--azul-medio);
+  background: var(--azul-muy-claro);
+}
+.opcion.locked { cursor: default; }
+.opcion.correcta {
+  border-color: var(--verde);
+  background: #dcfce7; color: #166534; font-weight: 700;
+}
+.opcion.incorrecta {
+  border-color: var(--rojo);
+  background: #fee2e2; color: #991b1b;
+}
+.opcion input { accent-color: var(--azul-profundo); }
+
+.feedback {
+  margin-top: var(--espacio-sm);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radio-sm);
+  font-size: 0.85rem; display: none;
+}
+.feedback.visible { display: block; }
+.feedback.correcto { background: #dcfce7; color: #166534; }
+.feedback.incorrecto { background: #fee2e2; color: #991b1b; }
+
+.marcador {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--azul-profundo);
+  color: #fff;
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-radius: var(--radio-md);
+  margin-bottom: var(--espacio-md);
+  font-weight: 700;
+  flex-wrap: wrap;
+  gap: var(--espacio-md);
+}
+.marcador__item {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.marcador__item-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.75;
+}
+.marcador__item-valor {
+  font-size: 1.4rem;
+  font-family: var(--fuente-mono);
+}
+.marcador__item-valor.porcentaje {
+  font-size: 1.6rem;
+}
+
+.resultado-final {
+  background: linear-gradient(135deg, var(--azul-profundo), var(--azul-medio));
+  color: #fff;
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  text-align: center;
+  margin-top: var(--espacio-md);
+  display: none;
+}
+.resultado-final.visible { display: block; }
+.resultado-final__puntaje {
+  font-size: 3rem; font-weight: 800;
+  font-family: var(--fuente-mono);
+  margin-bottom: var(--espacio-xs);
+}
+.resultado-final__detalle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: var(--espacio-md);
+}
+.resultado-final__mensaje {
+  font-size: 1.1rem;
+  margin-bottom: var(--espacio-md);
+}
+
+.formula {
+  background: var(--azul-muy-claro);
+  border-left: 3px solid var(--azul-medio);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radio-sm);
+  font-family: var(--fuente-mono);
+  font-size: 0.9rem;
+  margin-bottom: var(--espacio-sm);
+}
+
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26, 58, 107, 0.55);
+  z-index: 2000;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-md);
+}
+.modal-overlay.visible { display: flex; }
+
+.modal {
+  background: var(--superficie);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  width: 100%; max-width: 720px;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal__cabecera {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-bottom: 2px solid var(--borde);
+}
+.modal__titulo {
+  font-size: 1.2rem; font-weight: 700; color: var(--azul-profundo);
+}
+.modal__cerrar {
+  background: transparent; border: none;
+  font-size: 1.5rem; line-height: 1;
+  cursor: pointer; color: var(--texto-suave);
+  padding: 0 0.3rem;
+}
+.modal__cerrar:hover { color: var(--rojo); }
+
+.modal__cuerpo {
+  padding: var(--espacio-lg);
+  overflow-y: auto;
+  font-size: 0.95rem; line-height: 1.8;
+}
+
+.modal__intro {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-bottom: var(--espacio-lg);
+  font-size: 1rem;
+}
+.modal__seccion { margin-bottom: var(--espacio-lg); }
+.modal__seccion-titulo {
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.modal__seccion-titulo::before {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--azul-medio);
+  display: inline-block;
+}
+
+.modal__lista { list-style: none; padding-left: 0; }
+.modal__lista li {
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  position: relative;
+}
+.modal__lista li::before {
+  content: '→';
+  position: absolute; left: 0;
+  color: var(--azul-medio);
+  font-weight: 700;
+}
+
+.modal__idea {
+  background: #fff8e1;
+  border-left: 4px solid var(--amarillo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin: var(--espacio-md) 0;
+  font-style: italic;
+}
+
+.modal__tabla {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: var(--espacio-sm) 0;
+}
+.modal__tabla th {
+  background: var(--azul-medio); color: #fff;
+  padding: 0.5rem; text-align: left;
+  font-weight: 600;
+}
+.modal__tabla td {
+  padding: 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.modal__tabla tr:hover { background: var(--fondo); }
+
+.modal__pie {
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-top: 2px solid var(--borde);
+  text-align: right;
+}
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  body { padding: var(--espacio-md); }
+  .encabezado__titulo { font-size: 1.3rem; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .tab { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+  .tarjeta__cabecera { flex-direction: column; align-items: stretch; }
+  .boton-ayuda-calc,
+  .boton-ayuda-sim,
+  .boton-ayuda-exa { align-self: flex-start; }
+  .sim-radios__selector { grid-template-columns: 1fr; }
+  .modal { max-height: 92vh; }
+  .modal__cuerpo { padding: var(--espacio-md); }
+  .marcador { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+
+  <header class="encabezado">
+    <h1 class="encabezado__titulo">Propiedades Periódicas · Bloque 5</h1>
+    <p class="encabezado__subtitulo">Calculadora · Simulador · Examen de autoevaluación</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab activo" onclick="cambiarTab(0, this)">Calculadora</button>
+    <button class="tab" onclick="cambiarTab(1, this)">Simulador</button>
+    <button class="tab" onclick="cambiarTab(2, this)">Examen</button>
+  </div>
+
+  <!-- ============ PANEL 1: CALCULADORA ============ -->
+  <div class="panel activo" id="panel-0">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Calculadora de propiedades periódicas</div>
+          <div class="tarjeta__descripcion">
+            Cuatro calculadoras: carga nuclear efectiva (Slater), energía relativa de orbital,
+            carácter iónico y comparación de tendencias.
+          </div>
+        </div>
+        <button class="boton-ayuda-calc" onclick="abrirAyudaCalculadora()">¿Cómo usar la calculadora?</button>
+      </div>
+
+      <div class="formula">$Z^* = Z - S$ &nbsp;|&nbsp; $E_R = n + \ell$ &nbsp;|&nbsp; $\Delta\chi = |\chi_1 - \chi_2|$</div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">1. Carga nuclear efectiva (reglas de Slater)</div>
+      <div class="tarjeta__descripcion">
+        Introduce el número atómico $Z$. La calculadora genera la configuración electrónica,
+        agrupa según Slater y calcula $Z^*$ del electrón de valencia.
+      </div>
+      <div class="campo">
+        <label for="calcZ">Número atómico $Z$ (1-36)</label>
+        <input type="number" id="calcZ" min="1" max="36" value="7">
+      </div>
+      <button class="boton" onclick="calcularSlater()">Calcular</button>
+      <div class="resultado" id="resSlater"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">2. Energía relativa de un orbital</div>
+      <div class="tarjeta__descripcion">
+        Introduce $n$ y $\ell$ para calcular $E_R = n + \ell$.
+      </div>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="calcN">Nivel $n$</label>
+          <input type="number" id="calcN" min="1" max="7" value="4">
+        </div>
+        <div class="campo">
+          <label for="calcL">Subnivel $\ell$ (0=s, 1=p, 2=d, 3=f)</label>
+          <input type="number" id="calcL" min="0" max="3" value="1">
+        </div>
+      </div>
+      <button class="boton" onclick="calcularEnergiaRelativa()">Calcular</button>
+      <div class="resultado" id="resEnergiaRelativa"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">3. Carácter iónico de un enlace</div>
+      <div class="tarjeta__descripcion">
+        Introduce las electronegatividades de dos elementos. La calculadora obtiene
+        $\Delta\chi$, el porcentaje de carácter iónico y clasifica el enlace.
+      </div>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="chi1">Electronegatividad $\chi_1$</label>
+          <input type="number" id="chi1" step="0.01" value="0.93">
+        </div>
+        <div class="campo">
+          <label for="chi2">Electronegatividad $\chi_2$</label>
+          <input type="number" id="chi2" step="0.01" value="3.16">
+        </div>
+      </div>
+      <button class="boton" onclick="calcularDchi()">Calcular</button>
+      <div class="resultado" id="resDchi"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">4. Comparación de tendencias periódicas</div>
+      <div class="tarjeta__descripcion">
+        Introduce dos elementos y la propiedad a comparar. La calculadora clasifica el orden.
+      </div>
+      <div class="grid-3">
+        <div class="campo">
+          <label for="tend1">Elemento 1</label>
+          <select id="tend1">
+            <option value="Li">Li</option>
+            <option value="Na">Na</option>
+            <option value="K" selected>K</option>
+            <option value="Rb">Rb</option>
+            <option value="Cs">Cs</option>
+            <option value="F">F</option>
+            <option value="Cl">Cl</option>
+            <option value="Br">Br</option>
+            <option value="I">I</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="tend2">Elemento 2</label>
+          <select id="tend2">
+            <option value="Li" selected>Li</option>
+            <option value="Na">Na</option>
+            <option value="K">K</option>
+            <option value="Rb">Rb</option>
+            <option value="Cs">Cs</option>
+            <option value="F">F</option>
+            <option value="Cl">Cl</option>
+            <option value="Br">Br</option>
+            <option value="I">I</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label for="propiedad">Propiedad</label>
+          <select id="propiedad">
+            <option value="radio">Radio atómico</option>
+            <option value="ei">Energía de ionización</option>
+            <option value="electronegatividad">Electronegatividad</option>
+          </select>
+        </div>
+      </div>
+      <button class="boton" onclick="compararTendencia()">Comparar</button>
+      <div class="resultado" id="resTendencia"></div>
+    </div>
+
+  </div>
+
+  <!-- ============ PANEL 2: SIMULADOR ============ -->
+  <div class="panel" id="panel-1">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Simulador de radios atómicos e iónicos</div>
+          <div class="tarjeta__descripcion">
+            Selecciona dos especies y compara visualmente sus tamaños. El simulador explica
+            la razón del orden según el tipo de especie, el periodo y el grupo.
+          </div>
+        </div>
+        <button class="boton-ayuda-sim" onclick="abrirAyudaSimulador()">¿Cómo usar el simulador?</button>
+      </div>
+
+      <div class="sim-radios">
+        <div class="sim-radios__selector">
+          <div class="campo">
+            <label>Especie 1</label>
+            <select id="especie1" onchange="compararRadios()">
+              <option value="Li,1.23,2,1,neutro">Li (1,23 Å)</option>
+              <option value="Na,1.57,3,1,neutro" selected>Na (1,57 Å)</option>
+              <option value="K,2.03,4,1,neutro">K (2,03 Å)</option>
+              <option value="Rb,2.16,5,1,neutro">Rb (2,16 Å)</option>
+              <option value="Li+,0.68,2,1,cation">Li⁺ (0,68 Å)</option>
+              <option value="Na+,0.97,3,1,cation">Na⁺ (0,97 Å)</option>
+              <option value="K+,1.33,4,1,cation">K⁺ (1,33 Å)</option>
+              <option value="Mg2+,0.72,3,2,cation">Mg²⁺ (0,72 Å)</option>
+              <option value="Al3+,0.68,3,13,cation">Al³⁺ (0,68 Å)</option>
+              <option value="F,0.64,2,17,neutro">F (0,64 Å)</option>
+              <option value="Cl,0.99,3,17,neutro">Cl (0,99 Å)</option>
+              <option value="F-,1.36,2,17,anion">F⁻ (1,36 Å)</option>
+              <option value="Cl-,1.81,3,17,anion">Cl⁻ (1,81 Å)</option>
+              <option value="O2-,1.26,2,16,anion">O²⁻ (1,26 Å)</option>
+              <option value="S2-,1.84,3,16,anion">S²⁻ (1,84 Å)</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label>Especie 2</label>
+            <select id="especie2" onchange="compararRadios()">
+              <option value="Li,1.23,2,1,neutro">Li (1,23 Å)</option>
+              <option value="Na,1.57,3,1,neutro">Na (1,57 Å)</option>
+              <option value="K,2.03,4,1,neutro">K (2,03 Å)</option>
+              <option value="Rb,2.16,5,1,neutro">Rb (2,16 Å)</option>
+              <option value="Li+,0.68,2,1,cation">Li⁺ (0,68 Å)</option>
+              <option value="Na+,0.97,3,1,cation">Na⁺ (0,97 Å)</option>
+              <option value="K+,1.33,4,1,cation" selected>K⁺ (1,33 Å)</option>
+              <option value="Mg2+,0.72,3,2,cation">Mg²⁺ (0,72 Å)</option>
+              <option value="Al3+,0.68,3,13,cation">Al³⁺ (0,68 Å)</option>
+              <option value="F,0.64,2,17,neutro">F (0,64 Å)</option>
+              <option value="Cl,0.99,3,17,neutro">Cl (0,99 Å)</option>
+              <option value="F-,1.36,2,17,anion">F⁻ (1,36 Å)</option>
+              <option value="Cl-,1.81,3,17,anion">Cl⁻ (1,81 Å)</option>
+              <option value="O2-,1.26,2,16,anion">O²⁻ (1,26 Å)</option>
+              <option value="S2-,1.84,3,16,anion">S²⁻ (1,84 Å)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="sim-radios__svg">
+          <svg id="svgRadios" width="320" height="260" viewBox="0 0 320 260"></svg>
+        </div>
+
+        <div class="sim-radios__resultado">
+          <div class="sim-radios__mayor" id="radioMayor">Na > K⁺</div>
+          <div class="sim-radios__detalle" id="radioDetalle">
+            Na (1,57 Å) es mayor que K⁺ (1,33 Å) porque al perder un electrón, el catión reduce su tamaño.
+          </div>
+        </div>
+
+        <div class="recuadro-estado" id="estadoRadios"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ PANEL 3: EXAMEN ============ -->
+  <div class="panel" id="panel-2">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Examen de autoevaluación</div>
+          <div class="tarjeta__descripcion">
+            Se seleccionan 10 preguntas al azar de un banco de 20. Al hacer clic en una opción,
+            la pregunta se bloquea y se califica inmediatamente.
+          </div>
+        </div>
+        <button class="boton-ayuda-exa" onclick="abrirAyudaExamen()">¿Cómo aprovechar el examen?</button>
+      </div>
+
+      <div class="examen-acciones">
+        <button class="boton" onclick="nuevoExamen()">Nuevo examen</button>
+      </div>
+
+      <div class="marcador">
+        <div class="marcador__item">
+          <span class="marcador__item-label">Preguntas respondidas</span>
+          <span class="marcador__item-valor"><span id="exRespondidas">0</span> / <span id="exTotal">10</span></span>
+        </div>
+        <div class="marcador__item">
+          <span class="marcador__item-label">Respuestas correctas</span>
+          <span class="marcador__item-valor"><span id="exCorrectas">0</span></span>
+        </div>
+        <div class="marcador__item">
+          <span class="marcador__item-label">Puntaje</span>
+          <span class="marcador__item-valor porcentaje" id="exPorcentaje">0 %</span>
+        </div>
+      </div>
+
+      <div id="exPreguntas"></div>
+
+      <div class="resultado-final" id="exResultado">
+        <div class="resultado-final__puntaje" id="exResultadoPorcentaje">0 %</div>
+        <div class="resultado-final__detalle" id="exResultadoDetallePuntaje">0 / 10 respuestas correctas</div>
+        <div class="resultado-final__mensaje" id="exResultadoMensaje"></div>
+        <div id="exResultadoDetalle"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============ MODAL CALCULADORA ============ -->
+<div class="modal-overlay" id="modalCalculadora" onclick="if(event.target===this) cerrarAyudaCalculadora()">
+  <div class="modal" role="dialog" aria-labelledby="tituloCalculadora" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloCalculadora">Cómo usar la calculadora</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaCalculadora()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__intro">
+        <strong>Antes de pulsar "Calcular", escribe en papel o di en voz alta qué
+        esperas obtener y por qué.</strong> Luego pulsa el botón y compara.
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Por qué funciona</div>
+        <p><strong>1. Activación de conocimientos previos.</strong> Cuando anticipas, tu
+        cerebro busca en la memoria lo que ya sabe: fórmulas, ejemplos vistos, relaciones
+        entre $Z$, $S$, $Z^*$. Ese esfuerzo consolida el aprendizaje.</p>
+        <p><strong>2. Generación de expectativas.</strong> Al predecir, creas una expectativa
+        concreta. Cuando el resultado aparece, tu cerebro lo compara con lo que esperabas.</p>
+        <p><strong>3. Efecto de autoexplicación.</strong> El solo hecho de tener que
+        anticipar te obliga a explicarte a ti mismo por qué esperas ese resultado.</p>
+        <p><strong>4. Corrección inmediata del error.</strong> Si anticipaste mal, la app
+        te muestra el paso a paso. Ese contraste fija el concepto.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Regla simple</div>
+        <div class="modal__idea">"Primero pienso, después pulso."</div>
+        <table class="modal__tabla">
+          <thead><tr><th>Antes de pulsar</th><th>Después de pulsar</th></tr></thead>
+          <tbody>
+            <tr><td>¿Qué espero?</td><td>¿Coincide?</td></tr>
+            <tr><td>¿Por qué?</td><td>¿Por qué sí o por qué no?</td></tr>
+            <tr><td>¿Con qué fórmula?</td><td>¿Qué paso falló?</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Beneficios que verás con la práctica</div>
+        <table class="modal__tabla">
+          <thead><tr><th>Sin anticipación</th><th>Con anticipación</th></tr></thead>
+          <tbody>
+            <tr><td>Copias números</td><td>Comprendes fórmulas</td></tr>
+            <tr><td>El error pasa desapercibido</td><td>El error se detecta y corrige</td></tr>
+            <tr><td>Memoria de corto plazo</td><td>Memoria de largo plazo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaCalculadora()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL SIMULADOR ============ -->
+<div class="modal-overlay" id="modalSimulador" onclick="if(event.target===this) cerrarAyudaSimulador()">
+  <div class="modal" role="dialog" aria-labelledby="tituloSimulador" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloSimulador">Cómo usar el simulador</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaSimulador()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué hace el simulador</div>
+        <p>El simulador te permite comparar dos especies (átomos neutros o iones) y ver
+        sus tamaños relativos. Los círculos son proporcionales al radio atómico o iónico real.
+        Además, el simulador explica <strong>la razón</strong> del orden según el tipo de
+        especie, el periodo y el grupo.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo usarlo paso a paso</div>
+        <ul class="modal__lista">
+          <li><strong>Predice.</strong> Antes de cambiar la selección, anticipa cuál será mayor y por qué.</li>
+          <li><strong>Selecciona las dos especies</strong> y observa los círculos.</li>
+          <li><strong>Compara</strong> tu predicción con el resultado.</li>
+          <li><strong>Lee el recuadro informativo.</strong> Ahí se explica la razón del orden.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Advertencia importante</div>
+        <div class="modal__idea">
+          Los radios mostrados son <strong>valores promedio</strong>. El tamaño del átomo
+          no es fijo: depende del tipo de enlace y del entorno químico. Los círculos son
+          una representación conceptual, no una fotografía del átomo.
+        </div>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Por qué funciona pedagógicamente</div>
+        <ul class="modal__lista">
+          <li><strong>Comparación visual.</strong> Ver los tamaños relativos refuerza la memoria.</li>
+          <li><strong>Contraste catión/anión.</strong> Ver que los cationes son menores y los aniones mayores consolida el concepto.</li>
+          <li><strong>Análisis crítico.</strong> Reconocer que el tamaño depende del contexto te prepara para química avanzada.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaSimulador()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL EXAMEN ============ -->
+<div class="modal-overlay" id="modalExamen" onclick="if(event.target===this) cerrarAyudaExamen()">
+  <div class="modal" role="dialog" aria-labelledby="tituloExamen" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloExamen">Cómo aprovechar el examen</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaExamen()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué es este examen</div>
+        <p>No es un examen para aprobar o desaprobar. Es una <strong>herramienta de
+        autoevaluación formativa</strong>: te dice en qué temas estás firme y en cuáles
+        necesitas volver a estudiar. El puntaje no es una calificación; es una brújula.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo sacarle provecho paso a paso</div>
+        <ul class="modal__lista">
+          <li><strong>Antes de hacer clic, predice.</strong> Formula la respuesta en tu cabeza.</li>
+          <li><strong>Justifica tu elección.</strong> Di en voz baja por qué elegiste esa opción.</li>
+          <li><strong>Lee la retroalimentación.</strong> Aciertes o falles, la app explica el paso a paso.</li>
+          <li><strong>Identifica el error.</strong> ¿Fue de fórmula, de tendencia o de interpretación?</li>
+          <li><strong>Anota los temas fallados.</strong> Al final el reporte te dice qué repasar.</li>
+          <li><strong>Repite el examen.</strong> Cada vez que pulses "Nuevo examen", el banco se mezcla.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo leer la retroalimentación</div>
+        <ul class="modal__lista">
+          <li><strong>Verde (correcto):</strong> acertaste. La explicación confirma el razonamiento.</li>
+          <li><strong>Rojo (incorrecto):</strong> la opción correcta se marca en verde, y abajo se explica.</li>
+          <li><strong>Bloqueo:</strong> respondida la pregunta, no se puede cambiar.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué hacer con los errores</div>
+        <ul class="modal__lista">
+          <li><strong>Revisar la fórmula</strong> que no recordabas.</li>
+          <li><strong>Repasar la tendencia periódica</strong> con la explicación que la app te da.</li>
+          <li><strong>Volver al slide correspondiente</strong> y leer de nuevo el ejemplo.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Valor pedagógico del examen</div>
+        <ul class="modal__lista">
+          <li><strong>Práctica de recuperación.</strong> Responder fija el aprendizaje mucho más que releer.</li>
+          <li><strong>Retroalimentación inmediata.</strong> Sabes al instante si acertaste y por qué.</li>
+          <li><strong>Aleatorización.</strong> Cada examen mezcla preguntas y opciones.</li>
+          <li><strong>Variedad de temas.</strong> El banco cubre todo el Bloque 5.</li>
+          <li><strong>Repetición espaciada.</strong> Repetir en días distintos consolida la memoria.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Regla simple</div>
+        <div class="modal__idea">
+          "Predice antes de responder, lee la retroalimentación, corrige el error y
+          repite el examen en unos días."
+        </div>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaExamen()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+function abrirAyudaCalculadora() {
+  document.getElementById('modalCalculadora').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaCalculadora() {
+  document.getElementById('modalCalculadora').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+function abrirAyudaSimulador() {
+  document.getElementById('modalSimulador').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaSimulador() {
+  document.getElementById('modalSimulador').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+function abrirAyudaExamen() {
+  document.getElementById('modalExamen').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaExamen() {
+  document.getElementById('modalExamen').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    cerrarAyudaCalculadora();
+    cerrarAyudaSimulador();
+    cerrarAyudaExamen();
+  }
+});
+
+/* ============================================================
+   TABS
+   ============================================================ */
+function cambiarTab(idx, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('activo'));
+  el.classList.add('activo');
+  document.getElementById('panel-' + idx).classList.add('activo');
+
+  if (idx === 1) compararRadios();
+  if (idx === 2) {
+    const cont = document.getElementById('exPreguntas');
+    if (cont && cont.children.length === 0) nuevoExamen();
+  }
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 1: Slater
+   ============================================================ */
+const simbolos = ['', 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr'];
+
+function calcularSlater() {
+  let Z = parseInt(document.getElementById('calcZ').value) || 1;
+  if (Z < 1) Z = 1;
+  if (Z > 36) Z = 36;
+  document.getElementById('calcZ').value = Z;
+
+  const orden = [
+    { n: 1, l: 0, cap: 2 },
+    { n: 2, l: 0, cap: 2 },
+    { n: 2, l: 1, cap: 6 },
+    { n: 3, l: 0, cap: 2 },
+    { n: 3, l: 1, cap: 6 },
+    { n: 4, l: 0, cap: 2 },
+    { n: 3, l: 2, cap: 10 },
+    { n: 4, l: 1, cap: 6 }
+  ];
+
+  let restantes = Z;
+  let config = [];
+  let agrupado = {};
+
+  for (const sub of orden) {
+    if (restantes <= 0) break;
+    const numSub = ['s', 'p', 'd', 'f'][sub.l];
+    const asignar = Math.min(restantes, sub.cap);
+    if (asignar > 0) {
+      config.push(sub.n + numSub + '<sup>' + asignar + '</sup>');
+      let grupo;
+      if (sub.l === 0 && sub.n === 1) grupo = '1s';
+      else if (sub.l <= 1) grupo = sub.n + 'sp';
+      else grupo = sub.n + numSub;
+      agrupado[grupo] = (agrupado[grupo] || 0) + asignar;
+      restantes -= asignar;
+    }
+  }
+
+  const ultimo = config[config.length - 1];
+  const nVal = parseInt(ultimo.match(/\d+/)[0]);
+  const lVal = ultimo.includes('s') ? 's' : ultimo.includes('p') ? 'p' : ultimo.includes('d') ? 'd' : 'f';
+
+  let S = 0;
+  let pasos = '';
+  const esSP = (lVal === 's' || lVal === 'p');
+
+  if (esSP) {
+    const mismoGrupo = agrupado[nVal + 'sp'] || 0;
+    const otrosMismoGrupo = mismoGrupo - 1;
+    S += otrosMismoGrupo * 0.35;
+    pasos += 'Mismo grupo (' + nVal + 'sp): ' + otrosMismoGrupo + ' × 0,35 = ' + (otrosMismoGrupo * 0.35).toFixed(2) + '<br>';
+    let nivelN1 = 0;
+    if (nVal - 1 === 1) nivelN1 = agrupado['1s'] || 0;
+    else nivelN1 = (agrupado[(nVal-1) + 'sp'] || 0) + (agrupado[(nVal-1) + 'd'] || 0);
+    S += nivelN1 * 0.85;
+    pasos += 'Nivel n-1: ' + nivelN1 + ' × 0,85 = ' + (nivelN1 * 0.85).toFixed(2) + '<br>';
+    let inferiores = 0;
+    Object.keys(agrupado).forEach(g => {
+      const nG = parseInt(g.match(/\d+/)[0]);
+      if (nG < nVal - 1) inferiores += agrupado[g];
+    });
+    S += inferiores * 1.00;
+    pasos += 'Niveles < n-1: ' + inferiores + ' × 1,00 = ' + inferiores.toFixed(2) + '<br>';
+  } else {
+    const mismoGrupo = agrupado[nVal + lVal] || 0;
+    const otrosMismoGrupo = mismoGrupo - 1;
+    S += otrosMismoGrupo * 0.35;
+    pasos += 'Mismo grupo: ' + otrosMismoGrupo + ' × 0,35 = ' + (otrosMismoGrupo * 0.35).toFixed(2) + '<br>';
+    let izquierda = 0;
+    Object.keys(agrupado).forEach(g => {
+      if (g === nVal + lVal) return;
+      const nG = parseInt(g.match(/\d+/)[0]);
+      if (nG < nVal || (nG === nVal && g.includes('sp'))) izquierda += agrupado[g];
+    });
+    S += izquierda * 1.00;
+    pasos += 'Izquierda del grupo: ' + izquierda + ' × 1,00 = ' + izquierda.toFixed(2) + '<br>';
+  }
+
+  const zstar = Z - S;
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">Elemento: $Z = ' + Z + '$ ($' + simbolos[Z] + '$)</div>';
+  html += '<div class="paso">Configuración: $' + config.join('\\ ') + '$</div>';
+  let gruposTxt = Object.keys(agrupado).map(g => '(' + g + ')<sup>' + agrupado[g] + '</sup>').join(' ');
+  html += '<div class="paso">Agrupación: $' + gruposTxt + '$</div>';
+  html += '<div class="paso">$S = ' + S.toFixed(2).replace('.', ',') + '$<br>' + pasos + '</div>';
+  html += '<div class="destacado">Z* = ' + zstar.toFixed(2).replace('.', ',') + '</div>';
+
+  document.getElementById('resSlater').innerHTML = html;
+  document.getElementById('resSlater').classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 2: energía relativa
+   ============================================================ */
+function calcularEnergiaRelativa() {
+  const n = parseInt(document.getElementById('calcN').value);
+  const l = parseInt(document.getElementById('calcL').value);
+  const res = document.getElementById('resEnergiaRelativa');
+
+  if (isNaN(n) || isNaN(l) || n < 1 || l < 0 || l >= n) {
+    res.innerHTML = '<strong>Error:</strong> el subnivel $\\ell$ debe ser menor que $n$.';
+    res.classList.add('visible');
+    return;
+  }
+
+  const ER = n + l;
+  const nombre = ['s', 'p', 'd', 'f'][l] || '?';
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">Orbital: $' + n + nombre + '$</div>';
+  html += '<div class="paso">$E_R = n + \\ell = ' + n + ' + ' + l + ' = ' + ER + '$</div>';
+  html += '<div class="destacado">E<sub>R</sub> = ' + ER + '</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 3: carácter iónico
+   ============================================================ */
+function calcularDchi() {
+  const chi1 = parseFloat(document.getElementById('chi1').value);
+  const chi2 = parseFloat(document.getElementById('chi2').value);
+  const res = document.getElementById('resDchi');
+
+  if (isNaN(chi1) || isNaN(chi2)) {
+    res.innerHTML = '<strong>Error:</strong> verifica los valores.';
+    res.classList.add('visible');
+    return;
+  }
+
+  const dchi = Math.abs(chi2 - chi1);
+
+  const tabla = [
+    [0.1, 0.5], [0.2, 1], [0.3, 2], [0.4, 4], [0.5, 6], [0.6, 9], [0.7, 12],
+    [0.8, 15], [0.9, 19], [1.0, 22], [1.1, 26], [1.2, 30], [1.3, 34], [1.4, 39],
+    [1.5, 43], [1.6, 47], [1.7, 51], [1.8, 55], [1.9, 59], [2.0, 63], [2.1, 67],
+    [2.2, 70], [2.3, 74], [2.4, 75], [2.5, 79], [2.6, 82], [2.7, 84], [2.8, 86],
+    [2.9, 88], [3.0, 89], [3.1, 91], [3.2, 100]
+  ];
+  let porcentaje = 0;
+  for (let i = 0; i < tabla.length; i++) {
+    if (dchi <= tabla[i][0]) { porcentaje = tabla[i][1]; break; }
+    porcentaje = tabla[i][1];
+  }
+
+  let tipo = '';
+  if (dchi < 0.5) tipo = 'Covalente no polar';
+  else if (dchi < 1.7) tipo = 'Covalente polar';
+  else tipo = 'Iónico';
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">$\\Delta\\chi = |\\chi_2 - \\chi_1| = |' + chi2 + ' - ' + chi1 + '| = ' + dchi.toFixed(2).replace('.', ',') + '$</div>';
+  html += '<div class="paso">Porcentaje de carácter iónico: <strong>' + porcentaje + ' %</strong></div>';
+  html += '<div class="paso">Tipo de enlace: <strong>' + tipo + '</strong></div>';
+  html += '<div class="destacado">Δχ = ' + dchi.toFixed(2).replace('.', ',') + '</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 4: tendencias periódicas
+   ============================================================ */
+const datosTendencias = {
+  'Li': { radio: 1.23, ei: 5.36, en: 1.0 },
+  'Na': { radio: 1.57, ei: 5.12, en: 0.9 },
+  'K':  { radio: 2.03, ei: 4.32, en: 0.8 },
+  'Rb': { radio: 2.16, ei: 4.18, en: 0.8 },
+  'Cs': { radio: 2.65, ei: 3.89, en: 0.7 },
+  'F':  { radio: 0.64, ei: 17.34, en: 4.0 },
+  'Cl': { radio: 0.99, ei: 13.00, en: 3.0 },
+  'Br': { radio: 1.14, ei: 11.80, en: 2.8 },
+  'I':  { radio: 1.33, ei: 10.60, en: 2.5 }
+};
+
+function compararTendencia() {
+  const e1 = document.getElementById('tend1').value;
+  const e2 = document.getElementById('tend2').value;
+  const prop = document.getElementById('propiedad').value;
+  const res = document.getElementById('resTendencia');
+
+  const v1 = datosTendencias[e1][prop];
+  const v2 = datosTendencias[e2][prop];
+
+  let nombreProp = '';
+  if (prop === 'radio') nombreProp = 'radio atómico';
+  else if (prop === 'ei') nombreProp = 'energía de ionización';
+  else nombreProp = 'electronegatividad';
+
+  let orden = '';
+  if (v1 < v2) orden = e1 + ' < ' + e2;
+  else if (v1 > v2) orden = e2 + ' < ' + e1;
+  else orden = 'Ambos son iguales';
+
+  let html = '<strong>Comparación:</strong>';
+  html += '<div class="paso">' + e1 + ': $' + v1 + '$</div>';
+  html += '<div class="paso">' + e2 + ': $' + v2 + '$</div>';
+  html += '<div class="paso">Orden según ' + nombreProp + ': <strong>' + orden + '</strong></div>';
+  html += '<div class="destacado">' + orden + '</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   SIMULADOR: comparador de radios
+   ============================================================ */
+function compararRadios() {
+  const sel1 = document.getElementById('especie1').value.split(',');
+  const sel2 = document.getElementById('especie2').value.split(',');
+
+  const e1 = { nombre: sel1[0], r: parseFloat(sel1[1]), periodo: parseInt(sel1[2]), grupo: parseInt(sel1[3]), tipo: sel1[4] };
+  const e2 = { nombre: sel2[0], r: parseFloat(sel2[1]), periodo: parseInt(sel2[2]), grupo: parseInt(sel2[3]), tipo: sel2[4] };
+
+  dibujarRadios(e1.nombre, e1.r, e2.nombre, e2.r);
+
+  const mayor = e1.r > e2.r ? e1 : (e2.r > e1.r ? e2 : null);
+  const menor = e1.r < e2.r ? e1 : (e2.r < e1.r ? e2 : null);
+
+  let htmlMayor = '';
+  if (mayor) {
+    htmlMayor = e1.nombre + ' (' + e1.r.toFixed(2).replace('.', ',') + ' Å) ' +
+                (e1.r > e2.r ? '>' : '<') + ' ' +
+                e2.nombre + ' (' + e2.r.toFixed(2).replace('.', ',') + ' Å)';
+  } else {
+    htmlMayor = 'Ambos tienen el mismo radio.';
+  }
+  document.getElementById('radioMayor').textContent = htmlMayor;
+
+  let detalle = '';
+  if (!mayor) {
+    detalle = 'Ambos tienen el mismo radio atómico.';
+  } else {
+    detalle = generarRazon(e1, e2, mayor, menor);
+  }
+  document.getElementById('radioDetalle').textContent = detalle;
+
+  const estado = document.getElementById('estadoRadios');
+  estado.textContent = 'Los círculos son proporcionales al radio atómico o iónico real de cada especie.';
+}
+
+function generarRazon(e1, e2, mayor, menor) {
+  // Caso 1: ambos son aniones
+  if (e1.tipo === 'anion' && e2.tipo === 'anion') {
+    if (mayor.periodo > menor.periodo) {
+      return mayor.nombre + ' tiene un periodo mayor (' + mayor.periodo + ') que ' + menor.nombre + ' (' + menor.periodo + '). Al descender en el grupo, se agregan capas electrónicas y el radio aumenta.';
+    } else if (mayor.periodo === menor.periodo && mayor.grupo < menor.grupo) {
+      return 'Ambos están en el mismo periodo, pero ' + mayor.nombre + ' está más a la izquierda (grupo ' + mayor.grupo + '). A menor carga nuclear efectiva, mayor radio.';
+    }
+    return mayor.nombre + ' es mayor que ' + menor.nombre + ' por su posición en la tabla periódica.';
+  }
+
+  // Caso 2: ambos son cationes
+  if (e1.tipo === 'cation' && e2.tipo === 'cation') {
+    if (mayor.periodo > menor.periodo) {
+      return mayor.nombre + ' tiene un periodo mayor (' + mayor.periodo + ') que ' + menor.nombre + ' (' + menor.periodo + '). Al descender en el grupo, se agregan capas electrónicas y el radio aumenta.';
+    } else if (mayor.periodo === menor.periodo && mayor.grupo < menor.grupo) {
+      return 'Ambos están en el mismo periodo, pero ' + mayor.nombre + ' está más a la izquierda (grupo ' + mayor.grupo + '). A menor carga nuclear efectiva, mayor radio.';
+    }
+    return mayor.nombre + ' es mayor que ' + menor.nombre + ' por su posición en la tabla periódica.';
+  }
+
+  // Caso 3: ambos son neutros
+  if (e1.tipo === 'neutro' && e2.tipo === 'neutro') {
+    if (mayor.periodo > menor.periodo) {
+      return mayor.nombre + ' tiene un periodo mayor (' + mayor.periodo + ') que ' + menor.nombre + ' (' + menor.periodo + '). Al descender en el grupo, se agregan capas electrónicas y el radio aumenta.';
+    } else if (mayor.periodo === menor.periodo && mayor.grupo < menor.grupo) {
+      return 'Ambos están en el mismo periodo (' + mayor.periodo + '), pero ' + mayor.nombre + ' está más a la izquierda (grupo ' + mayor.grupo + '). A menor carga nuclear efectiva, mayor radio.';
+    }
+    return mayor.nombre + ' es mayor que ' + menor.nombre + ' por su posición en la tabla periódica.';
+  }
+
+  // Caso 4: uno es catión y el otro es neutro
+  if ((e1.tipo === 'cation' && e2.tipo === 'neutro') || (e1.tipo === 'neutro' && e2.tipo === 'cation')) {
+    const cation = e1.tipo === 'cation' ? e1 : e2;
+    const neutro = e1.tipo === 'neutro' ? e1 : e2;
+    if (cation.periodo === neutro.periodo && cation.grupo === neutro.grupo) {
+      return cation.nombre + ' es un catión del mismo elemento que ' + neutro.nombre + '. Al perder electrones, disminuye la repulsión electrónica y el catión es menor que el átomo neutro.';
+    }
+    return cation.nombre + ' es un catión, por eso es menor que ' + neutro.nombre + '. Al perder electrones, disminuye la repulsión electrónica.';
+  }
+
+  // Caso 5: uno es anión y el otro es neutro
+  if ((e1.tipo === 'anion' && e2.tipo === 'neutro') || (e1.tipo === 'neutro' && e2.tipo === 'anion')) {
+    const anion = e1.tipo === 'anion' ? e1 : e2;
+    const neutro = e1.tipo === 'neutro' ? e1 : e2;
+    if (anion.periodo === neutro.periodo && anion.grupo === neutro.grupo) {
+      return anion.nombre + ' es un anión del mismo elemento que ' + neutro.nombre + '. Al ganar electrones, aumenta la repulsión electrónica y el anión es mayor que el átomo neutro.';
+    }
+    return anion.nombre + ' es un anión, por eso es mayor que ' + neutro.nombre + '. Al ganar electrones, aumenta la repulsión electrónica.';
+  }
+
+  // Caso 6: uno es catión y el otro es anión
+  if ((e1.tipo === 'cation' && e2.tipo === 'anion') || (e1.tipo === 'anion' && e2.tipo === 'cation')) {
+    const anion = e1.tipo === 'anion' ? e1 : e2;
+    const cation = e1.tipo === 'cation' ? e1 : e2;
+    if (mayor.tipo === 'anion') {
+      return anion.nombre + ' es un anión (ganó electrones) y ' + cation.nombre + ' es un catión (perdió electrones). En general, los aniones son mayores que los cationes.';
+    }
+    return cation.nombre + ' es un catión y ' + anion.nombre + ' es un anión, pero ' + cation.nombre + ' tiene un periodo mayor (' + cation.periodo + ') que ' + anion.nombre + ' (' + anion.periodo + '), lo que hace que su radio sea mayor.';
+  }
+
+  return 'El radio mayor corresponde a ' + mayor.nombre + ' (' + mayor.r.toFixed(2).replace('.', ',') + ' Å) y el menor a ' + menor.nombre + ' (' + menor.r.toFixed(2).replace('.', ',') + ' Å).';
+}
+
+function dibujarRadios(nombre1, r1, nombre2, r2) {
+  const svg = document.getElementById('svgRadios');
+  const cx1 = 80, cx2 = 240, cy = 130;
+  const escala = 40;
+  let html = '';
+
+  const radio1 = r1 * escala;
+  html += '<circle cx="' + cx1 + '" cy="' + cy + '" r="' + radio1 + '" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+  html += '<text x="' + cx1 + '" y="' + (cy + 5) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#1a3a6b">' + nombre1 + '</text>';
+  html += '<text x="' + cx1 + '" y="' + (cy + radio1 + 18) + '" text-anchor="middle" font-size="11" fill="#5a6b82">' + r1.toFixed(2).replace('.', ',') + ' Å</text>';
+
+  const radio2 = r2 * escala;
+  html += '<circle cx="' + cx2 + '" cy="' + cy + '" r="' + radio2 + '" fill="rgba(220,38,38,0.20)" stroke="#dc2626" stroke-width="2"/>';
+  html += '<text x="' + cx2 + '" y="' + (cy + 5) + '" text-anchor="middle" font-size="13" font-weight="700" fill="#991b1b">' + nombre2 + '</text>';
+  html += '<text x="' + cx2 + '" y="' + (cy + radio2 + 18) + '" text-anchor="middle" font-size="11" fill="#5a6b82">' + r2.toFixed(2).replace('.', ',') + ' Å</text>';
+
+  svg.innerHTML = html;
+}
+
+/* ============================================================
+   EXAMEN
+   ============================================================ */
+const bancoPreguntas = [
+  { pregunta: '¿Qué es la carga nuclear efectiva $Z^*$?',
+    opciones: ['La carga total del núcleo', 'La carga que actúa sobre un electrón de valencia, considerando el apantallamiento', 'La carga del protón', 'La carga del electrón'],
+    correcta: 1, explicacion: '$Z^* = Z - S$, donde $S$ es la constante de pantalla.' },
+  { pregunta: 'En las reglas de Slater, si el electrón está en $ns$ o $np$, cada electrón del nivel $n-1$ contribuye con:',
+    opciones: ['0,35', '0,85', '1,00', '0,50'],
+    correcta: 1, explicacion: 'Cada electrón del nivel $n-1$ contribuye con $S = 0{,}85$.' },
+  { pregunta: 'Calcular $Z^*$ para el nitrógeno ($Z = 7$).',
+    opciones: ['3,90', '2,20', '2,85', '5,60'],
+    correcta: 0, explicacion: '$S = (4 \\times 0{,}35) + (2 \\times 0{,}85) = 3{,}10$; $Z^* = 7 - 3{,}10 = 3{,}90$.' },
+  { pregunta: '¿Cómo varía el radio atómico en un grupo?',
+    opciones: ['Aumenta al descender', 'Disminuye al descender', 'Permanece constante', 'Aumenta al ascender'],
+    correcta: 0, explicacion: 'Al descender en un grupo se agrega una capa electrónica, aumentando el radio.' },
+  { pregunta: '¿Cómo son los cationes respecto al átomo neutro del que se forman?',
+    opciones: ['Siempre mayores', 'Siempre menores', 'Iguales', 'Depende del elemento'],
+    correcta: 1, explicacion: 'Al perder electrones, disminuye la repulsión y el catión es menor.' },
+  { pregunta: '¿Cómo varía la energía de ionización en un periodo?',
+    opciones: ['Aumenta de izquierda a derecha', 'Disminuye de izquierda a derecha', 'Permanece constante', 'Aumenta al descender'],
+    correcta: 0, explicacion: 'La energía de ionización aumenta de izquierda a derecha porque $Z^*$ aumenta.' },
+  { pregunta: '¿Qué mide la afinidad electrónica?',
+    opciones: ['La energía para quitar un electrón', 'La energía liberada al añadir un electrón', 'La distancia al núcleo', 'La carga nuclear efectiva'],
+    correcta: 1, explicacion: 'La afinidad electrónica es la energía liberada cuando un átomo gaseoso captura un electrón.' },
+  { pregunta: '¿Quién definió la electronegatividad como la capacidad de un átomo en una molécula para atraer el par de electrones de un enlace?',
+    opciones: ['Slater', 'Pauling', 'Mulliken', 'Bohr'],
+    correcta: 1, explicacion: 'Linus Pauling definió la electronegatividad y creó la escala basada en energías de enlace.' },
+  { pregunta: 'Si $\\Delta\\chi = 2{,}2$, ¿qué porcentaje de carácter iónico tiene el enlace?',
+    opciones: ['22 %', '51 %', '70 %', '89 %'],
+    correcta: 2, explicacion: '$\\Delta\\chi = 2{,}2$ corresponde a un 70 % de carácter iónico.' },
+  { pregunta: '¿Cuál es el orden correcto de radio atómico creciente?',
+    opciones: ['F < O < N < C', 'C < N < O < F', 'N < C < F < O', 'O < F < C < N'],
+    correcta: 0, explicacion: 'En un periodo, el radio disminuye hacia la derecha: F < O < N < C.' },
+  { pregunta: 'Ordene de menor a mayor energía de ionización: Ne, K, Na, Ar.',
+    opciones: ['Ne < K < Na < Ar', 'K < Na < Ar < Ne', 'Na < Ar < Ne < K', 'Ar < Ne < K < Na'],
+    correcta: 1, explicacion: 'En un grupo, disminuye al descender: K < Na. En un periodo, aumenta hacia la derecha: Na < Ar < Ne.' },
+  { pregunta: '¿Qué indica un valor grande de $Z^*$?',
+    opciones: ['Que el electrón está muy apantallado', 'Que el electrón siente una fuerte atracción nuclear', 'Que el átomo es muy grande', 'Que el átomo es muy reactivo'],
+    correcta: 1, explicacion: 'Un $Z^*$ grande significa que el electrón siente una fuerte atracción nuclear.' },
+  { pregunta: '¿Cómo varía la electronegatividad en la tabla periódica?',
+    opciones: ['Aumenta al descender y al avanzar a la izquierda', 'Aumenta al ascender y al avanzar a la derecha', 'Disminuye al ascender', 'No varía'],
+    correcta: 1, explicacion: 'La electronegatividad aumenta al ascender en un grupo y al avanzar a la derecha en un periodo.' },
+  { pregunta: 'Ordenar de menor a mayor electronegatividad: Cs, P, F, O.',
+    opciones: ['F < O < P < Cs', 'Cs < P < O < F', 'P < Cs < F < O', 'O < F < Cs < P'],
+    correcta: 1, explicacion: 'Cs es un metal alcalino (baja); F es el más electronegativo: Cs < P < O < F.' },
+  { pregunta: '¿Cuál de las siguientes especies es isoelectrónica con el Ne?',
+    opciones: ['Na⁺', 'K⁺', 'Cl⁻', 'Ca²⁺'],
+    correcta: 0, explicacion: 'Na⁺ tiene 10 electrones, igual que el Ne. Es isoelectrónico.' },
+  { pregunta: '¿Qué tipo de enlace se forma si $\\Delta\\chi = 0{,}4$?',
+    opciones: ['Covalente no polar', 'Covalente polar', 'Iónico', 'Metálico'],
+    correcta: 0, explicacion: '$\\Delta\\chi < 0{,}5$ corresponde a un enlace covalente no polar.' },
+  { pregunta: '¿Qué tipo de enlace se forma si $\\Delta\\chi = 3{,}2$?',
+    opciones: ['Covalente no polar', 'Covalente polar', 'Iónico', 'Metálico'],
+    correcta: 2, explicacion: '$\\Delta\\chi \\geq 1{,}7$ corresponde a un enlace iónico.' },
+  { pregunta: '¿Cuál es la fórmula de la carga nuclear efectiva?',
+    opciones: ['$Z^* = Z + S$', '$Z^* = Z - S$', '$Z^* = S - Z$', '$Z^* = Z \\cdot S$'],
+    correcta: 1, explicacion: '$Z^* = Z - S$, donde $S$ es la constante de pantalla.' },
+  { pregunta: '¿Cuál es la tendencia del radio iónico para los aniones?',
+    opciones: ['Los aniones son menores que el átomo neutro', 'Los aniones son mayores que el átomo neutro', 'Los aniones son iguales al átomo neutro', 'No se puede determinar'],
+    correcta: 1, explicacion: 'Al ganar electrones, aumenta la repulsión y el anión es mayor.' },
+  { pregunta: '¿Cuál es el orden correcto de energía de ionización creciente para Li, Na y K?',
+    opciones: ['K < Na < Li', 'Li < Na < K', 'Na < K < Li', 'Li < K < Na'],
+    correcta: 0, explicacion: 'En un grupo, la energía de ionización disminuye al descender: K < Na < Li.' }
+];
+
+let examenActual = [];
+let examenRespondidas = 0;
+let examenCorrectas = 0;
+
+function nuevoExamen() {
+  examenActual = mezclar(bancoPreguntas).slice(0, 10);
+  examenRespondidas = 0;
+  examenCorrectas = 0;
+
+  document.getElementById('exRespondidas').textContent = '0';
+  document.getElementById('exCorrectas').textContent = '0';
+  document.getElementById('exPorcentaje').textContent = '0 %';
+  document.getElementById('exTotal').textContent = examenActual.length;
+  document.getElementById('exResultado').classList.remove('visible');
+
+  const cont = document.getElementById('exPreguntas');
+  cont.innerHTML = '';
+
+  examenActual.forEach((p, i) => {
+    const opcionesMezcladas = mezclar(p.opciones.map((op, idx) => ({ texto: op, original: idx })));
+    const correctaMezclada = opcionesMezcladas.findIndex(o => o.original === p.correcta);
+
+    const div = document.createElement('div');
+    div.className = 'pregunta';
+    div.dataset.idx = i;
+    div.dataset.correcta = correctaMezclada;
+
+    let html = '<div class="pregunta__texto">' + (i + 1) + '. ' + p.pregunta + '</div>';
+    html += '<div class="pregunta__opciones">';
+    opcionesMezcladas.forEach((o, j) => {
+      html += '<label class="opcion" data-idx="' + j + '">';
+      html += '<input type="radio" name="ex-' + i + '" value="' + j + '"> ';
+      html += o.texto;
+      html += '</label>';
+    });
+    html += '</div>';
+    html += '<div class="feedback" id="exFeedback-' + i + '"></div>';
+
+    div.innerHTML = html;
+    cont.appendChild(div);
+
+    div.querySelectorAll('.opcion').forEach(op => {
+      op.addEventListener('click', () => responderExamen(i, parseInt(op.dataset.idx)));
+    });
+  });
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function responderExamen(idx, seleccionada) {
+  const div = document.querySelector('.pregunta[data-idx="' + idx + '"]');
+  if (div.dataset.respondida === 'true') return;
+  div.dataset.respondida = 'true';
+
+  const correcta = parseInt(div.dataset.correcta);
+  const opciones = div.querySelectorAll('.opcion');
+  const feedback = document.getElementById('exFeedback-' + idx);
+
+  opciones.forEach((op, j) => {
+    op.classList.add('locked');
+    op.querySelector('input').disabled = true;
+    if (j === correcta) op.classList.add('correcta');
+    else if (j === seleccionada) op.classList.add('incorrecta');
+  });
+
+  const p = examenActual[idx];
+  const esCorrecta = seleccionada === correcta;
+
+  if (esCorrecta) {
+    examenCorrectas++;
+    div.classList.add('correcta');
+    feedback.className = 'feedback visible correcto';
+    feedback.innerHTML = '<strong>Correcto.</strong> ' + p.explicacion;
+  } else {
+    div.classList.add('incorrecta');
+    feedback.className = 'feedback visible incorrecto';
+    feedback.innerHTML = '<strong>Incorrecto.</strong> La respuesta correcta está marcada en verde. ' + p.explicacion;
+  }
+
+  examenRespondidas++;
+  actualizarMarcador();
+
+  if (examenRespondidas === examenActual.length) {
+    mostrarResultadoExamen();
+  }
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function actualizarMarcador() {
+  const total = examenActual.length;
+  const porcentaje = total > 0 ? Math.round((examenCorrectas / total) * 100) : 0;
+
+  document.getElementById('exRespondidas').textContent = examenRespondidas;
+  document.getElementById('exCorrectas').textContent = examenCorrectas;
+  document.getElementById('exPorcentaje').textContent = porcentaje + ' %';
+}
+
+function mostrarResultadoExamen() {
+  const total = examenActual.length;
+  const porcentaje = Math.round((examenCorrectas / total) * 100);
+
+  document.getElementById('exResultadoPorcentaje').textContent = porcentaje + ' %';
+  document.getElementById('exResultadoDetallePuntaje').textContent =
+    examenCorrectas + ' de ' + total + ' respuestas correctas';
+
+  let mensaje = '';
+  if (porcentaje >= 90) mensaje = '¡Excelente! Dominas el Bloque 5.';
+  else if (porcentaje >= 70) mensaje = 'Buen trabajo. Repasa los temas con error.';
+  else if (porcentaje >= 50) mensaje = 'Aprobado. Conviene reforzar varios temas.';
+  else mensaje = 'Necesitas repasar el Bloque 5. Revisa los errores y vuelve a intentar.';
+  document.getElementById('exResultadoMensaje').textContent = mensaje;
+
+  const errores = [];
+  examenActual.forEach((p, i) => {
+    const div = document.querySelector('.pregunta[data-idx="' + i + '"]');
+    if (!div.classList.contains('correcta')) errores.push(i + 1);
+  });
+
+  let detalle = '';
+  if (errores.length === 0) {
+    detalle = '<p>Todas las respuestas fueron correctas.</p>';
+  } else {
+    detalle = '<p>Preguntas a repasar: ' + errores.join(', ') + '</p>';
+  }
+  document.getElementById('exResultadoDetalle').innerHTML = detalle;
+
+  document.getElementById('exResultado').classList.add('visible');
+}
+
+/* ============================================================
+   INICIALIZACIÓN ROBUSTA
+   ============================================================ */
+function inicializarTodo() {
+  calcularSlater();
+  calcularEnergiaRelativa();
+  calcularDchi();
+  compararTendencia();
+  compararRadios();
+  nuevoExamen();
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>

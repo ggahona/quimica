@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Números Cuánticos y Configuración Electrónica · Bloque 4</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --espacio-xl: 4rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.barra-progreso {
+  position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--borde); z-index: 1000;
+}
+.barra-progreso__relleno {
+  height: 100%; background: var(--azul-medio); width: 0%;
+  transition: width 0.4s ease;
+}
+
+.contenedor-slides {
+  flex: 1; position: relative; display: flex;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-lg); padding-top: 2rem;
+}
+
+.slide {
+  display: none; width: 100%; max-width: 1100px;
+  background: var(--superficie); border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  padding: var(--espacio-xl) var(--espacio-lg);
+  animation: fadeIn 0.5s ease;
+  min-height: 70vh; max-height: 85vh; overflow-y: auto;
+}
+.slide.activo { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide__numero {
+  display: inline-block; background: var(--azul-profundo); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0.25rem 0.75rem; border-radius: 999px;
+  margin-bottom: var(--espacio-md);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.slide__titulo {
+  font-size: 2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm); line-height: 1.2;
+}
+.slide__subtitulo {
+  font-size: 1.1rem; color: var(--texto-suave);
+  margin-bottom: var(--espacio-lg);
+}
+.slide__cuerpo { font-size: 1rem; }
+
+.navegacion {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: var(--superficie); border-top: 1px solid var(--borde);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  z-index: 999; box-shadow: 0 -2px 10px rgba(26,58,107,0.05);
+}
+.navegacion__boton {
+  background: var(--azul-profundo); color: #fff; border: none;
+  padding: 0.6rem 1.4rem; border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.navegacion__boton:hover { background: var(--azul-medio); }
+.navegacion__boton:active { transform: scale(0.97); }
+.navegacion__boton:disabled {
+  background: var(--borde); color: var(--texto-suave); cursor: not-allowed;
+}
+.navegacion__contador {
+  font-size: 0.9rem; color: var(--texto-suave); font-weight: 600;
+}
+.navegacion__indice {
+  background: transparent; border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo); padding: 0.5rem 1rem;
+  border-radius: var(--radio-md); font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.navegacion__indice:hover { background: var(--azul-profundo); color: #fff; }
+
+.indice {
+  position: fixed; top: 0; right: -380px; width: 380px; height: 100vh;
+  background: var(--superficie); box-shadow: -4px 0 20px rgba(26,58,107,0.15);
+  z-index: 1001; transition: right 0.3s ease;
+  overflow-y: auto; padding: var(--espacio-lg);
+}
+.indice.abierto { right: 0; }
+.indice__titulo {
+  font-size: 1.2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-md);
+  padding-bottom: var(--espacio-sm);
+  border-bottom: 2px solid var(--borde);
+}
+.indice__lista { list-style: none; }
+.indice__item {
+  padding: 0.6rem 0.75rem; border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem; color: var(--texto);
+  transition: background 0.2s; margin-bottom: 0.25rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.indice__item:hover { background: var(--azul-muy-claro); }
+.indice__item.activo { background: var(--azul-profundo); color: #fff; font-weight: 600; }
+.indice__item-num { font-weight: 700; font-size: 0.8rem; min-width: 1.5rem; }
+.indice__cerrar {
+  position: absolute; top: var(--espacio-md); right: var(--espacio-md);
+  background: transparent; border: none; font-size: 1.2rem;
+  cursor: pointer; color: var(--texto-suave);
+  line-height: 1; font-family: var(--fuente-base);
+}
+.overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(26,58,107,0.4); z-index: 1000; display: none;
+}
+.overlay.visible { display: block; }
+
+.caja-concepto {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-concepto__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-concepto__texto { font-size: 1rem; color: var(--texto); line-height: 1.8; }
+.caja-concepto__texto strong { color: var(--azul-profundo); }
+
+.caja-ejemplo {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-ejemplo__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-ejemplo__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.caja-idea {
+  background: #fff8e1; border-left: 4px solid #d97706;
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-idea__titulo {
+  font-size: 0.85rem; font-weight: 700; color: #92400e;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-idea__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.alerta {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+.exito {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.tabla-datos {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: var(--espacio-md); font-size: 0.9rem;
+  box-shadow: var(--sombra-sm); border-radius: var(--radio-md);
+  overflow: hidden;
+}
+.tabla-datos thead { background: var(--azul-medio); color: #fff; }
+.tabla-datos th {
+  padding: 0.75rem 0.5rem; text-align: left;
+  font-weight: 600; font-size: 0.85rem;
+}
+.tabla-datos td {
+  padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.tabla-datos tbody tr:hover { background: var(--fondo); }
+.tabla-datos .centro { text-align: center; }
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.tarjeta {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: var(--radio-md); padding: var(--espacio-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tarjeta:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
+.tarjeta__titulo {
+  font-size: 0.95rem; font-weight: 700; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-xs);
+}
+.tarjeta__texto { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.6; }
+
+.mapa-conceptual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.mapa-nodo {
+  background: var(--superficie);
+  border: 2px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  text-align: center; transition: all 0.3s;
+  cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 70px;
+}
+.mapa-nodo:hover {
+  background: var(--azul-profundo); color: #fff; transform: scale(1.05);
+}
+.mapa-nodo__texto { font-size: 0.85rem; font-weight: 600; }
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  .slide { padding: var(--espacio-lg) var(--espacio-md); min-height: 80vh; }
+  .slide__titulo { font-size: 1.4rem; }
+  .slide__subtitulo { font-size: 0.95rem; }
+  .navegacion { padding: var(--espacio-sm) var(--espacio-md); }
+  .navegacion__boton { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+  .tabla-datos { font-size: 0.75rem; }
+  .grid-tarjetas { grid-template-columns: 1fr; }
+  .indice { width: 300px; right: -300px; }
+  .mapa-conceptual { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="barra-progreso">
+    <div class="barra-progreso__relleno" id="progreso"></div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="indice" id="indice">
+    <button class="indice__cerrar" id="cerrarIndice" aria-label="Cerrar índice">Cerrar</button>
+    <h2 class="indice__titulo">Índice — Bloque 4</h2>
+    <ul class="indice__lista" id="listaIndice"></ul>
+  </aside>
+
+  <main class="contenedor-slides" id="contenedorSlides">
+
+    <!-- Slide 1: Portada -->
+    <section class="slide activo" data-titulo="Portada">
+      <span class="slide__numero">Bloque 4 · Química</span>
+      <h1 class="slide__titulo">Números Cuánticos y Configuración Electrónica</h1>
+      <p class="slide__subtitulo">Del modelo ondulatorio a la distribución electrónica.</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Objetivo de aprendizaje</div>
+          <div class="caja-concepto__texto">
+            Al terminar esta secuencia podrás <strong>explicar la dualidad onda-partícula</strong>,
+            <strong>describir el principio de incertidumbre</strong>, <strong>identificar las formas de los orbitales</strong>,
+            <strong>aplicar los cuatro números cuánticos</strong>, <strong>realizar configuraciones electrónicas</strong>
+            y <strong>determinar el comportamiento magnético</strong> de un elemento.
+          </div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Idea central</div>
+          <div class="caja-idea__texto">
+            El electrón no sigue trayectorias definidas. Su comportamiento se describe mediante
+            una función de onda que permite calcular la probabilidad de encontrarlo en una
+            región del espacio llamada orbital. Cuatro números cuánticos definen su estado.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Cómo navegar:</strong> Usa las flechas del teclado, los botones inferiores o el índice lateral.
+          Cada slide incluye ejemplos resueltos que clarifican los conceptos teóricos.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Dualidad, incertidumbre y Schrödinger -->
+    <section class="slide" data-titulo="Dualidad, incertidumbre y Schrödinger">
+      <span class="slide__numero">Slide 2</span>
+      <h1 class="slide__titulo">Dualidad, incertidumbre y ecuación de onda</h1>
+      <p class="slide__subtitulo">De Broglie, Heisenberg y Schrödinger</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">De Broglie (1924)</div>
+            <div class="tarjeta__texto">
+              Toda partícula en movimiento tiene naturaleza dual: onda y partícula.
+              $$\lambda = \frac{h}{m \cdot v}$$
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Heisenberg (1927)</div>
+            <div class="tarjeta__texto">
+              No se puede determinar simultáneamente posición y momento lineal.
+              $$\Delta x \cdot \Delta p \geq \frac{h}{4\pi}$$
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Schrödinger (1926)</div>
+            <div class="tarjeta__texto">
+              Propuso la ecuación de onda $\psi$ que describe el comportamiento del electrón.
+              $\psi^2$ da la densidad electrónica.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Calcular la longitud de onda asociada a un electrón que viaja a
+            $v = 1{,}0 \times 10^{6}\ \text{m/s}$.
+            <br><br>
+            $$m_e = 9{,}1 \times 10^{-31}\ \text{kg}$$
+            $$\lambda = \frac{h}{m \cdot v} = \frac{6{,}626 \times 10^{-34}}{(9{,}1 \times 10^{-31})(1{,}0 \times 10^{6})} = 7{,}28 \times 10^{-10}\ \text{m}$$
+            Esta $\lambda$ es comparable al tamaño de un átomo.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Calcular la longitud de onda asociada a una pelota de tenis de $m = 0{,}057\ \text{kg}$
+            que viaja a $v = 30\ \text{m/s}$.
+            <br><br>
+            $$\lambda = \frac{6{,}626 \times 10^{-34}}{0{,}057 \times 30} = 3{,}9 \times 10^{-34}\ \text{m}$$
+            La $\lambda$ es indetectable: por eso los objetos macroscópicos no muestran
+            comportamiento ondulatorio.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>El principio de incertidumbre</strong> obliga a abandonar la idea de órbitas
+          definidas de Bohr. El electrón se describe como una nube de probabilidad.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Orbitales -->
+    <section class="slide" data-titulo="Orbitales y sus formas">
+      <span class="slide__numero">Slide 3</span>
+      <h1 class="slide__titulo">Orbitales electrónicos y sus formas</h1>
+      <p class="slide__subtitulo">Regiones de máxima probabilidad electrónica</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Definición</div>
+          <div class="caja-concepto__texto">
+            El orbital es la <strong>REEMPE</strong>: Región Espacio Energética de Máxima Probabilidad
+            Electrónica. Se describe con la <strong>función de onda</strong> $\psi$. Cada orbital
+            acepta como máximo <strong>2 electrones antiparalelos</strong>.
+          </div>
+        </div>
+
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Orbital s ($\ell = 0$)</div>
+            <div class="tarjeta__texto">
+              Simetría <strong>esférica</strong> alrededor del núcleo. 1 orbital por subnivel.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Orbitales p ($\ell = 1$)</div>
+            <div class="tarjeta__texto">
+              <strong>Dilobulares</strong>. 3 orbitales: $p_x$, $p_y$, $p_z$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Orbitales d ($\ell = 2$)</div>
+            <div class="tarjeta__texto">
+              <strong>Tetralobulares</strong>. 5 orbitales.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Orbitales f ($\ell = 3$)</div>
+            <div class="tarjeta__texto">
+              Formas más complejas. 7 orbitales.
+            </div>
+          </div>
+        </div>
+
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Subnivel</th>
+              <th>$\ell$</th>
+              <th>N.º de orbitales</th>
+              <th>N.º máx. de electrones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>$s$</td><td>0</td><td>1</td><td>2</td></tr>
+            <tr><td>$p$</td><td>1</td><td>3</td><td>6</td></tr>
+            <tr><td>$d$</td><td>2</td><td>5</td><td>10</td></tr>
+            <tr><td>$f$</td><td>3</td><td>7</td><td>14</td></tr>
+          </tbody>
+        </table>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            ¿Cuántos orbitales tiene el subnivel $3p$?
+            <br><br>
+            Para $p$, $\ell = 1$. Número de orbitales $= 2\ell + 1 = 2(1) + 1 = 3$.
+            <br><br>
+            Son $3p_x$, $3p_y$ y $3p_z$. Acepta un máximo de 6 electrones.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            ¿Cuántos electrones caben en el nivel $n = 3$?
+            <br><br>
+            Número máximo de electrones $= 2n^{2} = 2(3^{2}) = 18$.
+            <br><br>
+            Esto incluye los subniveles $3s$ (2), $3p$ (6) y $3d$ (10).
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Los cuatro números cuánticos -->
+    <section class="slide" data-titulo="Cuatro números cuánticos">
+      <span class="slide__numero">Slide 4</span>
+      <h1 class="slide__titulo">Los cuatro números cuánticos</h1>
+      <p class="slide__subtitulo">Definición y notación cuántica</p>
+
+      <div class="slide__cuerpo">
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Número</th>
+              <th>Símbolo</th>
+              <th>Significado</th>
+              <th>Valores</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Principal</td>
+              <td>$n$</td>
+              <td>Nivel de energía</td>
+              <td>$1, 2, 3, \dots$</td>
+            </tr>
+            <tr>
+              <td>Secundario</td>
+              <td>$\ell$</td>
+              <td>Subnivel (forma)</td>
+              <td>$0, 1, \dots, (n-1)$</td>
+            </tr>
+            <tr>
+              <td>Magnético</td>
+              <td>$m_\ell$</td>
+              <td>Orientación del orbital</td>
+              <td>$-\ell, \dots, +\ell$</td>
+            </tr>
+            <tr>
+              <td>Spin</td>
+              <td>$m_s$</td>
+              <td>Giro del electrón</td>
+              <td>$+1/2$ o $-1/2$</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Analizar la notación $\psi(3, 2, +1, +1/2)$.
+            <br><br>
+            $n = 3$ (nivel 3)<br>
+            $\ell = 2$ (subnivel $d$)<br>
+            $m_\ell = +1$ (orientación)<br>
+            $m_s = +1/2$ (spin)<br>
+            <br>
+            Es una notación <strong>válida</strong>: $\ell = 2 < n = 3$, y $|m_\ell| = 1 \leq \ell = 2$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Analizar la notación $\psi(2, 3, -1, +1/2)$.
+            <br><br>
+            $n = 2$ y $\ell = 3$.
+            <br><br>
+            Pero $\ell$ debe ser menor que $n$ ($\ell < n$). Como $3 > 2$, la notación es
+            <strong>inválida</strong>.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Para el orbital $4s^{2}$:
+            <br><br>
+            Electrón 1: $\psi(4, 0, 0, +1/2)$<br>
+            Electrón 2: $\psi(4, 0, 0, -1/2)$<br>
+            <br>
+            Los cuatro números cuánticos no son idénticos: difieren en $m_s$.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Principio de exclusión de Pauli:</strong> en un mismo átomo, no existen dos
+          electrones con sus cuatro números cuánticos idénticos. A lo más pueden tener
+          tres números cuánticos iguales.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Configuración electrónica -->
+    <section class="slide" data-titulo="Configuración electrónica">
+      <span class="slide__numero">Slide 5</span>
+      <h1 class="slide__titulo">Configuración electrónica</h1>
+      <p class="slide__subtitulo">Aufbau, Hund, Pauli y Moeller</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Aufbau</div>
+            <div class="tarjeta__texto">
+              Los electrones ocupan primero los orbitales de menor energía.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Hund</div>
+            <div class="tarjeta__texto">
+              Antes de aparear, todos los orbitales del subnivel deben tener al menos un electrón.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Pauli</div>
+            <div class="tarjeta__texto">
+              Dos electrones no pueden tener los cuatro números cuánticos idénticos.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Moeller</div>
+            <div class="tarjeta__texto">
+              Orden diagonal: $1s, 2s, 2p, 3s, 3p, 4s, 3d, \dots$
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Configuración electrónica del oxígeno ($Z = 8$):
+            <br><br>
+            $1s^{2}\ 2s^{2}\ 2p^{4}$
+            <br><br>
+            Diagrama de orbitales:
+            <br>$1s$: $\uparrow\downarrow$
+            <br>$2s$: $\uparrow\downarrow$
+            <br>$2p$: $\uparrow\downarrow$ $\uparrow$ $\uparrow$
+            <br><br>
+            El subnivel $2p$ tiene 4 electrones: dos apareados y dos desapareados,
+            siguiendo la regla de Hund.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Configuración electrónica del sodio ($Z = 11$):
+            <br><br>
+            $1s^{2}\ 2s^{2}\ 2p^{6}\ 3s^{1}$
+            <br><br>
+            Notación Kernel: $[\text{Ne}]\ 3s^{1}$
+            <br><br>
+            El electrón de valencia está en el subnivel $3s$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Configuración del cobre ($Z = 29$, antiserrucho):
+            <br><br>
+            Configuración esperada: $[\text{Ar}]\ 4s^{2}\ 3d^{9}$<br>
+            Configuración estable real: $[\text{Ar}]\ 4s^{1}\ 3d^{10}$
+            <br><br>
+            El subnivel $d$ lleno es más estable que el $d^{9}$.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Antiserrucho:</strong> algunos elementos como Cr y Cu presentan configuraciones
+          estables especiales por la mayor estabilidad de los subniveles $d^{5}$ y $d^{10}$.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Paramagnetismo y cierre -->
+    <section class="slide" data-titulo="Paramagnetismo y cierre">
+      <span class="slide__numero">Slide 6 — Cierre</span>
+      <h1 class="slide__titulo">Paramagnetismo y diamagnetismo</h1>
+      <p class="slide__subtitulo">Comportamiento magnético de los elementos</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Ferromagnético</div>
+            <div class="tarjeta__texto">
+              Fuertemente atraído. Ejemplos: Fe, Ni, Co. $\mu \gg 1$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Paramagnético</div>
+            <div class="tarjeta__texto">
+              Débilmente atraído. Tiene electrones desapareados. $\mu > 0$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Diamagnético</div>
+            <div class="tarjeta__texto">
+              Débilmente repelido. Todos sus electrones apareados. $\mu = 0$.
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Susceptibilidad magnética</div>
+          <div class="caja-concepto__texto">
+            Se calcula a partir del número de electrones desapareados en el último subnivel:
+            $$\mu = \sqrt{k(k+2)}$$
+            donde $k$ = número de electrones desapareados en el último subnivel.
+            <br><br>
+            $\mu = 0$: diamagnético. $\mu > 0$: paramagnético. $\mu \gg 1$: ferromagnético.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Calcular la susceptibilidad magnética del oxígeno ($Z = 8$).
+            <br><br>
+            Configuración: $1s^{2}\ 2s^{2}\ 2p^{4}$
+            <br><br>
+            En $2p$ hay 4 electrones: dos apareados y <strong>dos desapareados</strong>.
+            <br><br>
+            $$k = 2 \qquad \mu = \sqrt{2(2+2)} = \sqrt{8} = 2{,}83$$
+            Como $\mu > 0$, el oxígeno es <strong>paramagnético</strong>.
+          </div>
+        </div>
+
+        <div class="mapa-conceptual">
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">De Broglie: dualidad</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Heisenberg: incertidumbre</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Schrödinger: función de onda</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">4 números cuánticos</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Aufbau, Hund, Pauli</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Paramagnetismo y diamagnetismo</div></div>
+        </div>
+
+        <div class="exito">
+          <strong>Has completado el Bloque 4.</strong> Ahora comprendes la dualidad onda-partícula,
+          el principio de incertidumbre, la ecuación de Schrödinger, los cuatro números cuánticos,
+          la configuración electrónica y el comportamiento magnético de los elementos.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="navegacion">
+    <button class="navegacion__boton" id="btnAnterior" onclick="Slides.anterior()">Anterior</button>
+    <div style="display: flex; align-items: center; gap: var(--espacio-md);">
+      <button class="navegacion__indice" onclick="abrirIndice()">Índice</button>
+      <span class="navegacion__contador" id="contador">1 / 6</span>
+    </div>
+    <button class="navegacion__boton" id="btnSiguiente" onclick="Slides.siguiente()">Siguiente</button>
+  </nav>
+
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+const Slides = {
+  actual: 0,
+  slides: [],
+  total: 0,
+
+  init() {
+    this.slides = document.querySelectorAll('.slide');
+    this.total = this.slides.length;
+    this.render();
+    this.bindKeys();
+    this.bindHash();
+    this.construirIndice();
+  },
+
+  ir(n) {
+    if (n < 0 || n >= this.total) return;
+    this.slides[this.actual].classList.remove('activo');
+    this.actual = n;
+    this.slides[this.actual].classList.add('activo');
+    this.render();
+  },
+
+  siguiente() { this.ir(this.actual + 1); },
+  anterior() { this.ir(this.actual - 1); },
+
+  render() {
+    document.getElementById('contador').textContent = (this.actual + 1) + ' / ' + this.total;
+    document.getElementById('btnAnterior').disabled = this.actual === 0;
+    document.getElementById('btnSiguiente').disabled = this.actual === this.total - 1;
+    const pct = ((this.actual + 1) / this.total) * 100;
+    document.getElementById('progreso').style.width = pct + '%';
+    document.querySelectorAll('.indice__item').forEach((item, i) => {
+      item.classList.toggle('activo', i === this.actual);
+    });
+    history.replaceState(null, '', '#slide-' + (this.actual + 1));
+    this.slides[this.actual].scrollTop = 0;
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+  },
+
+  bindKeys() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        this.siguiente();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.anterior();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        this.ir(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        this.ir(this.total - 1);
+      }
+    });
+  },
+
+  bindHash() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#slide-')) {
+      const n = parseInt(hash.replace('#slide-', '')) - 1;
+      if (n >= 0 && n < this.total) {
+        this.ir(n);
+      }
+    }
+  },
+
+  construirIndice() {
+    const lista = document.getElementById('listaIndice');
+    lista.innerHTML = '';
+    this.slides.forEach((slide, i) => {
+      const titulo = slide.dataset.titulo || ('Slide ' + (i + 1));
+      const li = document.createElement('li');
+      li.className = 'indice__item' + (i === this.actual ? ' activo' : '');
+      li.innerHTML = '<span class="indice__item-num">' + (i + 1) + '.</span> ' + titulo;
+      li.onclick = () => {
+        this.ir(i);
+        cerrarIndice();
+      };
+      lista.appendChild(li);
+    });
+  }
+};
+
+/* ============================================================
+   ÍNDICE LATERAL
+   ============================================================ */
+function abrirIndice() {
+  document.getElementById('indice').classList.add('abierto');
+  document.getElementById('overlay').classList.add('visible');
+}
+function cerrarIndice() {
+  document.getElementById('indice').classList.remove('abierto');
+  document.getElementById('overlay').classList.remove('visible');
+}
+document.getElementById('cerrarIndice').onclick = cerrarIndice;
+document.getElementById('overlay').onclick = cerrarIndice;
+
+/* ============================================================
+   INICIALIZACIÓN
+   ============================================================ */
+function inicializarTodo() {
+  Slides.init();
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>

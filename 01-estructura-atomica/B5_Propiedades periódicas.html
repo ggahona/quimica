@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Propiedades Periódicas · Bloque 5</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --espacio-xl: 4rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+#app { display: flex; flex-direction: column; min-height: 100vh; }
+
+.barra-progreso {
+  position: fixed; top: 0; left: 0; width: 100%; height: 4px;
+  background: var(--borde); z-index: 1000;
+}
+.barra-progreso__relleno {
+  height: 100%; background: var(--azul-medio); width: 0%;
+  transition: width 0.4s ease;
+}
+
+.contenedor-slides {
+  flex: 1; position: relative; display: flex;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-lg); padding-top: 2rem;
+}
+
+.slide {
+  display: none; width: 100%; max-width: 1100px;
+  background: var(--superficie); border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  padding: var(--espacio-xl) var(--espacio-lg);
+  animation: fadeIn 0.5s ease;
+  min-height: 70vh; max-height: 85vh; overflow-y: auto;
+}
+.slide.activo { display: block; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.slide__numero {
+  display: inline-block; background: var(--azul-profundo); color: #fff;
+  font-size: 0.75rem; font-weight: 700;
+  padding: 0.25rem 0.75rem; border-radius: 999px;
+  margin-bottom: var(--espacio-md);
+  text-transform: uppercase; letter-spacing: 0.05em;
+}
+.slide__titulo {
+  font-size: 2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm); line-height: 1.2;
+}
+.slide__subtitulo {
+  font-size: 1.1rem; color: var(--texto-suave);
+  margin-bottom: var(--espacio-lg);
+}
+.slide__cuerpo { font-size: 1rem; }
+
+.navegacion {
+  position: fixed; bottom: 0; left: 0; width: 100%;
+  background: var(--superficie); border-top: 1px solid var(--borde);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  z-index: 999; box-shadow: 0 -2px 10px rgba(26,58,107,0.05);
+}
+.navegacion__boton {
+  background: var(--azul-profundo); color: #fff; border: none;
+  padding: 0.6rem 1.4rem; border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 600; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.navegacion__boton:hover { background: var(--azul-medio); }
+.navegacion__boton:active { transform: scale(0.97); }
+.navegacion__boton:disabled {
+  background: var(--borde); color: var(--texto-suave); cursor: not-allowed;
+}
+.navegacion__contador {
+  font-size: 0.9rem; color: var(--texto-suave); font-weight: 600;
+}
+.navegacion__indice {
+  background: transparent; border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo); padding: 0.5rem 1rem;
+  border-radius: var(--radio-md); font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.navegacion__indice:hover { background: var(--azul-profundo); color: #fff; }
+
+.indice {
+  position: fixed; top: 0; right: -380px; width: 380px; height: 100vh;
+  background: var(--superficie); box-shadow: -4px 0 20px rgba(26,58,107,0.15);
+  z-index: 1001; transition: right 0.3s ease;
+  overflow-y: auto; padding: var(--espacio-lg);
+}
+.indice.abierto { right: 0; }
+.indice__titulo {
+  font-size: 1.2rem; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-md);
+  padding-bottom: var(--espacio-sm);
+  border-bottom: 2px solid var(--borde);
+}
+.indice__lista { list-style: none; }
+.indice__item {
+  padding: 0.6rem 0.75rem; border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem; color: var(--texto);
+  transition: background 0.2s; margin-bottom: 0.25rem;
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.indice__item:hover { background: var(--azul-muy-claro); }
+.indice__item.activo { background: var(--azul-profundo); color: #fff; font-weight: 600; }
+.indice__item-num { font-weight: 700; font-size: 0.8rem; min-width: 1.5rem; }
+.indice__cerrar {
+  position: absolute; top: var(--espacio-md); right: var(--espacio-md);
+  background: transparent; border: none; font-size: 1.2rem;
+  cursor: pointer; color: var(--texto-suave);
+  line-height: 1; font-family: var(--fuente-base);
+}
+.overlay {
+  position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(26,58,107,0.4); z-index: 1000; display: none;
+}
+.overlay.visible { display: block; }
+
+.caja-concepto {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-concepto__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-concepto__texto { font-size: 1rem; color: var(--texto); line-height: 1.8; }
+.caja-concepto__texto strong { color: var(--azul-profundo); }
+
+.caja-ejemplo {
+  background: var(--azul-muy-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-ejemplo__titulo {
+  font-size: 0.85rem; font-weight: 700; color: var(--azul-profundo);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-ejemplo__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.caja-idea {
+  background: #fff8e1; border-left: 4px solid #d97706;
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); box-shadow: var(--sombra-sm);
+}
+.caja-idea__titulo {
+  font-size: 0.85rem; font-weight: 700; color: #92400e;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: var(--espacio-xs);
+}
+.caja-idea__texto { font-size: 0.95rem; color: var(--texto); line-height: 1.8; }
+
+.alerta {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+.exito {
+  background: var(--azul-claro); border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md) var(--espacio-lg);
+  margin-bottom: var(--espacio-md); font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.tabla-datos {
+  width: 100%; border-collapse: collapse;
+  margin-bottom: var(--espacio-md); font-size: 0.9rem;
+  box-shadow: var(--sombra-sm); border-radius: var(--radio-md);
+  overflow: hidden;
+}
+.tabla-datos thead { background: var(--azul-medio); color: #fff; }
+.tabla-datos th {
+  padding: 0.75rem 0.5rem; text-align: left;
+  font-weight: 600; font-size: 0.85rem;
+}
+.tabla-datos td {
+  padding: 0.65rem 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.tabla-datos tbody tr:hover { background: var(--fondo); }
+.tabla-datos .centro { text-align: center; }
+
+.grid-tarjetas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.tarjeta {
+  background: var(--fondo); border: 1px solid var(--borde);
+  border-radius: var(--radio-md); padding: var(--espacio-md);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tarjeta:hover { transform: translateY(-3px); box-shadow: var(--sombra-md); }
+.tarjeta__titulo {
+  font-size: 0.95rem; font-weight: 700; color: var(--azul-profundo);
+  margin-bottom: var(--espacio-xs);
+}
+.tarjeta__texto { font-size: 0.85rem; color: var(--texto-suave); line-height: 1.6; }
+
+.mapa-conceptual {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--espacio-md); margin-bottom: var(--espacio-md);
+}
+.mapa-nodo {
+  background: var(--superficie);
+  border: 2px solid var(--azul-profundo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  text-align: center; transition: all 0.3s;
+  cursor: default;
+  display: flex; align-items: center; justify-content: center;
+  min-height: 70px;
+}
+.mapa-nodo:hover {
+  background: var(--azul-profundo); color: #fff; transform: scale(1.05);
+}
+.mapa-nodo__texto { font-size: 0.85rem; font-weight: 600; }
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  .slide { padding: var(--espacio-lg) var(--espacio-md); min-height: 80vh; }
+  .slide__titulo { font-size: 1.4rem; }
+  .slide__subtitulo { font-size: 0.95rem; }
+  .navegacion { padding: var(--espacio-sm) var(--espacio-md); }
+  .navegacion__boton { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
+  .tabla-datos { font-size: 0.75rem; }
+  .grid-tarjetas { grid-template-columns: 1fr; }
+  .indice { width: 300px; right: -300px; }
+  .mapa-conceptual { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <div class="barra-progreso">
+    <div class="barra-progreso__relleno" id="progreso"></div>
+  </div>
+
+  <div class="overlay" id="overlay"></div>
+
+  <aside class="indice" id="indice">
+    <button class="indice__cerrar" id="cerrarIndice" aria-label="Cerrar índice">Cerrar</button>
+    <h2 class="indice__titulo">Índice — Bloque 5</h2>
+    <ul class="indice__lista" id="listaIndice"></ul>
+  </aside>
+
+  <main class="contenedor-slides" id="contenedorSlides">
+
+    <!-- Slide 1: Portada -->
+    <section class="slide activo" data-titulo="Portada">
+      <span class="slide__numero">Bloque 5 · Química</span>
+      <h1 class="slide__titulo">Propiedades Periódicas de los Elementos</h1>
+      <p class="slide__subtitulo">Carga nuclear efectiva, radio atómico, energía de ionización, afinidad electrónica y electronegatividad.</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Objetivo de aprendizaje</div>
+          <div class="caja-concepto__texto">
+            Al terminar esta secuencia podrás <strong>calcular la carga nuclear efectiva</strong> con la regla de Slater,
+            <strong>comparar radios atómicos e iónicos</strong>, <strong>interpretar las tendencias periódicas</strong>
+            de energía de ionización, afinidad electrónica y electronegatividad, y
+            <strong>determinar el porcentaje de carácter iónico</strong> de un enlace.
+          </div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Idea central</div>
+          <div class="caja-idea__texto">
+            Las propiedades químicas de los elementos dependen de dos factores: el número de
+            electrones de valencia y la fuerza con la que son atraídos por el núcleo. La carga
+            nuclear efectiva conecta ambos factores y explica las tendencias periódicas.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>Cómo navegar:</strong> Usa las flechas del teclado, los botones inferiores o el índice lateral.
+          Cada slide incluye ejemplos resueltos que clarifican los conceptos teóricos.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 2: Carga nuclear efectiva y Slater -->
+    <section class="slide" data-titulo="Carga nuclear efectiva y Slater">
+      <span class="slide__numero">Slide 2</span>
+      <h1 class="slide__titulo">Carga nuclear efectiva y reglas de Slater</h1>
+      <p class="slide__subtitulo">La carga que realmente siente el electrón de valencia</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Definición</div>
+          <div class="caja-concepto__texto">
+            Es la carga que actúa sobre un electrón de un átomo. Es más pequeña que la carga
+            nuclear real ($Z^* < Z$), porque incluye el efecto de los demás electrones presentes
+            en el átomo.
+            $$Z^* = Z - S$$
+            $Z$ = carga nuclear (número atómico)<br>
+            $S$ = constante de pantalla (del inglés <em>Screening</em>), número positivo.
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Reglas de Slater (para $ns$ o $np$)</div>
+          <div class="caja-concepto__texto">
+            1. Los electrones a la derecha del grupo $(ns\,np)$ no contribuyen a la pantalla.<br>
+            2. Cada uno de los demás electrones del grupo $(ns\,np)$ contribuye con $S = 0{,}35$.<br>
+            3. Cada electrón de la capa $(n-1)$ contribuye con $S = 0{,}85$.<br>
+            4. Cada electrón de las capas $(n-2)$ o inferiores contribuye con $S = 1{,}00$.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Calcular $Z^*$ para el electrón de valencia del nitrógeno ($Z = 7$).
+            <br><br>
+            Configuración: $1s^2\ 2s^2\ 2p^3$<br>
+            Agrupación: $(1s)^2\ (2s\,2p)^5$
+            <br><br>
+            $S = (4 \times 0{,}35) + (2 \times 0{,}85) = 1{,}40 + 1{,}70 = 3{,}10$
+            $$Z^* = 7 - 3{,}10 = 3{,}90$$
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Calcular $Z^*$ para el electrón $5s^1$ del rubidio ($Z = 37$).
+            <br><br>
+            Configuración: $1s^2\ 2s^2\ 2p^6\ 3s^2\ 3p^6\ 4s^2\ 3d^{10}\ 4p^6\ 5s^1$
+            <br><br>
+            Agrupación: $(1s)^2\ (2s\,2p)^8\ (3s\,3p)^8\ (3d)^{10}\ (4s\,4p)^8\ (5s)^1$
+            <br><br>
+            $S = (2+8+18) \times 1{,}00 + 8 \times 0{,}85 = 28{,}00 + 6{,}80 = 34{,}80$
+            $$Z^* = 37 - 34{,}80 = 2{,}20$$
+            La baja carga nuclear efectiva explica la alta reactividad del rubidio.
+          </div>
+        </div>
+
+        <div class="alerta">
+          <strong>En un periodo:</strong> $Z^*$ aumenta de izquierda a derecha. Los electrones
+          internos permanecen iguales, pero el número de protones aumenta.
+          <br><strong>En un grupo:</strong> $Z^*$ varía poco. A mayor carga nuclear, mayor apantallamiento.
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 3: Radio atómico e iónico -->
+    <section class="slide" data-titulo="Radio atómico e iónico">
+      <span class="slide__numero">Slide 3</span>
+      <h1 class="slide__titulo">Radio atómico e iónico</h1>
+      <p class="slide__subtitulo">Tamaño de átomos e iones</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Radio atómico</div>
+            <div class="tarjeta__texto">
+              Distancia promedio del núcleo a los electrones exteriores. En moléculas
+              homoatómicas: $r = d/2$.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Tendencia en un grupo</div>
+            <div class="tarjeta__texto">
+              Aumenta al descender. Cada nuevo periodo agrega una capa electrónica.
+              <br>Li (1,23 Å) < Na (1,57 Å) < K (2,03 Å) < Rb (2,16 Å)
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Tendencia en un periodo</div>
+            <div class="tarjeta__texto">
+              Disminuye al avanzar de izquierda a derecha. Aumenta la carga nuclear efectiva.
+              <br>Li (1,23 Å) > Be (0,89 Å) > B (0,80 Å) > C (0,77 Å) > N (0,70 Å) > O (0,66 Å) > F (0,64 Å)
+            </div>
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Radio iónico</div>
+          <div class="caja-concepto__texto">
+            <strong>Cationes</strong> (iones positivos): son menores que el átomo neutro.
+            Al perder electrones, disminuye la repulsión electrónica.
+            <br>Li (1,23 Å) > Li⁺ (0,68 Å)
+            <br><br>
+            <strong>Aniones</strong> (iones negativos): son mayores que el átomo neutro.
+            Al ganar electrones, aumenta la repulsión electrónica.
+            <br>F (0,64 Å) < F⁻ (1,36 Å)
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            ¿Cuál tiene mayor radio: Na o Cl?
+            <br><br>
+            Ambos están en el tercer periodo. A mayor carga nuclear ($Z_{\text{Na}} = 11$,
+            $Z_{\text{Cl}} = 17$), mayor atracción sobre los electrones del mismo nivel
+            energético y menor radio.
+            <br><br>
+            Por lo tanto: <strong>Na > Cl</strong>.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Ordenar los iones F⁻, Al³⁺, O²⁻, Mg²⁺ y Na⁺ según radio iónico decreciente.
+            <br><br>
+            Todos tienen 10 electrones (isoelectrónicos). A mayor carga nuclear, mayor
+            atracción y menor radio:
+            <br><br>
+            O²⁻ (1,26 Å) > F⁻ (1,19 Å) > Na⁺ (1,16 Å) > Mg²⁺ (0,86 Å) > Al³⁺ (0,68 Å)
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 4: Energía de ionización y afinidad electrónica -->
+    <section class="slide" data-titulo="Energía de ionización y afinidad">
+      <span class="slide__numero">Slide 4</span>
+      <h1 class="slide__titulo">Energía de ionización y afinidad electrónica</h1>
+      <p class="slide__subtitulo">Energía para quitar o añadir electrones</p>
+
+      <div class="slide__cuerpo">
+        <div class="grid-tarjetas">
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Energía de ionización (EI)</div>
+            <div class="tarjeta__texto">
+              Energía mínima para eliminar un electrón de un átomo gaseoso.
+              $$\text{Na}(g) \rightarrow \text{Na}^+(g) + e^-$$
+              Aumenta de izquierda a derecha en un periodo y disminuye al descender en un grupo.
+            </div>
+          </div>
+          <div class="tarjeta">
+            <div class="tarjeta__titulo">Afinidad electrónica (AE)</div>
+            <div class="tarjeta__texto">
+              Energía liberada cuando un electrón se agrega a un átomo gaseoso.
+              $$X(g) + e^- \rightarrow X^-(g) + AE$$
+              Se vuelve más negativa a la derecha en un periodo. Halógenos tienen los valores más negativos.
+            </div>
+          </div>
+        </div>
+
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>Elemento</th>
+              <th>$I_1$ (kJ/mol)</th>
+              <th>$I_2$ (kJ/mol)</th>
+              <th>$I_3$ (kJ/mol)</th>
+              <th>$I_4$ (kJ/mol)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Na</td><td>496</td><td>4560</td><td>—</td><td>—</td></tr>
+            <tr><td>Mg</td><td>738</td><td>1450</td><td>7730</td><td>—</td></tr>
+            <tr><td>Al</td><td>577</td><td>1816</td><td>2744</td><td>11600</td></tr>
+          </tbody>
+        </table>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Ordenar de menor a mayor energía de ionización: Ne, K, Na, Ar.
+            <br><br>
+            En un grupo, la EI disminuye al descender: K < Na.
+            <br>En un periodo, la EI aumenta hacia la derecha: Na < Ar < Ne.
+            <br><br>
+            Orden final: <strong>K < Na < Ar < Ne</strong>.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            ¿Por qué la segunda energía de ionización del sodio (4560 kJ/mol) es mucho mayor
+            que la primera (496 kJ/mol)?
+            <br><br>
+            Al quitar el primer electrón, el Na⁺ queda con configuración de gas noble
+            ($1s^2\ 2s^2\ 2p^6$). Quitar un segundo electrón requiere romper esa configuración
+            estable, por eso la energía aumenta drásticamente.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 5: Electronegatividad y carácter iónico -->
+    <section class="slide" data-titulo="Electronegatividad y carácter iónico">
+      <span class="slide__numero">Slide 5</span>
+      <h1 class="slide__titulo">Electronegatividad y carácter iónico</h1>
+      <p class="slide__subtitulo">Capacidad de atraer electrones en un enlace</p>
+
+      <div class="slide__cuerpo">
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Definición de Pauling (1932)</div>
+          <div class="caja-concepto__texto">
+            "Electronegatividad es la capacidad de un átomo en una molécula para atraer hacia sí
+            el par de electrones de un enlace químico."
+            <br><br>
+            Pauling asignó al flúor una electronegatividad de 4.
+            <br>La electronegatividad incrementa de izquierda a derecha en un periodo y de
+            abajo hacia arriba en un grupo.
+          </div>
+        </div>
+
+        <div class="caja-concepto">
+          <div class="caja-concepto__titulo">Porcentaje de carácter iónico</div>
+          <div class="caja-concepto__texto">
+            Se calcula a partir de la diferencia de electronegatividades ($\Delta\chi$) entre
+            dos átomos.
+            $$\Delta\chi = |\chi_1 - \chi_2|$$
+            <br>
+            Regla práctica: si $\Delta\chi \geq 1{,}7$, el enlace es mayoritariamente iónico.
+            Si $\Delta\chi < 1{,}7$, el enlace es covalente (polar o no polar).
+          </div>
+        </div>
+
+        <table class="tabla-datos">
+          <thead>
+            <tr>
+              <th>$\Delta\chi$</th>
+              <th>0,5</th>
+              <th>1,0</th>
+              <th>1,5</th>
+              <th>1,7</th>
+              <th>2,0</th>
+              <th>2,2</th>
+              <th>3,0</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>% C.I.</strong></td>
+              <td>6</td>
+              <td>22</td>
+              <td>43</td>
+              <td>51</td>
+              <td>63</td>
+              <td>70</td>
+              <td>89</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Determinar el tipo de enlace en el NaCl.
+            <br><br>
+            $\chi_{\text{Na}} = 0{,}93$ ; $\chi_{\text{Cl}} = 3{,}16$
+            $$\Delta\chi = 3{,}16 - 0{,}93 = 2{,}23$$
+            En la tabla, $\Delta\chi = 2{,}2$ corresponde a un <strong>70 % de carácter iónico</strong>.
+            Por eso el enlace Na–Cl es mayoritariamente iónico.
+          </div>
+        </div>
+
+        <div class="caja-ejemplo">
+          <div class="caja-ejemplo__titulo">EJEMPLO</div>
+          <div class="caja-ejemplo__texto">
+            Determinar el tipo de enlace en el HCl.
+            <br><br>
+            $\chi_{\text{H}} = 2{,}1$ ; $\chi_{\text{Cl}} = 3{,}16$
+            $$\Delta\chi = 3{,}16 - 2{,}1 = 1{,}06$$
+            En la tabla, $\Delta\chi = 1{,}0$ corresponde a un <strong>22 % de carácter iónico</strong>.
+            Por eso el enlace H–Cl es covalente polar.
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Slide 6: Cierre -->
+    <section class="slide" data-titulo="Cierre">
+      <span class="slide__numero">Slide 6 — Cierre</span>
+      <h1 class="slide__titulo">Síntesis del Bloque 5</h1>
+      <p class="slide__subtitulo">Mapa conceptual y cierre</p>
+
+      <div class="slide__cuerpo">
+        <div class="mapa-conceptual">
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">$Z^* = Z - S$</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Reglas de Slater</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Radio atómico e iónico</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Energía de ionización</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Afinidad electrónica</div></div>
+          <div class="mapa-nodo"><div class="mapa-nodo__texto">Electronegatividad</div></div>
+        </div>
+
+        <div class="caja-idea">
+          <div class="caja-idea__titulo">Tendencias periódicas</div>
+          <div class="caja-idea__texto">
+            <strong>Radio atómico:</strong> aumenta al descender, disminuye al avanzar.<br>
+            <strong>Energía de ionización:</strong> disminuye al descender, aumenta al avanzar.<br>
+            <strong>Afinidad electrónica:</strong> se vuelve más negativa al avanzar.<br>
+            <strong>Electronegatividad:</strong> aumenta al avanzar y al ascender.
+          </div>
+        </div>
+
+        <div class="exito">
+          <strong>Has completado el Bloque 5.</strong> Ahora comprendes la carga nuclear efectiva,
+          las reglas de Slater, las tendencias del radio atómico e iónico, la energía de
+          ionización, la afinidad electrónica y la electronegatividad, así como el cálculo
+          del porcentaje de carácter iónico de un enlace.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <nav class="navegacion">
+    <button class="navegacion__boton" id="btnAnterior" onclick="Slides.anterior()">Anterior</button>
+    <div style="display: flex; align-items: center; gap: var(--espacio-md);">
+      <button class="navegacion__indice" onclick="abrirIndice()">Índice</button>
+      <span class="navegacion__contador" id="contador">1 / 6</span>
+    </div>
+    <button class="navegacion__boton" id="btnSiguiente" onclick="Slides.siguiente()">Siguiente</button>
+  </nav>
+
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+/* ============================================================
+   SLIDER
+   ============================================================ */
+const Slides = {
+  actual: 0,
+  slides: [],
+  total: 0,
+
+  init() {
+    this.slides = document.querySelectorAll('.slide');
+    this.total = this.slides.length;
+    this.render();
+    this.bindKeys();
+    this.bindHash();
+    this.construirIndice();
+  },
+
+  ir(n) {
+    if (n < 0 || n >= this.total) return;
+    this.slides[this.actual].classList.remove('activo');
+    this.actual = n;
+    this.slides[this.actual].classList.add('activo');
+    this.render();
+  },
+
+  siguiente() { this.ir(this.actual + 1); },
+  anterior() { this.ir(this.actual - 1); },
+
+  render() {
+    document.getElementById('contador').textContent = (this.actual + 1) + ' / ' + this.total;
+    document.getElementById('btnAnterior').disabled = this.actual === 0;
+    document.getElementById('btnSiguiente').disabled = this.actual === this.total - 1;
+    const pct = ((this.actual + 1) / this.total) * 100;
+    document.getElementById('progreso').style.width = pct + '%';
+    document.querySelectorAll('.indice__item').forEach((item, i) => {
+      item.classList.toggle('activo', i === this.actual);
+    });
+    history.replaceState(null, '', '#slide-' + (this.actual + 1));
+    this.slides[this.actual].scrollTop = 0;
+    if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+  },
+
+  bindKeys() {
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        this.siguiente();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.anterior();
+      } else if (e.key === 'Home') {
+        e.preventDefault();
+        this.ir(0);
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        this.ir(this.total - 1);
+      }
+    });
+  },
+
+  bindHash() {
+    const hash = window.location.hash;
+    if (hash && hash.startsWith('#slide-')) {
+      const n = parseInt(hash.replace('#slide-', '')) - 1;
+      if (n >= 0 && n < this.total) {
+        this.ir(n);
+      }
+    }
+  },
+
+  construirIndice() {
+    const lista = document.getElementById('listaIndice');
+    lista.innerHTML = '';
+    this.slides.forEach((slide, i) => {
+      const titulo = slide.dataset.titulo || ('Slide ' + (i + 1));
+      const li = document.createElement('li');
+      li.className = 'indice__item' + (i === this.actual ? ' activo' : '');
+      li.innerHTML = '<span class="indice__item-num">' + (i + 1) + '.</span> ' + titulo;
+      li.onclick = () => {
+        this.ir(i);
+        cerrarIndice();
+      };
+      lista.appendChild(li);
+    });
+  }
+};
+
+/* ============================================================
+   ÍNDICE LATERAL
+   ============================================================ */
+function abrirIndice() {
+  document.getElementById('indice').classList.add('abierto');
+  document.getElementById('overlay').classList.add('visible');
+}
+function cerrarIndice() {
+  document.getElementById('indice').classList.remove('abierto');
+  document.getElementById('overlay').classList.remove('visible');
+}
+document.getElementById('cerrarIndice').onclick = cerrarIndice;
+document.getElementById('overlay').onclick = cerrarIndice;
+
+/* ============================================================
+   INICIALIZACIÓN
+   ============================================================ */
+function inicializarTodo() {
+  Slides.init();
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>

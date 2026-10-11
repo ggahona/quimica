@@ -1,0 +1,1412 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App · Teorías y Modelos Atómicos · Bloque 1</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --verde: #16a34a;
+  --rojo: #dc2626;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: var(--espacio-lg);
+}
+
+.contenedor { max-width: 1100px; margin: 0 auto; }
+
+.encabezado {
+  background: linear-gradient(135deg, var(--azul-profundo), var(--azul-medio));
+  color: #fff;
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  margin-bottom: var(--espacio-lg);
+  box-shadow: var(--sombra-lg);
+  text-align: center;
+}
+.encabezado__titulo {
+  font-size: 1.8rem; font-weight: 700; margin-bottom: var(--espacio-xs);
+}
+.encabezado__subtitulo { font-size: 1rem; opacity: 0.9; }
+
+.tabs {
+  display: flex; gap: var(--espacio-sm);
+  margin-bottom: var(--espacio-md);
+  border-bottom: 2px solid var(--borde);
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 0.7rem 1.4rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--texto-suave);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.tab:hover { color: var(--azul-profundo); }
+.tab.activo {
+  color: var(--azul-profundo);
+  border-bottom-color: var(--azul-profundo);
+}
+
+.panel { display: none; }
+.panel.activo { display: block; }
+
+.tarjeta {
+  background: var(--superficie);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  box-shadow: var(--sombra-md);
+  margin-bottom: var(--espacio-lg);
+}
+
+.tarjeta__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espacio-md);
+  margin-bottom: var(--espacio-md);
+  flex-wrap: wrap;
+}
+.tarjeta__texto { flex: 1; min-width: 240px; }
+.tarjeta__titulo {
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--azul-profundo); margin-bottom: var(--espacio-sm);
+}
+.tarjeta__descripcion {
+  font-size: 0.9rem; color: var(--texto-suave);
+}
+
+/* Botones de ayuda — estilo unificado */
+.boton-ayuda-calc,
+.boton-ayuda-sim,
+.boton-ayuda-exa {
+  background: var(--azul-profundo);
+  color: #fff;
+  border: 2px solid var(--azul-profundo);
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radio-md);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(26,58,107,0.25);
+  align-self: flex-start;
+}
+.boton-ayuda-calc:hover,
+.boton-ayuda-sim:hover,
+.boton-ayuda-exa:hover {
+  background: var(--superficie);
+  color: var(--azul-profundo);
+}
+
+.campo { margin-bottom: var(--espacio-md); }
+.campo label {
+  display: block; font-size: 0.9rem; font-weight: 700;
+  color: var(--azul-profundo); margin-bottom: 0.3rem;
+}
+.campo input, .campo select {
+  width: 100%; padding: 0.6rem;
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--fuente-base);
+  font-size: 0.95rem;
+  background: var(--superficie); color: var(--texto);
+}
+.campo input:focus, .campo select:focus {
+  outline: none; border-color: var(--azul-medio);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espacio-md); }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--espacio-md); }
+.grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: var(--espacio-md); }
+
+.boton {
+  background: var(--azul-profundo); color: #fff;
+  border: none; padding: 0.7rem 1.6rem;
+  border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.boton:hover { background: var(--azul-medio); }
+.boton:active { transform: scale(0.97); }
+.boton.secundario {
+  background: transparent;
+  border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo);
+}
+.boton.secundario:hover { background: var(--azul-profundo); color: #fff; }
+.boton.grupo { display: flex; gap: var(--espacio-sm); flex-wrap: wrap; }
+
+.resultado {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-top: var(--espacio-md);
+  font-size: 0.95rem; line-height: 1.8;
+  display: none;
+}
+.resultado.visible { display: block; }
+.resultado strong { color: var(--azul-profundo); }
+.resultado .paso {
+  font-family: var(--fuente-mono);
+  background: var(--superficie);
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radio-sm);
+  margin: 0.4rem 0;
+  border-left: 3px solid var(--azul-medio);
+  font-size: 0.9rem; line-height: 1.7;
+}
+.resultado .destacado {
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--azul-profundo);
+  font-family: var(--fuente-mono);
+  text-align: center; margin: var(--espacio-sm) 0;
+}
+
+/* Simulador de modelos */
+.simulador-modelos {
+  display: flex; flex-direction: column; gap: var(--espacio-md);
+}
+.simulador-modelos__selector {
+  display: flex; gap: var(--espacio-sm); flex-wrap: wrap;
+  margin-bottom: var(--espacio-md);
+}
+.modelo-btn {
+  padding: 0.5rem 1rem;
+  background: var(--superficie);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-md);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--texto);
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.modelo-btn:hover { border-color: var(--azul-medio); background: var(--azul-muy-claro); }
+.modelo-btn.activo {
+  border-color: var(--azul-profundo);
+  background: var(--azul-profundo);
+  color: #fff;
+}
+.simulador-modelos__svg {
+  background: radial-gradient(circle at center, #f7f9fc 0%, #e6eef8 100%);
+  border-radius: var(--radio-md);
+  border: 1px solid var(--borde);
+  padding: var(--espacio-sm);
+  display: flex; align-items: center; justify-content: center;
+}
+.simulador-modelos__info {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+.simulador-modelos__info strong { color: var(--azul-profundo); }
+
+.recuadro-estado {
+  margin-top: var(--espacio-md);
+  padding: 0.7rem 1rem;
+  border-radius: var(--radio-md);
+  font-size: 0.9rem; font-weight: 600;
+  line-height: 1.6;
+  display: flex; align-items: center; gap: 0.6rem;
+  border-left: 4px solid var(--amarillo);
+  background: #fff8e1; color: #92400e;
+}
+.recuadro-estado::before {
+  content: '⚠'; font-size: 1.2rem; flex-shrink: 0;
+}
+.recuadro-estado.historico {
+  border-left-color: var(--azul-profundo);
+  background: var(--azul-muy-claro); color: var(--azul-profundo);
+}
+.recuadro-estado.historico::before { content: 'ℹ'; }
+.recuadro-estado.superado {
+  border-left-color: var(--rojo);
+  background: #fef2f2; color: #991b1b;
+}
+.recuadro-estado.superado::before { content: '✗'; }
+.recuadro-estado.vigente {
+  border-left-color: var(--verde);
+  background: #f0fdf4; color: #166534;
+}
+.recuadro-estado.vigente::before { content: '✓'; }
+
+.examen-acciones {
+  display: flex; justify-content: flex-start;
+  margin-bottom: var(--espacio-md);
+}
+
+.pregunta {
+  background: var(--superficie);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-bottom: var(--espacio-md);
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--borde);
+  transition: all 0.3s;
+}
+.pregunta.correcta {
+  border-left: 4px solid var(--verde);
+  background: #f0fdf4;
+}
+.pregunta.incorrecta {
+  border-left: 4px solid var(--rojo);
+  background: #fef2f2;
+}
+.pregunta__texto {
+  font-weight: 600; margin-bottom: var(--espacio-sm);
+  font-size: 0.95rem;
+}
+.pregunta__opciones {
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.opcion {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--fondo);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.opcion:hover:not(.locked) {
+  border-color: var(--azul-medio);
+  background: var(--azul-muy-claro);
+}
+.opcion.locked { cursor: default; }
+.opcion.correcta {
+  border-color: var(--verde);
+  background: #dcfce7; color: #166534; font-weight: 700;
+}
+.opcion.incorrecta {
+  border-color: var(--rojo);
+  background: #fee2e2; color: #991b1b;
+}
+.opcion input { accent-color: var(--azul-profundo); }
+
+.feedback {
+  margin-top: var(--espacio-sm);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radio-sm);
+  font-size: 0.85rem; display: none;
+}
+.feedback.visible { display: block; }
+.feedback.correcto { background: #dcfce7; color: #166534; }
+.feedback.incorrecto { background: #fee2e2; color: #991b1b; }
+
+.marcador {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--azul-profundo);
+  color: #fff;
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-radius: var(--radio-md);
+  margin-bottom: var(--espacio-md);
+  font-weight: 700;
+  flex-wrap: wrap;
+  gap: var(--espacio-md);
+}
+.marcador__item {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.marcador__item-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.75;
+}
+.marcador__item-valor {
+  font-size: 1.4rem;
+  font-family: var(--fuente-mono);
+}
+.marcador__item-valor.porcentaje {
+  font-size: 1.6rem;
+}
+
+.resultado-final {
+  background: linear-gradient(135deg, var(--azul-profundo), var(--azul-medio));
+  color: #fff;
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  text-align: center;
+  margin-top: var(--espacio-md);
+  display: none;
+}
+.resultado-final.visible { display: block; }
+.resultado-final__puntaje {
+  font-size: 3rem; font-weight: 800;
+  font-family: var(--fuente-mono);
+  margin-bottom: var(--espacio-xs);
+}
+.resultado-final__detalle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: var(--espacio-md);
+}
+.resultado-final__mensaje {
+  font-size: 1.1rem;
+  margin-bottom: var(--espacio-md);
+}
+
+.formula {
+  background: var(--azul-muy-claro);
+  border-left: 3px solid var(--azul-medio);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radio-sm);
+  font-family: var(--fuente-mono);
+  font-size: 0.9rem;
+  margin-bottom: var(--espacio-sm);
+}
+
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26, 58, 107, 0.55);
+  z-index: 2000;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-md);
+}
+.modal-overlay.visible { display: flex; }
+
+.modal {
+  background: var(--superficie);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  width: 100%; max-width: 720px;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal__cabecera {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-bottom: 2px solid var(--borde);
+}
+.modal__titulo {
+  font-size: 1.2rem; font-weight: 700; color: var(--azul-profundo);
+}
+.modal__cerrar {
+  background: transparent; border: none;
+  font-size: 1.5rem; line-height: 1;
+  cursor: pointer; color: var(--texto-suave);
+  padding: 0 0.3rem;
+}
+.modal__cerrar:hover { color: var(--rojo); }
+
+.modal__cuerpo {
+  padding: var(--espacio-lg);
+  overflow-y: auto;
+  font-size: 0.95rem; line-height: 1.8;
+}
+
+.modal__intro {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-bottom: var(--espacio-lg);
+  font-size: 1rem;
+}
+.modal__seccion { margin-bottom: var(--espacio-lg); }
+.modal__seccion-titulo {
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.modal__seccion-titulo::before {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--azul-medio);
+  display: inline-block;
+}
+
+.modal__lista { list-style: none; padding-left: 0; }
+.modal__lista li {
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  position: relative;
+}
+.modal__lista li::before {
+  content: '→';
+  position: absolute; left: 0;
+  color: var(--azul-medio);
+  font-weight: 700;
+}
+
+.modal__idea {
+  background: #fff8e1;
+  border-left: 4px solid var(--amarillo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin: var(--espacio-md) 0;
+  font-style: italic;
+}
+
+.modal__tabla {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: var(--espacio-sm) 0;
+}
+.modal__tabla th {
+  background: var(--azul-medio); color: #fff;
+  padding: 0.5rem; text-align: left;
+  font-weight: 600;
+}
+.modal__tabla td {
+  padding: 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.modal__tabla tr:hover { background: var(--fondo); }
+
+.modal__pie {
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-top: 2px solid var(--borde);
+  text-align: right;
+}
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  body { padding: var(--espacio-md); }
+  .encabezado__titulo { font-size: 1.3rem; }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .tab { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+  .tarjeta__cabecera { flex-direction: column; align-items: stretch; }
+  .boton-ayuda-calc,
+  .boton-ayuda-sim,
+  .boton-ayuda-exa { align-self: flex-start; }
+  .modal { max-height: 92vh; }
+  .modal__cuerpo { padding: var(--espacio-md); }
+  .marcador { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+
+  <header class="encabezado">
+    <h1 class="encabezado__titulo">Teorías y Modelos Atómicos · Bloque 1</h1>
+    <p class="encabezado__subtitulo">Calculadora · Simulador · Examen de autoevaluación</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab activo" onclick="cambiarTab(0, this)">Calculadora</button>
+    <button class="tab" onclick="cambiarTab(1, this)">Simulador</button>
+    <button class="tab" onclick="cambiarTab(2, this)">Examen</button>
+  </div>
+
+  <!-- ============ PANEL 1: CALCULADORA ============ -->
+  <div class="panel activo" id="panel-0">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Calculadora de teoría cuántica</div>
+          <div class="tarjeta__descripcion">
+            Tres calculadoras: energía del fotón, frecuencia umbral del efecto fotoeléctrico
+            y energía cinética del electrón emitido.
+          </div>
+        </div>
+        <button class="boton-ayuda-calc" onclick="abrirAyudaCalculadora()">¿Cómo usar la calculadora?</button>
+      </div>
+
+      <div class="formula">$E = h \cdot f$ &nbsp;|&nbsp; $f_0 = W_0 / h$ &nbsp;|&nbsp; $E_c = h \cdot f - W_0$</div>
+      <div class="formula">$h = 6{,}626 \times 10^{-34}\ \text{J}\cdot\text{s}$ &nbsp;|&nbsp; $c = 3{,}0 \times 10^{8}\ \text{m/s}$</div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">1. Energía del fotón</div>
+      <div class="tarjeta__descripcion">
+        Introduce la frecuencia de la radiación. La calculadora obtiene la energía del fotón.
+      </div>
+      <div class="campo">
+        <label for="calcF">Frecuencia $f$ (Hz)</label>
+        <input type="number" id="calcF" step="any" value="5e14">
+      </div>
+      <button class="boton" onclick="calcularEnergiaFoton()">Calcular</button>
+      <div class="resultado" id="resFoton"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">2. Frecuencia umbral del efecto fotoeléctrico</div>
+      <div class="tarjeta__descripcion">
+        Introduce la función trabajo del metal. La calculadora obtiene la frecuencia umbral.
+      </div>
+      <div class="campo">
+        <label for="calcW0">Función trabajo $W_0$ (J)</label>
+        <input type="number" id="calcW0" step="any" value="3e-19">
+      </div>
+      <button class="boton" onclick="calcularUmbral()">Calcular</button>
+      <div class="resultado" id="resUmbral"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">3. Energía cinética del electrón emitido</div>
+      <div class="tarjeta__descripcion">
+        Introduce la frecuencia de la luz y la función trabajo. La calculadora obtiene la
+        energía cinética máxima del electrón.
+      </div>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="calcF2">Frecuencia $f$ (Hz)</label>
+          <input type="number" id="calcF2" step="any" value="1e15">
+        </div>
+        <div class="campo">
+          <label for="calcW02">Función trabajo $W_0$ (J)</label>
+          <input type="number" id="calcW02" step="any" value="3e-19">
+        </div>
+      </div>
+      <button class="boton" onclick="calcularEc()">Calcular</button>
+      <div class="resultado" id="resEc"></div>
+    </div>
+
+  </div>
+
+  <!-- ============ PANEL 2: SIMULADOR ============ -->
+  <div class="panel" id="panel-1">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Simulador de modelos atómicos</div>
+          <div class="tarjeta__descripcion">
+            Selecciona un modelo para ver su representación visual y su aporte histórico.
+          </div>
+        </div>
+        <button class="boton-ayuda-sim" onclick="abrirAyudaSimulador()">¿Cómo usar el simulador?</button>
+      </div>
+
+      <div class="simulador-modelos">
+        <div class="simulador-modelos__selector">
+          <button class="modelo-btn activo" onclick="mostrarModelo('dalton', this)">Dalton</button>
+          <button class="modelo-btn" onclick="mostrarModelo('thomson', this)">Thomson</button>
+          <button class="modelo-btn" onclick="mostrarModelo('perrin', this)">Perrin/Nagaoka</button>
+          <button class="modelo-btn" onclick="mostrarModelo('rutherford', this)">Rutherford</button>
+        </div>
+
+        <div class="simulador-modelos__svg">
+          <svg id="svgModelo" width="320" height="280" viewBox="0 0 320 280"></svg>
+        </div>
+
+        <div class="simulador-modelos__info" id="infoModelo"></div>
+
+        <div class="recuadro-estado" id="estadoModelo"></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ PANEL 3: EXAMEN ============ -->
+  <div class="panel" id="panel-2">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Examen de autoevaluación</div>
+          <div class="tarjeta__descripcion">
+            Se seleccionan 10 preguntas al azar de un banco de 20. Al hacer clic en una opción,
+            la pregunta se bloquea y se califica inmediatamente.
+          </div>
+        </div>
+        <button class="boton-ayuda-exa" onclick="abrirAyudaExamen()">¿Cómo aprovechar el examen?</button>
+      </div>
+
+      <div class="examen-acciones">
+        <button class="boton" onclick="nuevoExamen()">Nuevo examen</button>
+      </div>
+
+      <div class="marcador">
+        <div class="marcador__item">
+          <span class="marcador__item-label">Preguntas respondidas</span>
+          <span class="marcador__item-valor"><span id="exRespondidas">0</span> / <span id="exTotal">10</span></span>
+        </div>
+        <div class="marcador__item">
+          <span class="marcador__item-label">Respuestas correctas</span>
+          <span class="marcador__item-valor"><span id="exCorrectas">0</span></span>
+        </div>
+        <div class="marcador__item">
+          <span class="marcador__item-label">Puntaje</span>
+          <span class="marcador__item-valor porcentaje" id="exPorcentaje">0 %</span>
+        </div>
+      </div>
+
+      <div id="exPreguntas"></div>
+
+      <div class="resultado-final" id="exResultado">
+        <div class="resultado-final__puntaje" id="exResultadoPorcentaje">0 %</div>
+        <div class="resultado-final__detalle" id="exResultadoDetallePuntaje">0 / 10 respuestas correctas</div>
+        <div class="resultado-final__mensaje" id="exResultadoMensaje"></div>
+        <div id="exResultadoDetalle"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============ MODAL CALCULADORA ============ -->
+<div class="modal-overlay" id="modalCalculadora" onclick="if(event.target===this) cerrarAyudaCalculadora()">
+  <div class="modal" role="dialog" aria-labelledby="tituloCalculadora" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloCalculadora">Cómo usar la calculadora</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaCalculadora()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__intro">
+        <strong>Antes de pulsar "Calcular", escribe en papel o di en voz alta qué
+        esperas obtener y por qué.</strong> Luego pulsa el botón y compara.
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Por qué funciona</div>
+        <p><strong>1. Activación de conocimientos previos.</strong> Cuando anticipas, tu
+        cerebro busca en la memoria lo que ya sabe: fórmulas, ejemplos vistos, relaciones
+        entre $h$, $f$, $W_0$ y $E_c$. Ese esfuerzo por rescatar lo aprendido es justamente
+        el momento en que más se consolida.</p>
+        <p><strong>2. Generación de expectativas.</strong> Al predecir, creas una expectativa
+        concreta. Cuando el resultado aparece, tu cerebro lo compara automáticamente con lo
+        que esperabas. Esa comparación es la que produce aprendizaje.</p>
+        <p><strong>3. Efecto de autoexplicación.</strong> El solo hecho de tener que
+        anticipar te obliga a explicarte a ti mismo por qué esperas ese resultado.</p>
+        <p><strong>4. Corrección inmediata del error.</strong> Si anticipaste mal, la app
+        te muestra el paso a paso. Ese contraste fija el concepto mucho mejor que si solo
+        hubieras leído la respuesta.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Regla simple</div>
+        <div class="modal__idea">"Primero pienso, después pulso."</div>
+        <table class="modal__tabla">
+          <thead><tr><th>Antes de pulsar</th><th>Después de pulsar</th></tr></thead>
+          <tbody>
+            <tr><td>¿Qué espero?</td><td>¿Coincide?</td></tr>
+            <tr><td>¿Por qué?</td><td>¿Por qué sí o por qué no?</td></tr>
+            <tr><td>¿Con qué fórmula?</td><td>¿Qué paso falló?</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Beneficios que verás con la práctica</div>
+        <table class="modal__tabla">
+          <thead><tr><th>Sin anticipación</th><th>Con anticipación</th></tr></thead>
+          <tbody>
+            <tr><td>Copias números</td><td>Comprendes fórmulas</td></tr>
+            <tr><td>El error pasa desapercibido</td><td>El error se detecta y corrige</td></tr>
+            <tr><td>Memoria de corto plazo</td><td>Memoria de largo plazo</td></tr>
+            <tr><td>La calculadora es una caja negra</td><td>La calculadora es un interlocutor</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Resumen final</div>
+        <p>La calculadora no es para <em>evitar</em> el cálculo, es para <em>verificar</em>
+        tu razonamiento. Úsala así:</p>
+        <ul class="modal__lista">
+          <li><strong>Lee</strong> los datos.</li>
+          <li><strong>Anticipa</strong> el resultado y el porqué.</li>
+          <li><strong>Calcula</strong> con la app.</li>
+          <li><strong>Compara</strong> lo que esperabas con lo que obtuviste.</li>
+          <li><strong>Corrige</strong> tu razonamiento si hubo diferencia.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaCalculadora()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL SIMULADOR ============ -->
+<div class="modal-overlay" id="modalSimulador" onclick="if(event.target===this) cerrarAyudaSimulador()">
+  <div class="modal" role="dialog" aria-labelledby="tituloSimulador" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloSimulador">Cómo usar el simulador</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaSimulador()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué hace el simulador</div>
+        <p>El simulador te permite ver representaciones visuales de los cuatro modelos
+        atómicos principales. Al seleccionar un modelo, aparece su dibujo, su contexto
+        histórico y su vigencia actual.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo usarlo paso a paso</div>
+        <ul class="modal__lista">
+          <li><strong>Predice.</strong> Antes de hacer clic, recuerda qué proponía ese modelo.</li>
+          <li><strong>Haz clic en el modelo</strong> y observa el dibujo.</li>
+          <li><strong>Compara</strong> lo que recordabas con lo que muestra el simulador.</li>
+          <li><strong>Lee el recuadro amarillo.</strong> Ahí te dice si el modelo es histórico,
+              superado o vigente parcialmente.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué significan los colores del recuadro</div>
+        <ul class="modal__lista">
+          <li><strong style="color:#1a3a6b;">Azul (histórico):</strong> el modelo fue importante
+              en su época, pero hoy no se usa.</li>
+          <li><strong style="color:#991b1b;">Rojo (superado):</strong> el modelo fue refutado
+              por experimentos posteriores.</li>
+          <li><strong style="color:#166534;">Verde (vigente):</strong> el modelo sigue siendo
+              válido en ciertos contextos.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Advertencia importante</div>
+        <div class="modal__idea">
+          Los modelos son <strong>representaciones simplificadas</strong>. Ninguno es una
+          fotografía del átomo. Cada uno describe lo que se sabía en su época.
+          El simulador no te muestra átomos reales, sino <strong>dibujos conceptuales</strong>
+          que te ayudan a comprender la evolución del modelo atómico.
+        </div>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Por qué funciona pedagógicamente</div>
+        <ul class="modal__lista">
+          <li><strong>Comparación visual.</strong> Ver los cuatro modelos juntos ayuda a
+              recordar sus diferencias.</li>
+          <li><strong>Contraste histórico.</strong> Saber qué modelo vino antes y después
+              refuerza la comprensión de la evolución científica.</li>
+          <li><strong>Análisis crítico.</strong> Reconocer que un modelo fue superado te
+              enseña que la ciencia es un proceso en construcción.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaSimulador()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL EXAMEN ============ -->
+<div class="modal-overlay" id="modalExamen" onclick="if(event.target===this) cerrarAyudaExamen()">
+  <div class="modal" role="dialog" aria-labelledby="tituloExamen" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloExamen">Cómo aprovechar el examen</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaExamen()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué es este examen</div>
+        <p>No es un examen para aprobar o desaprobar. Es una <strong>herramienta de
+        autoevaluación formativa</strong>: te dice en qué temas estás firme y en cuáles
+        necesitas volver a estudiar. El puntaje no es una calificación; es una brújula.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo sacarle provecho paso a paso</div>
+        <ul class="modal__lista">
+          <li><strong>Antes de hacer clic, predice.</strong> Formula la respuesta en tu cabeza.</li>
+          <li><strong>Justifica tu elección.</strong> Di en voz baja por qué elegiste esa opción.</li>
+          <li><strong>Lee la retroalimentación.</strong> Aciertes o falles, la app explica el paso a paso.</li>
+          <li><strong>Identifica el error.</strong> ¿Fue de concepto, de científico o de cronología?</li>
+          <li><strong>Anota los temas fallados.</strong> Al final el reporte te dice qué repasar.</li>
+          <li><strong>Repite el examen.</strong> Cada vez que pulses "Nuevo examen", el banco se mezcla.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo leer la retroalimentación</div>
+        <ul class="modal__lista">
+          <li><strong>Verde (correcto):</strong> acertaste. La explicación confirma el razonamiento.</li>
+          <li><strong>Rojo (incorrecto):</strong> la opción correcta se marca en verde, y abajo se explica.</li>
+          <li><strong>Bloqueo:</strong> respondida la pregunta, no se puede cambiar.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué hacer con los errores</div>
+        <ul class="modal__lista">
+          <li><strong>Revisar el modelo</strong> que no recordabas.</li>
+          <li><strong>Repasar el científico</strong> y su aporte con la explicación que la app te da.</li>
+          <li><strong>Volver al slide correspondiente</strong> y leer de nuevo el ejemplo.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Valor pedagógico del examen</div>
+        <ul class="modal__lista">
+          <li><strong>Práctica de recuperación.</strong> Responder fija el aprendizaje mucho más que releer.</li>
+          <li><strong>Retroalimentación inmediata.</strong> Sabes al instante si acertaste y por qué.</li>
+          <li><strong>Aleatorización.</strong> Cada examen mezcla preguntas y opciones.</li>
+          <li><strong>Variedad de temas.</strong> El banco cubre todo el Bloque 1.</li>
+          <li><strong>Repetición espaciada.</strong> Repetir en días distintos consolida la memoria.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Regla simple</div>
+        <div class="modal__idea">
+          "Predice antes de responder, lee la retroalimentación, corrige el error y
+          repite el examen en unos días."
+        </div>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaExamen()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const H_CONST = 6.626e-34;
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+function abrirAyudaCalculadora() {
+  document.getElementById('modalCalculadora').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaCalculadora() {
+  document.getElementById('modalCalculadora').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+function abrirAyudaSimulador() {
+  document.getElementById('modalSimulador').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaSimulador() {
+  document.getElementById('modalSimulador').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+function abrirAyudaExamen() {
+  document.getElementById('modalExamen').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaExamen() {
+  document.getElementById('modalExamen').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    cerrarAyudaCalculadora();
+    cerrarAyudaSimulador();
+    cerrarAyudaExamen();
+  }
+});
+
+/* ============================================================
+   TABS
+   ============================================================ */
+function cambiarTab(idx, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('activo'));
+  el.classList.add('activo');
+  document.getElementById('panel-' + idx).classList.add('activo');
+
+  // Si se cambia a la pestaña del simulador, redibujar SVG
+  if (idx === 1) {
+    const btnActivo = document.querySelector('.modelo-btn.activo');
+    if (btnActivo) {
+      // Obtener el modelo activo desde el botón
+      const modelos = ['dalton', 'thomson', 'perrin', 'rutherford'];
+      const idxBtn = Array.from(document.querySelectorAll('.modelo-btn')).indexOf(btnActivo);
+      if (idxBtn >= 0) dibujarModelo(modelos[idxBtn]);
+    }
+  }
+
+  // Si se cambia a la pestaña del examen, regenerar si está vacío
+  if (idx === 2) {
+    const cont = document.getElementById('exPreguntas');
+    if (cont && cont.children.length === 0) {
+      nuevoExamen();
+    }
+  }
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 1: energía del fotón
+   ============================================================ */
+function calcularEnergiaFoton() {
+  const f = parseFloat(document.getElementById('calcF').value);
+  const res = document.getElementById('resFoton');
+
+  if (isNaN(f) || f <= 0) {
+    res.innerHTML = '<strong>Error:</strong> introduce una frecuencia positiva.';
+    res.classList.add('visible');
+    return;
+  }
+
+  const E = H_CONST * f;
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">$E = h \\cdot f = (6{,}626 \\times 10^{-34}) \\times ' + f.toExponential(2) + ' = ' + E.toExponential(3) + '\\ \\text{J}$</div>';
+  html += '<div class="destacado">E = ' + E.toExponential(3) + ' J</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 2: frecuencia umbral
+   ============================================================ */
+function calcularUmbral() {
+  const W0 = parseFloat(document.getElementById('calcW0').value);
+  const res = document.getElementById('resUmbral');
+
+  if (isNaN(W0) || W0 <= 0) {
+    res.innerHTML = '<strong>Error:</strong> introduce una función trabajo positiva.';
+    res.classList.add('visible');
+    return;
+  }
+
+  const f0 = W0 / H_CONST;
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">$f_0 = \\dfrac{W_0}{h} = \\dfrac{' + W0.toExponential(2) + '}{6{,}626 \\times 10^{-34}} = ' + f0.toExponential(3) + '\\ \\text{Hz}$</div>';
+  html += '<div class="paso">Si $f < f_0$, no hay efecto fotoeléctrico.</div>';
+  html += '<div class="destacado">f₀ = ' + f0.toExponential(3) + ' Hz</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 3: energía cinética
+   ============================================================ */
+function calcularEc() {
+  const f = parseFloat(document.getElementById('calcF2').value);
+  const W0 = parseFloat(document.getElementById('calcW02').value);
+  const res = document.getElementById('resEc');
+
+  if (isNaN(f) || isNaN(W0) || f <= 0 || W0 <= 0) {
+    res.innerHTML = '<strong>Error:</strong> verifica los valores.';
+    res.classList.add('visible');
+    return;
+  }
+
+  const E = H_CONST * f;
+  const Ec = E - W0;
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">$E_{\\text{fotón}} = h \\cdot f = ' + E.toExponential(3) + '\\ \\text{J}$</div>';
+  html += '<div class="paso">$E_c = E - W_0 = ' + E.toExponential(3) + ' - ' + W0.toExponential(2) + ' = ' + Ec.toExponential(3) + '\\ \\text{J}$</div>';
+
+  if (Ec > 0) {
+    html += '<div class="paso">Como $E_c > 0$, sí se produce efecto fotoeléctrico.</div>';
+    html += '<div class="destacado">Ec = ' + Ec.toExponential(3) + ' J</div>';
+  } else {
+    html += '<div class="paso">Como $E_c \\leq 0$, no hay emisión de electrones.</div>';
+    html += '<div class="destacado">Sin emisión</div>';
+  }
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   SIMULADOR DE MODELOS
+   ============================================================ */
+const infoModelos = {
+  dalton: {
+    titulo: 'Modelo de Dalton (1808)',
+    info: 'El átomo es una <strong>esfera maciza, indivisible e indestructible</strong>. No tiene estructura interna. Átomos de un mismo elemento son iguales entre sí y diferentes de los de otros elementos.',
+    estado: 'historico',
+    textoEstado: 'Modelo histórico. Fue el primer modelo con base experimental, pero fue superado al descubrirse el electrón y el núcleo.'
+  },
+  thomson: {
+    titulo: 'Modelo de Thomson (1897)',
+    info: 'El átomo es una <strong>esfera cargada positivamente</strong> con electrones negativos incrustados, como las pasas en un budín. Es el primer modelo que incluye electrones.',
+    estado: 'superado',
+    textoEstado: 'Modelo superado. El experimento de Rutherford demostró que la carga positiva no está distribuida, sino concentrada en un núcleo.'
+  },
+  perrin: {
+    titulo: 'Modelo de Perrin y Nagaoka (1903)',
+    info: 'El átomo es una <strong>esfera positiva</strong> con electrones <strong>tangentes a su superficie</strong>, como los anillos de Saturno. Primera propuesta de electrones fuera de la esfera positiva.',
+    estado: 'superado',
+    textoEstado: 'Modelo superado. Fue un paso intermedio hacia el modelo nuclear de Rutherford.'
+  },
+  rutherford: {
+    titulo: 'Modelo de Rutherford (1911)',
+    info: 'El átomo tiene un <strong>núcleo pequeño, macizo y positivo</strong> que concentra casi toda la masa. Los electrones giran en órbitas alrededor del núcleo. El átomo es casi vacío.',
+    estado: 'vigente',
+    textoEstado: 'Modelo vigente parcialmente. La idea del núcleo central es correcta, pero las órbitas definidas fueron reemplazadas por orbitales (mecánica cuántica).'
+  }
+};
+
+function mostrarModelo(tipo, el) {
+  document.querySelectorAll('.modelo-btn').forEach(b => b.classList.remove('activo'));
+  el.classList.add('activo');
+
+  const m = infoModelos[tipo];
+  document.getElementById('infoModelo').innerHTML = '<strong>' + m.titulo + '</strong><br>' + m.info;
+
+  const estado = document.getElementById('estadoModelo');
+  estado.className = 'recuadro-estado ' + m.estado;
+  estado.textContent = m.textoEstado;
+
+  dibujarModelo(tipo);
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function dibujarModelo(tipo) {
+  const svg = document.getElementById('svgModelo');
+  const cx = 160, cy = 140;
+  let html = '';
+
+  if (tipo === 'dalton') {
+    // Esfera maciza
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="80" fill="#2c5aa0" stroke="#1a3a6b" stroke-width="3"/>';
+    html += '<text x="' + cx + '" y="' + (cy + 5) + '" text-anchor="middle" font-size="14" fill="#fff" font-weight="700">Esfera maciza</text>';
+    html += '<text x="' + cx + '" y="' + (cy + 25) + '" text-anchor="middle" font-size="11" fill="#d6e4f5">sin estructura interna</text>';
+  } else if (tipo === 'thomson') {
+    // Esfera positiva con electrones incrustados
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="80" fill="#fbbf24" stroke="#d97706" stroke-width="3" opacity="0.4"/>';
+    html += '<text x="' + cx + '" y="30" text-anchor="middle" font-size="12" fill="#92400e" font-weight="700">Esfera positiva</text>';
+    // Electrones en posiciones fijas
+    const posiciones = [[-40,-30],[30,-40],[0,0],[-30,40],[40,30],[60,-10],[-60,10]];
+    posiciones.forEach(([dx,dy]) => {
+      html += '<circle cx="' + (cx+dx) + '" cy="' + (cy+dy) + '" r="8" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>';
+      html += '<text x="' + (cx+dx) + '" y="' + (cy+dy+4) + '" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">−</text>';
+    });
+  } else if (tipo === 'perrin') {
+    // Esfera positiva con electrones en anillo
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="60" fill="#fbbf24" stroke="#d97706" stroke-width="3" opacity="0.4"/>';
+    html += '<text x="' + cx + '" y="30" text-anchor="middle" font-size="12" fill="#92400e" font-weight="700">Esfera positiva</text>';
+    // Anillo de electrones
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="80" fill="none" stroke="#c5d5e8" stroke-width="1" stroke-dasharray="3,3"/>';
+    for (let i = 0; i < 6; i++) {
+      const ang = (i / 6) * Math.PI * 2;
+      const x = cx + Math.cos(ang) * 80;
+      const y = cy + Math.sin(ang) * 80;
+      html += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="8" fill="#dc2626" stroke="#991b1b" stroke-width="1.5"/>';
+      html += '<text x="' + x.toFixed(1) + '" y="' + (y+4).toFixed(1) + '" text-anchor="middle" font-size="11" fill="#fff" font-weight="700">−</text>';
+    }
+  } else if (tipo === 'rutherford') {
+    // Núcleo central + electrones en órbitas
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="10" fill="#dc2626" stroke="#991b1b" stroke-width="2"/>';
+    html += '<text x="' + cx + '" y="' + (cy+4) + '" text-anchor="middle" font-size="12" fill="#fff" font-weight="700">+</text>';
+    html += '<text x="' + cx + '" y="30" text-anchor="middle" font-size="12" fill="#991b1b" font-weight="700">Núcleo</text>';
+    // Órbitas con electrones
+    const orbitas = [50, 80, 110];
+    orbitas.forEach((r, idx) => {
+      html += '<circle cx="' + cx + '" cy="' + cy + '" r="' + r + '" fill="none" stroke="#c5d5e8" stroke-width="1" stroke-dasharray="3,3"/>';
+      const nElec = idx + 1;
+      for (let i = 0; i < nElec; i++) {
+        const ang = (i / nElec) * Math.PI * 2 + idx * 0.5;
+        const x = cx + Math.cos(ang) * r;
+        const y = cy + Math.sin(ang) * r;
+        html += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="6" fill="#fbbf24" stroke="#d97706" stroke-width="1.5"/>';
+        html += '<text x="' + x.toFixed(1) + '" y="' + (y+3).toFixed(1) + '" text-anchor="middle" font-size="9" fill="#78350f" font-weight="700">−</text>';
+      }
+    });
+  }
+
+  svg.innerHTML = html;
+}
+
+/* ============================================================
+   EXAMEN
+   ============================================================ */
+const bancoPreguntas = [
+  { pregunta: '¿Quiénes propusieron por primera vez la idea de átomo como partícula indivisible?',
+    opciones: ['Aristóteles y Empédocles', 'Leucipo y Demócrito', 'Dalton y Thomson', 'Rutherford y Bohr'],
+    correcta: 1, explicacion: 'Leucipo y Demócrito (s. V a.C.) propusieron que la materia está formada por átomos indivisibles.' },
+  { pregunta: 'Según la teoría aristotélica, ¿cuáles son los cuatro elementos?',
+    opciones: ['Agua, tierra, aire y fuego', 'Oxígeno, hidrógeno, carbono y nitrógeno', 'Sólido, líquido, gaseoso y plasma', 'Electrón, protón, neutrón y fotón'],
+    correcta: 0, explicacion: 'Aristóteles propuso que la materia está formada por agua, tierra, aire y fuego.' },
+  { pregunta: '¿Cuál de los siguientes postulados NO corresponde a Dalton?',
+    opciones: ['Los átomos son indivisibles e indestructibles', 'Átomos de un mismo elemento son iguales', 'Los electrones giran en órbitas alrededor del núcleo', 'Los elementos se combinan en relaciones sencillas'],
+    correcta: 2, explicacion: 'Dalton no conocía los electrones. Ese postulado es de Rutherford-Bohr.' },
+  { pregunta: '¿Qué descubrió J.J. Thomson con sus experimentos con rayos catódicos?',
+    opciones: ['El núcleo atómico', 'El electrón', 'El protón', 'El neutrón'],
+    correcta: 1, explicacion: 'Thomson descubrió el electrón y propuso el modelo del budín de pasas.' },
+  { pregunta: '¿Cómo se llama el modelo atómico de Thomson?',
+    opciones: ['Modelo planetario', 'Modelo del budín de pasas', 'Modelo de capas', 'Modelo cuántico'],
+    correcta: 1, explicacion: 'El modelo de Thomson se llama "budín de pasas" porque los electrones están incrustados en una esfera positiva.' },
+  { pregunta: '¿Qué determinó el experimento de la gota de aceite de Millikan?',
+    opciones: ['La masa del protón', 'La carga del electrón', 'La velocidad de la luz', 'El número de Avogadro'],
+    correcta: 1, explicacion: 'Millikan determinó la carga del electrón: $q = 1{,}6 \\times 10^{-19}\\ \\text{C}$.' },
+  { pregunta: '¿Quién descubrió los rayos anódicos o canales?',
+    opciones: ['Eugene Goldstein', 'William Crookes', 'Julius Plücker', 'Michael Faraday'],
+    correcta: 0, explicacion: 'Goldstein descubrió los rayos anódicos: iones positivos que viajan del ánodo al cátodo.' },
+  { pregunta: 'En el experimento de Rutherford, ¿qué ocurrió con la mayoría de las partículas alfa?',
+    opciones: ['Rebotaron', 'Se desviaron mucho', 'Pasaron sin desviarse', 'Se dividieron en electrones'],
+    correcta: 2, explicacion: 'La mayoría atravesó la lámina sin desviarse, lo cual demostró que el átomo es casi vacío.' },
+  { pregunta: '¿Cuál fue el error principal del modelo de Rutherford según la física clásica?',
+    opciones: ['El núcleo era demasiado grande', 'Los electrones no podían girar en órbitas', 'El electrón debería perder energía y caer en espiral', 'No incluía protones'],
+    correcta: 2, explicacion: 'Según la física clásica, una partícula cargada que acelera emite energía. El electrón debería caer en espiral sobre el núcleo.' },
+  { pregunta: '¿Qué modelo propusieron Perrin y Nagaoka?',
+    opciones: ['Esfera positiva con electrones incrustados', 'Electrones tangentes a la superficie de una esfera positiva', 'Núcleo central con electrones orbitando', 'Átomo indivisible e indestructible'],
+    correcta: 1, explicacion: 'Perrin y Nagaoka propusieron electrones tangentes a una esfera positiva, como anillos de Saturno.' },
+  { pregunta: '¿Qué proponía el modelo de Dalton sobre los átomos de un mismo elemento?',
+    opciones: ['Tienen diferente masa', 'Tienen iguales propiedades', 'Tienen electrones incrustados', 'Tienen núcleo central'],
+    correcta: 1, explicacion: 'Dalton propuso que átomos del mismo elemento tienen iguales propiedades (tamaño y masa).' },
+  { pregunta: '¿Qué son los rayos catódicos?',
+    opciones: ['Iones positivos', 'Electrones que viajan del cátodo al ánodo', 'Neutrones libres', 'Fotones de alta energía'],
+    correcta: 1, explicacion: 'Los rayos catódicos son chorros de electrones que viajan del cátodo al ánodo.' },
+  { pregunta: '¿En qué año propuso Dalton su teoría atómica?',
+    opciones: ['1808', '1897', '1911', '1900'],
+    correcta: 0, explicacion: 'Dalton publicó su teoría atómico-molecular en 1808.' },
+  { pregunta: '¿Qué experimento usó Rutherford para descubrir el núcleo?',
+    opciones: ['La gota de aceite', 'La electrólisis', 'El bombardeo de láminas de oro con partículas alfa', 'Los rayos catódicos'],
+    correcta: 2, explicacion: 'Rutherford bombardeó láminas de oro con partículas alfa y observó que algunas rebotaban.' },
+  { pregunta: '¿Qué son los rayos anódicos o canales?',
+    opciones: ['Electrones negativos', 'Iones positivos que viajan del ánodo al cátodo', 'Neutrones', 'Rayos X'],
+    correcta: 1, explicacion: 'Los rayos anódicos son iones positivos (cationes) que viajan del ánodo al cátodo.' },
+  { pregunta: '¿Qué observó Faraday en sus experimentos de electrólisis?',
+    opciones: ['Que la materia se descompone al paso de la corriente', 'Que los átomos son indivisibles', 'Que existen los electrones', 'Que el núcleo es positivo'],
+    correcta: 0, explicacion: 'Faraday observó que la materia se descompone al paso de la corriente eléctrica, dando indicios de partículas negativas.' },
+  { pregunta: '¿Qué diferencia al modelo de Thomson del modelo de Dalton?',
+    opciones: ['Dalton incluye electrones', 'Thomson incluye electrones', 'Ambos son iguales', 'Thomson propone el núcleo'],
+    correcta: 1, explicacion: 'Thomson incluye electrones en su modelo, mientras Dalton solo proponía una esfera maciza sin estructura interna.' },
+  { pregunta: '¿Cuál de los siguientes científicos NO pertenece al Bloque 1?',
+    opciones: ['Thomson', 'Rutherford', 'Bohr', 'Millikan'],
+    correcta: 2, explicacion: 'Bohr pertenece al Bloque 3. En el Bloque 1 se estudian hasta Rutherford.' },
+  { pregunta: '¿Qué son las partículas alfa usadas por Rutherford?',
+    opciones: ['Electrones', 'Núcleos de helio', 'Neutrones', 'Fotones'],
+    correcta: 1, explicacion: 'Las partículas alfa son núcleos de helio con carga positiva.' },
+  { pregunta: '¿Qué modelo atómico sigue vigente parcialmente hoy?',
+    opciones: ['Dalton', 'Thomson', 'Perrin/Nagaoka', 'Rutherford'],
+    correcta: 3, explicacion: 'El modelo de Rutherford sigue vigente en cuanto a la idea de un núcleo central, aunque las órbitas fueron reemplazadas por orbitales.' }
+];
+
+let examenActual = [];
+let examenRespondidas = 0;
+let examenCorrectas = 0;
+
+function nuevoExamen() {
+  examenActual = mezclar(bancoPreguntas).slice(0, 10);
+  examenRespondidas = 0;
+  examenCorrectas = 0;
+
+  document.getElementById('exRespondidas').textContent = '0';
+  document.getElementById('exCorrectas').textContent = '0';
+  document.getElementById('exPorcentaje').textContent = '0 %';
+  document.getElementById('exTotal').textContent = examenActual.length;
+  document.getElementById('exResultado').classList.remove('visible');
+
+  const cont = document.getElementById('exPreguntas');
+  cont.innerHTML = '';
+
+  examenActual.forEach((p, i) => {
+    const opcionesMezcladas = mezclar(p.opciones.map((op, idx) => ({ texto: op, original: idx })));
+    const correctaMezclada = opcionesMezcladas.findIndex(o => o.original === p.correcta);
+
+    const div = document.createElement('div');
+    div.className = 'pregunta';
+    div.dataset.idx = i;
+    div.dataset.correcta = correctaMezclada;
+
+    let html = '<div class="pregunta__texto">' + (i + 1) + '. ' + p.pregunta + '</div>';
+    html += '<div class="pregunta__opciones">';
+    opcionesMezcladas.forEach((o, j) => {
+      html += '<label class="opcion" data-idx="' + j + '">';
+      html += '<input type="radio" name="ex-' + i + '" value="' + j + '"> ';
+      html += o.texto;
+      html += '</label>';
+    });
+    html += '</div>';
+    html += '<div class="feedback" id="exFeedback-' + i + '"></div>';
+
+    div.innerHTML = html;
+    cont.appendChild(div);
+
+    div.querySelectorAll('.opcion').forEach(op => {
+      op.addEventListener('click', () => responderExamen(i, parseInt(op.dataset.idx)));
+    });
+  });
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function responderExamen(idx, seleccionada) {
+  const div = document.querySelector('.pregunta[data-idx="' + idx + '"]');
+  if (div.dataset.respondida === 'true') return;
+  div.dataset.respondida = 'true';
+
+  const correcta = parseInt(div.dataset.correcta);
+  const opciones = div.querySelectorAll('.opcion');
+  const feedback = document.getElementById('exFeedback-' + idx);
+
+  opciones.forEach((op, j) => {
+    op.classList.add('locked');
+    op.querySelector('input').disabled = true;
+    if (j === correcta) op.classList.add('correcta');
+    else if (j === seleccionada) op.classList.add('incorrecta');
+  });
+
+  const p = examenActual[idx];
+  const esCorrecta = seleccionada === correcta;
+
+  if (esCorrecta) {
+    examenCorrectas++;
+    div.classList.add('correcta');
+    feedback.className = 'feedback visible correcto';
+    feedback.innerHTML = '<strong>Correcto.</strong> ' + p.explicacion;
+  } else {
+    div.classList.add('incorrecta');
+    feedback.className = 'feedback visible incorrecto';
+    feedback.innerHTML = '<strong>Incorrecto.</strong> La respuesta correcta está marcada en verde. ' + p.explicacion;
+  }
+
+  examenRespondidas++;
+  actualizarMarcador();
+
+  if (examenRespondidas === examenActual.length) {
+    mostrarResultadoExamen();
+  }
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function actualizarMarcador() {
+  const total = examenActual.length;
+  const porcentaje = total > 0 ? Math.round((examenCorrectas / total) * 100) : 0;
+
+  document.getElementById('exRespondidas').textContent = examenRespondidas;
+  document.getElementById('exCorrectas').textContent = examenCorrectas;
+  document.getElementById('exPorcentaje').textContent = porcentaje + ' %';
+}
+
+function mostrarResultadoExamen() {
+  const total = examenActual.length;
+  const porcentaje = Math.round((examenCorrectas / total) * 100);
+
+  document.getElementById('exResultadoPorcentaje').textContent = porcentaje + ' %';
+  document.getElementById('exResultadoDetallePuntaje').textContent =
+    examenCorrectas + ' de ' + total + ' respuestas correctas';
+
+  let mensaje = '';
+  if (porcentaje >= 90) mensaje = '¡Excelente! Dominas el Bloque 1.';
+  else if (porcentaje >= 70) mensaje = 'Buen trabajo. Repasa los temas con error.';
+  else if (porcentaje >= 50) mensaje = 'Aprobado. Conviene reforzar varios temas.';
+  else mensaje = 'Necesitas repasar el Bloque 1. Revisa los errores y vuelve a intentar.';
+  document.getElementById('exResultadoMensaje').textContent = mensaje;
+
+  const errores = [];
+  examenActual.forEach((p, i) => {
+    const div = document.querySelector('.pregunta[data-idx="' + i + '"]');
+    if (!div.classList.contains('correcta')) errores.push(i + 1);
+  });
+
+  let detalle = '';
+  if (errores.length === 0) {
+    detalle = '<p>Todas las respuestas fueron correctas.</p>';
+  } else {
+    detalle = '<p>Preguntas a repasar: ' + errores.join(', ') + '</p>';
+  }
+  document.getElementById('exResultadoDetalle').innerHTML = detalle;
+
+  document.getElementById('exResultado').classList.add('visible');
+}
+
+/* ============================================================
+   INICIALIZACIÓN ROBUSTA
+   ============================================================ */
+function inicializarTodo() {
+  calcularEnergiaFoton();
+  calcularUmbral();
+  calcularEc();
+
+  const primerModelo = document.querySelector('.modelo-btn');
+  if (primerModelo) mostrarModelo('dalton', primerModelo);
+
+  nuevoExamen();
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>

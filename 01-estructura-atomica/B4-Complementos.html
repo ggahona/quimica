@@ -1,0 +1,1482 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>App · Números Cuánticos y Configuración Electrónica · Bloque 4</title>
+
+<script>
+  MathJax = {
+    tex: {
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+      displayMath: [['$$', '$$'], ['\\[', '\\]']]
+    },
+    svg: { fontCache: 'global' }
+  };
+</script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --azul-profundo: #1a3a6b;
+  --azul-medio: #2c5aa0;
+  --azul-claro: #d6e4f5;
+  --azul-muy-claro: #eef4fb;
+  --fondo: #f7f9fc;
+  --superficie: #ffffff;
+  --texto: #1a2b45;
+  --texto-suave: #5a6b82;
+  --borde: #c5d5e8;
+  --verde: #16a34a;
+  --rojo: #dc2626;
+  --amarillo: #d97706;
+  --fuente-base: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --fuente-mono: 'Courier New', Courier, monospace;
+  --espacio-xs: 0.25rem;
+  --espacio-sm: 0.5rem;
+  --espacio-md: 1rem;
+  --espacio-lg: 2rem;
+  --sombra-sm: 0 1px 2px rgba(26,58,107,0.06);
+  --sombra-md: 0 4px 6px rgba(26,58,107,0.10);
+  --sombra-lg: 0 10px 15px rgba(26,58,107,0.12);
+  --radio-sm: 4px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+}
+
+html { font-size: 16px; }
+
+body {
+  font-family: var(--fuente-base);
+  background: var(--fondo);
+  color: var(--texto);
+  line-height: 1.6;
+  min-height: 100vh;
+  padding: var(--espacio-lg);
+}
+
+.contenedor { max-width: 1100px; margin: 0 auto; }
+
+.encabezado {
+  background: linear-gradient(135deg, var(--azul-profundo), var(--azul-medio));
+  color: #fff;
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  margin-bottom: var(--espacio-lg);
+  box-shadow: var(--sombra-lg);
+  text-align: center;
+}
+.encabezado__titulo {
+  font-size: 1.8rem; font-weight: 700; margin-bottom: var(--espacio-xs);
+}
+.encabezado__subtitulo { font-size: 1rem; opacity: 0.9; }
+
+.tabs {
+  display: flex; gap: var(--espacio-sm);
+  margin-bottom: var(--espacio-md);
+  border-bottom: 2px solid var(--borde);
+  flex-wrap: wrap;
+}
+.tab {
+  padding: 0.7rem 1.4rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--texto-suave);
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.tab:hover { color: var(--azul-profundo); }
+.tab.activo {
+  color: var(--azul-profundo);
+  border-bottom-color: var(--azul-profundo);
+}
+
+.panel { display: none; }
+.panel.activo { display: block; }
+
+.tarjeta {
+  background: var(--superficie);
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  box-shadow: var(--sombra-md);
+  margin-bottom: var(--espacio-lg);
+}
+
+.tarjeta__cabecera {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--espacio-md);
+  margin-bottom: var(--espacio-md);
+  flex-wrap: wrap;
+}
+.tarjeta__texto { flex: 1; min-width: 240px; }
+.tarjeta__titulo {
+  font-size: 1.2rem; font-weight: 700;
+  color: var(--azul-profundo); margin-bottom: var(--espacio-sm);
+}
+.tarjeta__descripcion {
+  font-size: 0.9rem; color: var(--texto-suave);
+}
+
+.boton-ayuda-calc,
+.boton-ayuda-sim,
+.boton-ayuda-exa {
+  background: var(--azul-profundo);
+  color: #fff;
+  border: 2px solid var(--azul-profundo);
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radio-md);
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+  white-space: nowrap;
+  box-shadow: 0 2px 4px rgba(26,58,107,0.25);
+  align-self: flex-start;
+}
+.boton-ayuda-calc:hover,
+.boton-ayuda-sim:hover,
+.boton-ayuda-exa:hover {
+  background: var(--superficie);
+  color: var(--azul-profundo);
+}
+
+.campo { margin-bottom: var(--espacio-md); }
+.campo label {
+  display: block; font-size: 0.9rem; font-weight: 700;
+  color: var(--azul-profundo); margin-bottom: 0.3rem;
+}
+.campo input, .campo select {
+  width: 100%; padding: 0.6rem;
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-sm);
+  font-family: var(--fuente-base);
+  font-size: 0.95rem;
+  background: var(--superficie); color: var(--texto);
+}
+.campo input:focus, .campo select:focus {
+  outline: none; border-color: var(--azul-medio);
+}
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--espacio-md); }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--espacio-md); }
+
+.boton {
+  background: var(--azul-profundo); color: #fff;
+  border: none; padding: 0.7rem 1.6rem;
+  border-radius: var(--radio-md);
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; transition: background 0.2s, transform 0.1s;
+  font-family: var(--fuente-base);
+}
+.boton:hover { background: var(--azul-medio); }
+.boton:active { transform: scale(0.97); }
+.boton.secundario {
+  background: transparent;
+  border: 2px solid var(--azul-profundo);
+  color: var(--azul-profundo);
+}
+.boton.secundario:hover { background: var(--azul-profundo); color: #fff; }
+.boton.grupo { display: flex; gap: var(--espacio-sm); flex-wrap: wrap; }
+
+.resultado {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-top: var(--espacio-md);
+  font-size: 0.95rem; line-height: 1.8;
+  display: none;
+}
+.resultado.visible { display: block; }
+.resultado strong { color: var(--azul-profundo); }
+.resultado .paso {
+  font-family: var(--fuente-mono);
+  background: var(--superficie);
+  padding: 0.6rem 0.8rem;
+  border-radius: var(--radio-sm);
+  margin: 0.4rem 0;
+  border-left: 3px solid var(--azul-medio);
+  font-size: 0.9rem; line-height: 1.7;
+}
+.resultado .destacado {
+  font-size: 1.4rem; font-weight: 700;
+  color: var(--azul-profundo);
+  font-family: var(--fuente-mono);
+  text-align: center; margin: var(--espacio-sm) 0;
+}
+
+.sim-orbital {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--espacio-md);
+  align-items: center;
+}
+.sim-orbital__svg {
+  background: radial-gradient(circle at center, #f7f9fc 0%, #e6eef8 100%);
+  border-radius: var(--radio-md);
+  border: 1px solid var(--borde);
+  padding: var(--espacio-sm);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 240px;
+}
+.sim-orbital__panel {
+  display: flex; flex-direction: column; gap: var(--espacio-md);
+}
+.sim-orbital__selector {
+  display: flex; gap: var(--espacio-sm); flex-wrap: wrap;
+}
+.orbital-btn {
+  padding: 0.5rem 1rem;
+  background: var(--superficie);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-md);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--texto);
+  transition: all 0.2s;
+  font-family: var(--fuente-base);
+}
+.orbital-btn:hover { border-color: var(--azul-medio); background: var(--azul-muy-claro); }
+.orbital-btn.activo {
+  border-color: var(--azul-profundo);
+  background: var(--azul-profundo);
+  color: #fff;
+}
+.sim-orbital__datos {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--espacio-sm);
+}
+.sim-orbital__dato {
+  background: var(--superficie);
+  border-radius: var(--radio-sm);
+  padding: 0.5rem;
+  text-align: center;
+  border: 1px solid var(--borde);
+}
+.sim-orbital__dato strong {
+  display: block; font-size: 1.05rem;
+  color: var(--azul-profundo);
+  font-family: var(--fuente-mono);
+}
+.sim-orbital__dato small {
+  font-size: 0.7rem; color: var(--texto-suave);
+}
+
+.recuadro-estado {
+  margin-top: var(--espacio-md);
+  padding: 0.7rem 1rem;
+  border-radius: var(--radio-md);
+  font-size: 0.9rem; font-weight: 600;
+  line-height: 1.6;
+  display: flex; align-items: center; gap: 0.6rem;
+  border-left: 4px solid var(--azul-medio);
+  background: var(--azul-muy-claro); color: var(--azul-profundo);
+}
+.recuadro-estado::before {
+  content: 'ℹ'; font-size: 1.2rem; flex-shrink: 0;
+}
+
+.examen-acciones {
+  display: flex; justify-content: flex-start;
+  margin-bottom: var(--espacio-md);
+}
+
+.pregunta {
+  background: var(--superficie);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-bottom: var(--espacio-md);
+  box-shadow: var(--sombra-sm);
+  border: 1px solid var(--borde);
+  transition: all 0.3s;
+}
+.pregunta.correcta {
+  border-left: 4px solid var(--verde);
+  background: #f0fdf4;
+}
+.pregunta.incorrecta {
+  border-left: 4px solid var(--rojo);
+  background: #fef2f2;
+}
+.pregunta__texto {
+  font-weight: 600; margin-bottom: var(--espacio-sm);
+  font-size: 0.95rem;
+}
+.pregunta__opciones {
+  display: flex; flex-direction: column; gap: 0.4rem;
+}
+.opcion {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: var(--fondo);
+  border: 2px solid var(--borde);
+  border-radius: var(--radio-sm);
+  cursor: pointer; font-size: 0.9rem;
+  transition: all 0.2s;
+}
+.opcion:hover:not(.locked) {
+  border-color: var(--azul-medio);
+  background: var(--azul-muy-claro);
+}
+.opcion.locked { cursor: default; }
+.opcion.correcta {
+  border-color: var(--verde);
+  background: #dcfce7; color: #166534; font-weight: 700;
+}
+.opcion.incorrecta {
+  border-color: var(--rojo);
+  background: #fee2e2; color: #991b1b;
+}
+.opcion input { accent-color: var(--azul-profundo); }
+
+.feedback {
+  margin-top: var(--espacio-sm);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radio-sm);
+  font-size: 0.85rem; display: none;
+}
+.feedback.visible { display: block; }
+.feedback.correcto { background: #dcfce7; color: #166534; }
+.feedback.incorrecto { background: #fee2e2; color: #991b1b; }
+
+.marcador {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--azul-profundo);
+  color: #fff;
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-radius: var(--radio-md);
+  margin-bottom: var(--espacio-md);
+  font-weight: 700;
+  flex-wrap: wrap;
+  gap: var(--espacio-md);
+}
+.marcador__item {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+.marcador__item-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  opacity: 0.75;
+}
+.marcador__item-valor {
+  font-size: 1.4rem;
+  font-family: var(--fuente-mono);
+}
+.marcador__item-valor.porcentaje {
+  font-size: 1.6rem;
+}
+
+.resultado-final {
+  background: linear-gradient(135deg, var(--azul-profundo), var(--azul-medio));
+  color: #fff;
+  border-radius: var(--radio-lg);
+  padding: var(--espacio-lg);
+  text-align: center;
+  margin-top: var(--espacio-md);
+  display: none;
+}
+.resultado-final.visible { display: block; }
+.resultado-final__puntaje {
+  font-size: 3rem; font-weight: 800;
+  font-family: var(--fuente-mono);
+  margin-bottom: var(--espacio-xs);
+}
+.resultado-final__detalle {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: var(--espacio-md);
+}
+.resultado-final__mensaje {
+  font-size: 1.1rem;
+  margin-bottom: var(--espacio-md);
+}
+
+.formula {
+  background: var(--azul-muy-claro);
+  border-left: 3px solid var(--azul-medio);
+  padding: 0.5rem 0.8rem;
+  border-radius: var(--radio-sm);
+  font-family: var(--fuente-mono);
+  font-size: 0.9rem;
+  margin-bottom: var(--espacio-sm);
+}
+
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(26, 58, 107, 0.55);
+  z-index: 2000;
+  display: none;
+  align-items: center; justify-content: center;
+  padding: var(--espacio-md);
+}
+.modal-overlay.visible { display: flex; }
+
+.modal {
+  background: var(--superficie);
+  border-radius: var(--radio-lg);
+  box-shadow: var(--sombra-lg);
+  width: 100%; max-width: 720px;
+  max-height: 85vh;
+  display: flex; flex-direction: column;
+  animation: modalIn 0.3s ease;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(-20px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.modal__cabecera {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-bottom: 2px solid var(--borde);
+}
+.modal__titulo {
+  font-size: 1.2rem; font-weight: 700; color: var(--azul-profundo);
+}
+.modal__cerrar {
+  background: transparent; border: none;
+  font-size: 1.5rem; line-height: 1;
+  cursor: pointer; color: var(--texto-suave);
+  padding: 0 0.3rem;
+}
+.modal__cerrar:hover { color: var(--rojo); }
+
+.modal__cuerpo {
+  padding: var(--espacio-lg);
+  overflow-y: auto;
+  font-size: 0.95rem; line-height: 1.8;
+}
+
+.modal__intro {
+  background: var(--azul-muy-claro);
+  border-left: 4px solid var(--azul-medio);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin-bottom: var(--espacio-lg);
+  font-size: 1rem;
+}
+.modal__seccion { margin-bottom: var(--espacio-lg); }
+.modal__seccion-titulo {
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--azul-profundo);
+  margin-bottom: var(--espacio-sm);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.modal__seccion-titulo::before {
+  content: '';
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--azul-medio);
+  display: inline-block;
+}
+
+.modal__lista { list-style: none; padding-left: 0; }
+.modal__lista li {
+  padding: 0.4rem 0 0.4rem 1.5rem;
+  position: relative;
+}
+.modal__lista li::before {
+  content: '→';
+  position: absolute; left: 0;
+  color: var(--azul-medio);
+  font-weight: 700;
+}
+
+.modal__idea {
+  background: #fff8e1;
+  border-left: 4px solid var(--amarillo);
+  border-radius: var(--radio-md);
+  padding: var(--espacio-md);
+  margin: var(--espacio-md) 0;
+  font-style: italic;
+}
+
+.modal__tabla {
+  width: 100%; border-collapse: collapse;
+  font-size: 0.9rem;
+  margin: var(--espacio-sm) 0;
+}
+.modal__tabla th {
+  background: var(--azul-medio); color: #fff;
+  padding: 0.5rem; text-align: left;
+  font-weight: 600;
+}
+.modal__tabla td {
+  padding: 0.5rem; border-bottom: 1px solid var(--borde);
+  vertical-align: top;
+}
+.modal__tabla tr:hover { background: var(--fondo); }
+
+.modal__pie {
+  padding: var(--espacio-md) var(--espacio-lg);
+  border-top: 2px solid var(--borde);
+  text-align: right;
+}
+
+mjx-container { font-size: 1.05em !important; }
+
+@media (max-width: 768px) {
+  body { padding: var(--espacio-md); }
+  .encabezado__titulo { font-size: 1.3rem; }
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .tab { padding: 0.5rem 0.8rem; font-size: 0.85rem; }
+  .tarjeta__cabecera { flex-direction: column; align-items: stretch; }
+  .boton-ayuda-calc,
+  .boton-ayuda-sim,
+  .boton-ayuda-exa { align-self: flex-start; }
+  .sim-orbital { grid-template-columns: 1fr; }
+  .modal { max-height: 92vh; }
+  .modal__cuerpo { padding: var(--espacio-md); }
+  .marcador { flex-direction: column; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+
+<div class="contenedor">
+
+  <header class="encabezado">
+    <h1 class="encabezado__titulo">Números Cuánticos y Configuración Electrónica · Bloque 4</h1>
+    <p class="encabezado__subtitulo">Calculadora · Simulador · Examen de autoevaluación</p>
+  </header>
+
+  <div class="tabs">
+    <button class="tab activo" onclick="cambiarTab(0, this)">Calculadora</button>
+    <button class="tab" onclick="cambiarTab(1, this)">Simulador</button>
+    <button class="tab" onclick="cambiarTab(2, this)">Examen</button>
+  </div>
+
+  <!-- ============ PANEL 1: CALCULADORA ============ -->
+  <div class="panel activo" id="panel-0">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Calculadora de estructura electrónica</div>
+          <div class="tarjeta__descripcion">
+            Cinco calculadoras: De Broglie, energía relativa, números cuánticos,
+            configuración electrónica y susceptibilidad magnética.
+          </div>
+        </div>
+        <button class="boton-ayuda-calc" onclick="abrirAyudaCalculadora()">¿Cómo usar la calculadora?</button>
+      </div>
+
+      <div class="formula">$\lambda = h/(m \cdot v)$ &nbsp;|&nbsp; $E_R = n + \ell$ &nbsp;|&nbsp; $\mu = \sqrt{k(k+2)}$</div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">1. Longitud de onda de De Broglie</div>
+      <div class="tarjeta__descripcion">
+        Introduce la masa y la velocidad de una partícula. La calculadora obtiene su
+        longitud de onda asociada.
+      </div>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="calcM">Masa $m$ (kg)</label>
+          <input type="number" id="calcM" step="any" value="9.1e-31">
+        </div>
+        <div class="campo">
+          <label for="calcV">Velocidad $v$ (m/s)</label>
+          <input type="number" id="calcV" step="any" value="1e6">
+        </div>
+      </div>
+      <button class="boton" onclick="calcularBroglie()">Calcular</button>
+      <div class="resultado" id="resBroglie"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">2. Energía relativa de un orbital</div>
+      <div class="tarjeta__descripcion">
+        Introduce el nivel $n$ y el subnivel $\ell$. La calculadora obtiene la energía
+        relativa del orbital.
+      </div>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="calcN">Nivel $n$</label>
+          <input type="number" id="calcN" min="1" max="7" value="4">
+        </div>
+        <div class="campo">
+          <label for="calcL">Subnivel $\ell$ (0 = s, 1 = p, 2 = d, 3 = f)</label>
+          <input type="number" id="calcL" min="0" max="3" value="1">
+        </div>
+      </div>
+      <button class="boton" onclick="calcularEnergiaRelativa()">Calcular</button>
+      <div class="resultado" id="resEnergiaRelativa"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">3. Validez de una notación cuántica</div>
+      <div class="tarjeta__descripcion">
+        Introduce los cuatro números cuánticos. La calculadora verifica si la notación
+        es válida.
+      </div>
+      <div class="grid-2">
+        <div class="campo">
+          <label for="ncN">$n$</label>
+          <input type="number" id="ncN" min="1" max="7" value="3">
+        </div>
+        <div class="campo">
+          <label for="ncL">$\ell$</label>
+          <input type="number" id="ncL" min="0" max="6" value="2">
+        </div>
+        <div class="campo">
+          <label for="ncML">$m_\ell$</label>
+          <input type="number" id="ncML" min="-6" max="6" value="1">
+        </div>
+        <div class="campo">
+          <label for="ncMS">$m_s$ (+1/2 o -1/2)</label>
+          <select id="ncMS">
+            <option value="0.5">+1/2</option>
+            <option value="-0.5">-1/2</option>
+          </select>
+        </div>
+      </div>
+      <button class="boton" onclick="verificarNotacion()">Verificar</button>
+      <div class="resultado" id="resNotacion"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">4. Configuración electrónica</div>
+      <div class="tarjeta__descripcion">
+        Introduce el número atómico $Z$. La calculadora genera la configuración
+        electrónica completa y la notación Kernel.
+      </div>
+      <div class="campo">
+        <label for="calcZ">Número atómico $Z$ (1-36)</label>
+        <input type="number" id="calcZ" min="1" max="36" value="8">
+      </div>
+      <button class="boton" onclick="calcularConfiguracion()">Calcular</button>
+      <div class="resultado" id="resConfig"></div>
+    </div>
+
+    <div class="tarjeta">
+      <div class="tarjeta__titulo">5. Susceptibilidad magnética</div>
+      <div class="tarjeta__descripcion">
+        Introduce el número de electrones desapareados en el último subnivel. La calculadora
+        obtiene $\mu$ y clasifica el comportamiento magnético.
+      </div>
+      <div class="campo">
+        <label for="calcK">Electrones desapareados $k$</label>
+        <input type="number" id="calcK" min="0" max="7" value="2">
+      </div>
+      <button class="boton" onclick="calcularMu()">Calcular</button>
+      <div class="resultado" id="resMu"></div>
+    </div>
+
+  </div>
+
+  <!-- ============ PANEL 2: SIMULADOR ============ -->
+  <div class="panel" id="panel-1">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Simulador de orbitales</div>
+          <div class="tarjeta__descripcion">
+            Selecciona un subnivel para ver su forma, número de orbitales y electrones máximos.
+          </div>
+        </div>
+        <button class="boton-ayuda-sim" onclick="abrirAyudaSimulador()">¿Cómo usar el simulador?</button>
+      </div>
+
+      <div class="sim-orbital">
+        <div class="sim-orbital__svg">
+          <svg id="svgOrbital" width="280" height="240" viewBox="0 0 280 240"></svg>
+        </div>
+        <div class="sim-orbital__panel">
+          <div class="sim-orbital__selector">
+            <button class="orbital-btn activo" onclick="mostrarOrbital(0, this)">s</button>
+            <button class="orbital-btn" onclick="mostrarOrbital(1, this)">p</button>
+            <button class="orbital-btn" onclick="mostrarOrbital(2, this)">d</button>
+            <button class="orbital-btn" onclick="mostrarOrbital(3, this)">f</button>
+          </div>
+          <div class="sim-orbital__datos">
+            <div class="sim-orbital__dato">$\ell$<strong id="orbL">0</strong><small>secundario</small></div>
+            <div class="sim-orbital__dato"># orbitales<strong id="orbNum">1</strong><small>$2\ell+1$</small></div>
+            <div class="sim-orbital__dato"># e⁻ máx<strong id="orbE">2</strong><small>$2(2\ell+1)$</small></div>
+            <div class="sim-orbital__dato">Forma<strong id="orbForma">Esférica</strong><small>geometría</small></div>
+          </div>
+          <div class="recuadro-estado" id="orbEstado"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ============ PANEL 3: EXAMEN ============ -->
+  <div class="panel" id="panel-2">
+
+    <div class="tarjeta">
+      <div class="tarjeta__cabecera">
+        <div class="tarjeta__texto">
+          <div class="tarjeta__titulo">Examen de autoevaluación</div>
+          <div class="tarjeta__descripcion">
+            Se seleccionan 10 preguntas al azar de un banco de 20. Al hacer clic en una opción,
+            la pregunta se bloquea y se califica inmediatamente.
+          </div>
+        </div>
+        <button class="boton-ayuda-exa" onclick="abrirAyudaExamen()">¿Cómo aprovechar el examen?</button>
+      </div>
+
+      <div class="examen-acciones">
+        <button class="boton" onclick="nuevoExamen()">Nuevo examen</button>
+      </div>
+
+      <div class="marcador">
+        <div class="marcador__item">
+          <span class="marcador__item-label">Preguntas respondidas</span>
+          <span class="marcador__item-valor"><span id="exRespondidas">0</span> / <span id="exTotal">10</span></span>
+        </div>
+        <div class="marcador__item">
+          <span class="marcador__item-label">Respuestas correctas</span>
+          <span class="marcador__item-valor"><span id="exCorrectas">0</span></span>
+        </div>
+        <div class="marcador__item">
+          <span class="marcador__item-label">Puntaje</span>
+          <span class="marcador__item-valor porcentaje" id="exPorcentaje">0 %</span>
+        </div>
+      </div>
+
+      <div id="exPreguntas"></div>
+
+      <div class="resultado-final" id="exResultado">
+        <div class="resultado-final__puntaje" id="exResultadoPorcentaje">0 %</div>
+        <div class="resultado-final__detalle" id="exResultadoDetallePuntaje">0 / 10 respuestas correctas</div>
+        <div class="resultado-final__mensaje" id="exResultadoMensaje"></div>
+        <div id="exResultadoDetalle"></div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- ============ MODAL CALCULADORA ============ -->
+<div class="modal-overlay" id="modalCalculadora" onclick="if(event.target===this) cerrarAyudaCalculadora()">
+  <div class="modal" role="dialog" aria-labelledby="tituloCalculadora" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloCalculadora">Cómo usar la calculadora</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaCalculadora()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__intro">
+        <strong>Antes de pulsar "Calcular", escribe en papel o di en voz alta qué
+        esperas obtener y por qué.</strong> Luego pulsa el botón y compara.
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Por qué funciona</div>
+        <p><strong>1. Activación de conocimientos previos.</strong> Cuando anticipas, tu
+        cerebro busca en la memoria lo que ya sabe: fórmulas, ejemplos vistos, relaciones
+        entre $n$, $\ell$, $m_\ell$ y $m_s$. Ese esfuerzo consolida el aprendizaje.</p>
+        <p><strong>2. Generación de expectativas.</strong> Al predecir, creas una expectativa
+        concreta. Cuando el resultado aparece, tu cerebro lo compara con lo que esperabas.</p>
+        <p><strong>3. Efecto de autoexplicación.</strong> El solo hecho de tener que
+        anticipar te obliga a explicarte a ti mismo por qué esperas ese resultado.</p>
+        <p><strong>4. Corrección inmediata del error.</strong> Si anticipaste mal, la app
+        te muestra el paso a paso. Ese contraste fija el concepto.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Regla simple</div>
+        <div class="modal__idea">"Primero pienso, después pulso."</div>
+        <table class="modal__tabla">
+          <thead><tr><th>Antes de pulsar</th><th>Después de pulsar</th></tr></thead>
+          <tbody>
+            <tr><td>¿Qué espero?</td><td>¿Coincide?</td></tr>
+            <tr><td>¿Por qué?</td><td>¿Por qué sí o por qué no?</td></tr>
+            <tr><td>¿Con qué fórmula?</td><td>¿Qué paso falló?</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Beneficios que verás con la práctica</div>
+        <table class="modal__tabla">
+          <thead><tr><th>Sin anticipación</th><th>Con anticipación</th></tr></thead>
+          <tbody>
+            <tr><td>Copias números</td><td>Comprendes fórmulas</td></tr>
+            <tr><td>El error pasa desapercibido</td><td>El error se detecta y corrige</td></tr>
+            <tr><td>Memoria de corto plazo</td><td>Memoria de largo plazo</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaCalculadora()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL SIMULADOR ============ -->
+<div class="modal-overlay" id="modalSimulador" onclick="if(event.target===this) cerrarAyudaSimulador()">
+  <div class="modal" role="dialog" aria-labelledby="tituloSimulador" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloSimulador">Cómo usar el simulador</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaSimulador()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué hace el simulador</div>
+        <p>El simulador te permite ver la forma de los orbitales $s$, $p$, $d$ y $f$. Al
+        seleccionar un subnivel, aparecen su dibujo, el número de orbitales y el número
+        máximo de electrones.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo usarlo paso a paso</div>
+        <ul class="modal__lista">
+          <li><strong>Predice.</strong> Antes de hacer clic, recuerda cuántos orbitales tiene ese subnivel.</li>
+          <li><strong>Haz clic en el subnivel</strong> y observa el dibujo.</li>
+          <li><strong>Compara</strong> lo que recordabas con lo que muestra el simulador.</li>
+          <li><strong>Lee el recuadro informativo.</strong> Ahí se describe la geometría.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Advertencia importante</div>
+        <div class="modal__idea">
+          Los orbitales son <strong>regiones de probabilidad</strong>, no trayectorias
+          definidas. El dibujo es una representación simplificada: en la mecánica cuántica
+          los electrones no giran en órbitas como planetas.
+        </div>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Por qué funciona pedagógicamente</div>
+        <ul class="modal__lista">
+          <li><strong>Comparación visual.</strong> Ver las diferencias entre $s$, $p$, $d$ y $f$ refuerza la memoria.</li>
+          <li><strong>Contraste numérico.</strong> Relacionar el número de orbitales con $\ell$ consolida la fórmula $2\ell+1$.</li>
+          <li><strong>Análisis crítico.</strong> Entender que el orbital no es una órbita te prepara para la mecánica cuántica.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaSimulador()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL EXAMEN ============ -->
+<div class="modal-overlay" id="modalExamen" onclick="if(event.target===this) cerrarAyudaExamen()">
+  <div class="modal" role="dialog" aria-labelledby="tituloExamen" aria-modal="true">
+    <div class="modal__cabecera">
+      <h2 class="modal__titulo" id="tituloExamen">Cómo aprovechar el examen</h2>
+      <button class="modal__cerrar" onclick="cerrarAyudaExamen()" aria-label="Cerrar">×</button>
+    </div>
+    <div class="modal__cuerpo">
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué es este examen</div>
+        <p>No es un examen para aprobar o desaprobar. Es una <strong>herramienta de
+        autoevaluación formativa</strong>: te dice en qué temas estás firme y en cuáles
+        necesitas volver a estudiar. El puntaje no es una calificación; es una brújula.</p>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo sacarle provecho paso a paso</div>
+        <ul class="modal__lista">
+          <li><strong>Antes de hacer clic, predice.</strong> Formula la respuesta en tu cabeza.</li>
+          <li><strong>Justifica tu elección.</strong> Di en voz baja por qué elegiste esa opción.</li>
+          <li><strong>Lee la retroalimentación.</strong> Aciertes o falles, la app explica el paso a paso.</li>
+          <li><strong>Identifica el error.</strong> ¿Fue de fórmula, de cálculo o de interpretación?</li>
+          <li><strong>Anota los temas fallados.</strong> Al final el reporte te dice qué repasar.</li>
+          <li><strong>Repite el examen.</strong> Cada vez que pulses "Nuevo examen", el banco se mezcla.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Cómo leer la retroalimentación</div>
+        <ul class="modal__lista">
+          <li><strong>Verde (correcto):</strong> acertaste. La explicación confirma el razonamiento.</li>
+          <li><strong>Rojo (incorrecto):</strong> la opción correcta se marca en verde, y abajo se explica.</li>
+          <li><strong>Bloqueo:</strong> respondida la pregunta, no se puede cambiar.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Qué hacer con los errores</div>
+        <ul class="modal__lista">
+          <li><strong>Revisar la fórmula</strong> que no recordabas.</li>
+          <li><strong>Repasar el concepto</strong> con la explicación que la app te da.</li>
+          <li><strong>Volver al slide correspondiente</strong> y leer de nuevo el ejemplo.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Valor pedagógico del examen</div>
+        <ul class="modal__lista">
+          <li><strong>Práctica de recuperación.</strong> Responder fija el aprendizaje mucho más que releer.</li>
+          <li><strong>Retroalimentación inmediata.</strong> Sabes al instante si acertaste y por qué.</li>
+          <li><strong>Aleatorización.</strong> Cada examen mezcla preguntas y opciones.</li>
+          <li><strong>Variedad de temas.</strong> El banco cubre todo el Bloque 4.</li>
+          <li><strong>Repetición espaciada.</strong> Repetir en días distintos consolida la memoria.</li>
+        </ul>
+      </div>
+
+      <div class="modal__seccion">
+        <div class="modal__seccion-titulo">Regla simple</div>
+        <div class="modal__idea">
+          "Predice antes de responder, lee la retroalimentación, corrige el error y
+          repite el examen en unos días."
+        </div>
+      </div>
+    </div>
+    <div class="modal__pie">
+      <button class="boton" onclick="cerrarAyudaExamen()">Entendido</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   UTILIDADES
+   ============================================================ */
+function mezclar(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const H_CONST = 6.626e-34;
+
+/* ============================================================
+   MODALES
+   ============================================================ */
+function abrirAyudaCalculadora() {
+  document.getElementById('modalCalculadora').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaCalculadora() {
+  document.getElementById('modalCalculadora').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+function abrirAyudaSimulador() {
+  document.getElementById('modalSimulador').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaSimulador() {
+  document.getElementById('modalSimulador').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+function abrirAyudaExamen() {
+  document.getElementById('modalExamen').classList.add('visible');
+  document.body.style.overflow = 'hidden';
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+function cerrarAyudaExamen() {
+  document.getElementById('modalExamen').classList.remove('visible');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    cerrarAyudaCalculadora();
+    cerrarAyudaSimulador();
+    cerrarAyudaExamen();
+  }
+});
+
+/* ============================================================
+   TABS
+   ============================================================ */
+function cambiarTab(idx, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('activo'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('activo'));
+  el.classList.add('activo');
+  document.getElementById('panel-' + idx).classList.add('activo');
+
+  // Si se cambia a la pestaña del simulador, redibujar SVG
+  if (idx === 1) {
+    const btn = document.querySelector('.orbital-btn.activo');
+    if (btn) {
+      const orden = ['s', 'p', 'd', 'f'];
+      const tipo = orden.indexOf(btn.textContent.trim());
+      if (tipo >= 0) dibujarOrbital(tipo);
+    }
+  }
+
+  // Si se cambia a la pestaña del examen, regenerar si está vacío
+  if (idx === 2) {
+    const cont = document.getElementById('exPreguntas');
+    if (cont && cont.children.length === 0) {
+      nuevoExamen();
+    }
+  }
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 1: De Broglie
+   ============================================================ */
+function calcularBroglie() {
+  const m = parseFloat(document.getElementById('calcM').value);
+  const v = parseFloat(document.getElementById('calcV').value);
+  const res = document.getElementById('resBroglie');
+
+  if (isNaN(m) || isNaN(v) || m <= 0 || v <= 0) {
+    res.innerHTML = '<strong>Error:</strong> verifica los valores.';
+    res.classList.add('visible');
+    return;
+  }
+
+  const lambda = H_CONST / (m * v);
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">$\\lambda = \\dfrac{h}{m \\cdot v} = \\dfrac{6{,}626 \\times 10^{-34}}{' + m.toExponential(2) + ' \\times ' + v.toExponential(2) + '} = ' + lambda.toExponential(3) + '\\ \\text{m}$</div>';
+  html += '<div class="destacado">λ = ' + lambda.toExponential(3) + ' m</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 2: energía relativa
+   ============================================================ */
+function calcularEnergiaRelativa() {
+  const n = parseInt(document.getElementById('calcN').value);
+  const l = parseInt(document.getElementById('calcL').value);
+  const res = document.getElementById('resEnergiaRelativa');
+
+  if (isNaN(n) || isNaN(l) || n < 1 || l < 0 || l >= n) {
+    res.innerHTML = '<strong>Error:</strong> el subnivel $\\ell$ debe ser menor que $n$.';
+    res.classList.add('visible');
+    return;
+  }
+
+  const ER = n + l;
+  const nombre = ['s', 'p', 'd', 'f'][l] || '?';
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">Orbital: $' + n + nombre + '$</div>';
+  html += '<div class="paso">$E_R = n + \\ell = ' + n + ' + ' + l + ' = ' + ER + '$</div>';
+  html += '<div class="destacado">E<sub>R</sub> = ' + ER + '</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 3: validez de notación cuántica
+   ============================================================ */
+function verificarNotacion() {
+  const n = parseInt(document.getElementById('ncN').value);
+  const l = parseInt(document.getElementById('ncL').value);
+  const ml = parseInt(document.getElementById('ncML').value);
+  const ms = parseFloat(document.getElementById('ncMS').value);
+  const res = document.getElementById('resNotacion');
+
+  let valida = true;
+  let razon = '';
+  if (l >= n) { valida = false; razon = '$\\ell$ debe ser menor que $n$.'; }
+  else if (Math.abs(ml) > l) { valida = false; razon = '$|m_\\ell|$ no puede exceder $\\ell$.'; }
+  else if (ms !== 0.5 && ms !== -0.5) { valida = false; razon = '$m_s$ debe ser $+1/2$ o $-1/2$.'; }
+
+  const msTxt = ms > 0 ? '+1/2' : '-1/2';
+  const notacion = '$\\psi(' + n + ', ' + l + ', ' + ml + ', ' + msTxt + ')$';
+
+  let html = '<strong>Análisis:</strong>';
+  html += '<div class="paso">Notación: ' + notacion + '</div>';
+  if (valida) {
+    const nombre = ['s', 'p', 'd', 'f', 'g', 'h'][l] || '?';
+    html += '<div class="paso">Orbital: $' + n + nombre + '$</div>';
+    html += '<div class="destacado" style="color: var(--verde);">✓ Válida</div>';
+  } else {
+    html += '<div class="paso">' + razon + '</div>';
+    html += '<div class="destacado" style="color: var(--rojo);">✗ Inválida</div>';
+  }
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 4: configuración electrónica
+   ============================================================ */
+const simbolos = ['', 'H', 'He', 'Li', 'Be', 'B', 'C', 'N', 'O', 'F', 'Ne', 'Na', 'Mg', 'Al', 'Si', 'P', 'S', 'Cl', 'Ar', 'K', 'Ca', 'Sc', 'Ti', 'V', 'Cr', 'Mn', 'Fe', 'Co', 'Ni', 'Cu', 'Zn', 'Ga', 'Ge', 'As', 'Se', 'Br', 'Kr'];
+
+function calcularConfiguracion() {
+  let Z = parseInt(document.getElementById('calcZ').value) || 1;
+  if (Z < 1) Z = 1;
+  if (Z > 36) Z = 36;
+  document.getElementById('calcZ').value = Z;
+
+  const orden = [
+    { n: 1, l: 0, cap: 2 },
+    { n: 2, l: 0, cap: 2 },
+    { n: 2, l: 1, cap: 6 },
+    { n: 3, l: 0, cap: 2 },
+    { n: 3, l: 1, cap: 6 },
+    { n: 4, l: 0, cap: 2 },
+    { n: 3, l: 2, cap: 10 },
+    { n: 4, l: 1, cap: 6 }
+  ];
+
+  let restantes = Z;
+  let config = [];
+
+  for (const sub of orden) {
+    if (restantes <= 0) break;
+    const numSub = ['s', 'p', 'd', 'f'][sub.l];
+    const asignar = Math.min(restantes, sub.cap);
+    if (asignar > 0) {
+      config.push(sub.n + numSub + '<sup>' + asignar + '</sup>');
+      restantes -= asignar;
+    }
+  }
+
+  const simbolo = simbolos[Z] || '?';
+  const gases = [{z: 2, s: 'He'}, {z: 10, s: 'Ne'}, {z: 18, s: 'Ar'}, {z: 36, s: 'Kr'}];
+  let kernel = '';
+  for (let i = gases.length - 1; i >= 0; i--) {
+    if (Z > gases[i].z) { kernel = gases[i].s; break; }
+  }
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">Elemento: $Z = ' + Z + '$ ($' + simbolo + '$)</div>';
+  html += '<div class="paso">Configuración completa: $' + config.join('\\ ') + '$</div>';
+  if (kernel) {
+    const idxKernel = gases.findIndex(g => g.s === kernel);
+    const configKernel = config.slice(idxKernel + 1).join('\\ ');
+    html += '<div class="paso">Notación Kernel: $[' + kernel + ']\\ ' + configKernel + '$</div>';
+  }
+
+  let adv = '';
+  if (Z === 24) adv = 'El cromo es antiserrucho: configuración estable $[Ar]\\ 4s^{1}\\ 3d^{5}$.';
+  if (Z === 29) adv = 'El cobre es antiserrucho: configuración estable $[Ar]\\ 4s^{1}\\ 3d^{10}$.';
+  if (adv) html += '<div class="paso">⚠ ' + adv + '</div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   CALCULADORA 5: susceptibilidad magnética
+   ============================================================ */
+function calcularMu() {
+  let k = parseInt(document.getElementById('calcK').value) || 0;
+  if (k < 0) k = 0;
+  if (k > 7) k = 7;
+  document.getElementById('calcK').value = k;
+
+  const mu = Math.sqrt(k * (k + 2));
+
+  let tipo = '';
+  if (k === 0) tipo = 'Diamagnético';
+  else if (k <= 3) tipo = 'Paramagnético';
+  else tipo = 'Ferromagnético (μ alto)';
+
+  let html = '<strong>Resultado:</strong>';
+  html += '<div class="paso">$\\mu = \\sqrt{k(k+2)} = \\sqrt{' + k + '(' + k + '+2)} = ' + mu.toFixed(2).replace('.', ',') + '$</div>';
+  html += '<div class="destacado">μ = ' + mu.toFixed(2).replace('.', ',') + '</div>';
+  html += '<div class="paso">Clasificación: <strong>' + tipo + '</strong></div>';
+
+  res.innerHTML = html;
+  res.classList.add('visible');
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+/* ============================================================
+   SIMULADOR DE ORBITALES
+   ============================================================ */
+const datosOrbitales = [
+  { l: 0, orbitales: 1, electrones: 2, forma: 'Esférica', estado: 'El orbital $s$ tiene simetría esférica alrededor del núcleo. Solo hay 1 orbital por subnivel.' },
+  { l: 1, orbitales: 3, electrones: 6, forma: 'Dilobular', estado: 'Los orbitales $p$ son dilobulares. Hay 3: $p_x$, $p_y$, $p_z$, orientados en los ejes del espacio.' },
+  { l: 2, orbitales: 5, electrones: 10, forma: 'Tetralobular', estado: 'Los orbitales $d$ son tetralobulares (cuatro lóbulos) excepto $d_{z^2}$. Hay 5 orbitales.' },
+  { l: 3, orbitales: 7, electrones: 14, forma: 'Compleja', estado: 'Los orbitales $f$ tienen formas complejas con más lóbulos. Hay 7 orbitales.' }
+];
+
+function mostrarOrbital(idx, el) {
+  document.querySelectorAll('.orbital-btn').forEach(b => b.classList.remove('activo'));
+  el.classList.add('activo');
+  const d = datosOrbitales[idx];
+  document.getElementById('orbL').textContent = d.l;
+  document.getElementById('orbNum').textContent = d.orbitales;
+  document.getElementById('orbE').textContent = d.electrones;
+  document.getElementById('orbForma').textContent = d.forma;
+  document.getElementById('orbEstado').textContent = d.estado;
+  dibujarOrbital(d.l);
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function dibujarOrbital(l) {
+  const svg = document.getElementById('svgOrbital');
+  const cx = 140, cy = 120;
+  let html = '';
+
+  html += '<line x1="20" y1="' + cy + '" x2="260" y2="' + cy + '" stroke="#c5d5e8" stroke-width="1" stroke-dasharray="3,3"/>';
+  html += '<line x1="' + cx + '" y1="20" x2="' + cx + '" y2="220" stroke="#c5d5e8" stroke-width="1" stroke-dasharray="3,3"/>';
+
+  html += '<circle cx="' + cx + '" cy="' + cy + '" r="5" fill="#dc2626"/>';
+
+  if (l === 0) {
+    html += '<circle cx="' + cx + '" cy="' + cy + '" r="65" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+  } else if (l === 1) {
+    html += '<ellipse cx="' + (cx + 45) + '" cy="' + cy + '" rx="40" ry="22" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+    html += '<ellipse cx="' + (cx - 45) + '" cy="' + cy + '" rx="40" ry="22" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+  } else if (l === 2) {
+    html += '<ellipse cx="' + (cx + 35) + '" cy="' + (cy + 35) + '" rx="30" ry="18" transform="rotate(45 ' + (cx+35) + ' ' + (cy+35) + ')" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+    html += '<ellipse cx="' + (cx - 35) + '" cy="' + (cy - 35) + '" rx="30" ry="18" transform="rotate(45 ' + (cx-35) + ' ' + (cy-35) + ')" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+    html += '<ellipse cx="' + (cx + 35) + '" cy="' + (cy - 35) + '" rx="30" ry="18" transform="rotate(-45 ' + (cx+35) + ' ' + (cy-35) + ')" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+    html += '<ellipse cx="' + (cx - 35) + '" cy="' + (cy + 35) + '" rx="30" ry="18" transform="rotate(-45 ' + (cx-35) + ' ' + (cy+35) + ')" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="2"/>';
+  } else {
+    for (let i = 0; i < 6; i++) {
+      const ang = (i / 6) * Math.PI * 2;
+      const x = cx + Math.cos(ang) * 55;
+      const y = cy + Math.sin(ang) * 55;
+      html += '<ellipse cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" rx="18" ry="10" transform="rotate(' + (ang * 180 / Math.PI) + ' ' + x.toFixed(1) + ' ' + y.toFixed(1) + ')" fill="rgba(44,90,160,0.25)" stroke="#2c5aa0" stroke-width="1.5"/>';
+    }
+  }
+
+  svg.innerHTML = html;
+}
+
+/* ============================================================
+   EXAMEN
+   ============================================================ */
+const bancoPreguntas = [
+  { pregunta: '¿Quién propuso que toda partícula en movimiento tiene naturaleza dual?',
+    opciones: ['Heisenberg', 'De Broglie', 'Schrödinger', 'Bohr'],
+    correcta: 1, explicacion: 'De Broglie (1924) propuso que toda partícula tiene naturaleza de onda y partícula.' },
+  { pregunta: '¿Qué establece el principio de incertidumbre?',
+    opciones: ['No se puede determinar simultáneamente posición y momento lineal', 'Los electrones giran en órbitas definidas', 'La energía se emite en cuantos', 'Los orbitales son esféricos'],
+    correcta: 0, explicacion: 'Heisenberg estableció que no se puede conocer con precisión simultánea la posición y el momento lineal.' },
+  { pregunta: '¿Qué representa el cuadrado de la función de onda $\\psi^2$?',
+    opciones: ['La energía del electrón', 'La densidad electrónica alrededor del núcleo', 'La velocidad del electrón', 'La masa del electrón'],
+    correcta: 1, explicacion: '$\\psi^2$ da la densidad de probabilidad de encontrar al electrón en una región del espacio.' },
+  { pregunta: '¿Cuántos orbitales tiene el subnivel $p$?',
+    opciones: ['1', '3', '5', '7'],
+    correcta: 1, explicacion: 'El subnivel $p$ ($\\ell = 1$) tiene $2\\ell + 1 = 3$ orbitales.' },
+  { pregunta: '¿Qué valores puede tomar el número cuántico de spin $m_s$?',
+    opciones: ['$0$ y $1$', '$+1/2$ y $-1/2$', '$-1, 0, +1$', '$1, 2, 3$'],
+    correcta: 1, explicacion: '$m_s$ solo puede ser $+1/2$ o $-1/2$.' },
+  { pregunta: '¿Cuál es la energía relativa del orbital $3d$?',
+    opciones: ['3', '4', '5', '6'],
+    correcta: 2, explicacion: '$E_R = n + \\ell = 3 + 2 = 5$.' },
+  { pregunta: '¿Qué regla establece que antes de aparear un electrón todos los orbitales deben tener al menos uno?',
+    opciones: ['Aufbau', 'Pauli', 'Hund', 'Moeller'],
+    correcta: 2, explicacion: 'La regla de Hund establece que antes de aparear, todos los orbitales del subnivel deben tener al menos un electrón.' },
+  { pregunta: '¿Cuál es la configuración electrónica del cobre ($Z = 29$) en su estado estable?',
+    opciones: ['$[\\text{Ar}]\\ 4s^2\\ 3d^9$', '$[\\text{Ar}]\\ 4s^1\\ 3d^{10}$', '$[\\text{Ar}]\\ 4s^2\\ 3d^{10}$', '$[\\text{Ne}]\\ 4s^2\\ 3d^9$'],
+    correcta: 1, explicacion: 'El cobre es un elemento antiserrucho. Su configuración estable es $[Ar]\\ 4s^1\\ 3d^{10}$.' },
+  { pregunta: '¿Qué tipo de material es débilmente repelido por un campo magnético intenso?',
+    opciones: ['Ferromagnético', 'Paramagnético', 'Diamagnético', 'Antiferromagnético'],
+    correcta: 2, explicacion: 'Los materiales diamagnéticos son débilmente repelidos. Todos sus electrones están apareados.' },
+  { pregunta: '¿Cuántos electrones desapareados tiene el oxígeno ($Z = 8$) en su último subnivel?',
+    opciones: ['0', '1', '2', '4'],
+    correcta: 2, explicacion: 'La configuración del oxígeno es $1s^2\\ 2s^2\\ 2p^4$. En $2p$ hay 2 electrones desapareados.' },
+  { pregunta: '¿Qué indica el número cuántico principal $n$?',
+    opciones: ['La forma del orbital', 'El nivel de energía', 'La orientación del orbital', 'El spin'],
+    correcta: 1, explicacion: '$n$ describe el nivel de energía principal que ocupa el electrón.' },
+  { pregunta: '¿Cuántos electrones caben como máximo en el nivel $n = 3$?',
+    opciones: ['8', '18', '32', '2'],
+    correcta: 1, explicacion: '$2n^2 = 2(3^2) = 18$ electrones.' },
+  { pregunta: '¿Cuál es la notación correcta para un electrón en el orbital $4s$ con spin $+1/2$?',
+    opciones: ['$\\psi(4, 0, 0, +1/2)$', '$\\psi(4, 1, 0, +1/2)$', '$\\psi(1, 0, 0, +1/2)$', '$\\psi(4, 4, 0, +1/2)$'],
+    correcta: 0, explicacion: 'Para el orbital $4s$: $n = 4$, $\\ell = 0$, $m_\\ell = 0$, $m_s = +1/2$.' },
+  { pregunta: '¿Qué tipo de orbital tiene simetría esférica?',
+    opciones: ['$s$', '$p$', '$d$', '$f$'],
+    correcta: 0, explicacion: 'El orbital $s$ tiene simetría esférica alrededor del núcleo.' },
+  { pregunta: '¿Cuál es la fórmula de la susceptibilidad magnética?',
+    opciones: ['$\\mu = \\sqrt{k}$', '$\\mu = \\sqrt{k(k+2)}$', '$\\mu = k + 2$', '$\\mu = k^2$'],
+    correcta: 1, explicacion: '$\\mu = \\sqrt{k(k+2)}$, donde $k$ = electrones desapareados.' },
+  { pregunta: '¿Qué principio establece que dos electrones no pueden tener los cuatro números cuánticos idénticos?',
+    opciones: ['Aufbau', 'Pauli', 'Hund', 'Moeller'],
+    correcta: 1, explicacion: 'El principio de exclusión de Pauli establece que dos electrones no pueden tener los cuatro números cuánticos idénticos.' },
+  { pregunta: '¿Cuál es la configuración electrónica del neón ($Z = 10$)?',
+    opciones: ['$1s^2\\ 2s^2\\ 2p^6$', '$1s^2\\ 2s^2\\ 2p^4$', '$1s^2\\ 2s^2\\ 2p^5$', '$1s^2\\ 2s^2\\ 2p^6\\ 3s^1$'],
+    correcta: 0, explicacion: 'El neón tiene 10 electrones: $1s^2\\ 2s^2\\ 2p^6$.' },
+  { pregunta: '¿Qué dice el principio de Aufbau?',
+    opciones: ['Los electrones ocupan primero los orbitales de menor energía', 'Todos los orbitales deben tener al menos un electrón antes de aparear', 'Dos electrones no pueden tener los cuatro números cuánticos idénticos', 'El orden de llenado sigue la diagonal'],
+    correcta: 0, explicacion: 'Aufbau: los electrones ocupan primero los orbitales de menor energía.' },
+  { pregunta: '¿Cuál es la longitud de onda de De Broglie de un electrón a $v = 1{,}0 \\times 10^{6}\\ \\text{m/s}$?',
+    opciones: ['$7{,}28 \\times 10^{-10}\\ \\text{m}$', '$3{,}9 \\times 10^{-34}\\ \\text{m}$', '$6{,}6 \\times 10^{-34}\\ \\text{m}$', '$1{,}0 \\times 10^{-9}\\ \\text{m}$'],
+    correcta: 0, explicacion: '$\\lambda = h/(m \\cdot v) = 6{,}626 \\times 10^{-34} / (9{,}1 \\times 10^{-31} \\times 10^{6}) = 7{,}28 \\times 10^{-10}\\ \\text{m}$.' },
+  { pregunta: '¿Cuál es la diferencia entre órbita y orbital?',
+    opciones: ['Son sinónimos', 'La órbita es una trayectoria definida; el orbital es una región de probabilidad', 'El orbital es una trayectoria; la órbita es una región', 'Ninguna es correcta'],
+    correcta: 1, explicacion: 'La órbita es una trayectoria definida (Bohr). El orbital es una región de probabilidad (mecánica cuántica).' }
+];
+
+let examenActual = [];
+let examenRespondidas = 0;
+let examenCorrectas = 0;
+
+function nuevoExamen() {
+  examenActual = mezclar(bancoPreguntas).slice(0, 10);
+  examenRespondidas = 0;
+  examenCorrectas = 0;
+
+  document.getElementById('exRespondidas').textContent = '0';
+  document.getElementById('exCorrectas').textContent = '0';
+  document.getElementById('exPorcentaje').textContent = '0 %';
+  document.getElementById('exTotal').textContent = examenActual.length;
+  document.getElementById('exResultado').classList.remove('visible');
+
+  const cont = document.getElementById('exPreguntas');
+  cont.innerHTML = '';
+
+  examenActual.forEach((p, i) => {
+    const opcionesMezcladas = mezclar(p.opciones.map((op, idx) => ({ texto: op, original: idx })));
+    const correctaMezclada = opcionesMezcladas.findIndex(o => o.original === p.correcta);
+
+    const div = document.createElement('div');
+    div.className = 'pregunta';
+    div.dataset.idx = i;
+    div.dataset.correcta = correctaMezclada;
+
+    let html = '<div class="pregunta__texto">' + (i + 1) + '. ' + p.pregunta + '</div>';
+    html += '<div class="pregunta__opciones">';
+    opcionesMezcladas.forEach((o, j) => {
+      html += '<label class="opcion" data-idx="' + j + '">';
+      html += '<input type="radio" name="ex-' + i + '" value="' + j + '"> ';
+      html += o.texto;
+      html += '</label>';
+    });
+    html += '</div>';
+    html += '<div class="feedback" id="exFeedback-' + i + '"></div>';
+
+    div.innerHTML = html;
+    cont.appendChild(div);
+
+    div.querySelectorAll('.opcion').forEach(op => {
+      op.addEventListener('click', () => responderExamen(i, parseInt(op.dataset.idx)));
+    });
+  });
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function responderExamen(idx, seleccionada) {
+  const div = document.querySelector('.pregunta[data-idx="' + idx + '"]');
+  if (div.dataset.respondida === 'true') return;
+  div.dataset.respondida = 'true';
+
+  const correcta = parseInt(div.dataset.correcta);
+  const opciones = div.querySelectorAll('.opcion');
+  const feedback = document.getElementById('exFeedback-' + idx);
+
+  opciones.forEach((op, j) => {
+    op.classList.add('locked');
+    op.querySelector('input').disabled = true;
+    if (j === correcta) op.classList.add('correcta');
+    else if (j === seleccionada) op.classList.add('incorrecta');
+  });
+
+  const p = examenActual[idx];
+  const esCorrecta = seleccionada === correcta;
+
+  if (esCorrecta) {
+    examenCorrectas++;
+    div.classList.add('correcta');
+    feedback.className = 'feedback visible correcto';
+    feedback.innerHTML = '<strong>Correcto.</strong> ' + p.explicacion;
+  } else {
+    div.classList.add('incorrecta');
+    feedback.className = 'feedback visible incorrecto';
+    feedback.innerHTML = '<strong>Incorrecto.</strong> La respuesta correcta está marcada en verde. ' + p.explicacion;
+  }
+
+  examenRespondidas++;
+  actualizarMarcador();
+
+  if (examenRespondidas === examenActual.length) {
+    mostrarResultadoExamen();
+  }
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+function actualizarMarcador() {
+  const total = examenActual.length;
+  const porcentaje = total > 0 ? Math.round((examenCorrectas / total) * 100) : 0;
+
+  document.getElementById('exRespondidas').textContent = examenRespondidas;
+  document.getElementById('exCorrectas').textContent = examenCorrectas;
+  document.getElementById('exPorcentaje').textContent = porcentaje + ' %';
+}
+
+function mostrarResultadoExamen() {
+  const total = examenActual.length;
+  const porcentaje = Math.round((examenCorrectas / total) * 100);
+
+  document.getElementById('exResultadoPorcentaje').textContent = porcentaje + ' %';
+  document.getElementById('exResultadoDetallePuntaje').textContent =
+    examenCorrectas + ' de ' + total + ' respuestas correctas';
+
+  let mensaje = '';
+  if (porcentaje >= 90) mensaje = '¡Excelente! Dominas el Bloque 4.';
+  else if (porcentaje >= 70) mensaje = 'Buen trabajo. Repasa los temas con error.';
+  else if (porcentaje >= 50) mensaje = 'Aprobado. Conviene reforzar varios temas.';
+  else mensaje = 'Necesitas repasar el Bloque 4. Revisa los errores y vuelve a intentar.';
+  document.getElementById('exResultadoMensaje').textContent = mensaje;
+
+  const errores = [];
+  examenActual.forEach((p, i) => {
+    const div = document.querySelector('.pregunta[data-idx="' + i + '"]');
+    if (!div.classList.contains('correcta')) errores.push(i + 1);
+  });
+
+  let detalle = '';
+  if (errores.length === 0) {
+    detalle = '<p>Todas las respuestas fueron correctas.</p>';
+  } else {
+    detalle = '<p>Preguntas a repasar: ' + errores.join(', ') + '</p>';
+  }
+  document.getElementById('exResultadoDetalle').innerHTML = detalle;
+
+  document.getElementById('exResultado').classList.add('visible');
+}
+
+/* ============================================================
+   INICIALIZACIÓN ROBUSTA
+   ============================================================ */
+function inicializarTodo() {
+  // Calculadora: ejecutar una vez para mostrar resultados de ejemplo
+  calcularBroglie();
+  calcularEnergiaRelativa();
+  verificarNotacion();
+  calcularConfiguracion();
+  calcularMu();
+
+  // Simulador: dibujar el primer orbital (s)
+  const primerOrbitalBtn = document.querySelector('.orbital-btn');
+  if (primerOrbitalBtn) mostrarOrbital(0, primerOrbitalBtn);
+
+  // Examen: generar preguntas al cargar
+  nuevoExamen();
+
+  if (window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise();
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(inicializarTodo, 100);
+  });
+} else {
+  setTimeout(inicializarTodo, 100);
+}
+</script>
+
+</body>
+</html>
