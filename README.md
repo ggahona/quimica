@@ -2,9 +2,9 @@
 
 Recursos educativos interactivos para el aprendizaje de Química General, orientados a estudiantes de primer semestre universitario.
 
-## 🌐 Acceso al sitio
+## Acceso al sitio
 
-👉 **[https://gghona.github.io/quimica/](https://gghona.github.io/quimica/)**
+**[https://gghona.github.io/quimica/](https://gghona.github.io/quimica/)**
 
 ## 📚 Temas disponibles
 
@@ -15,7 +15,7 @@ Recursos educativos interactivos para el aprendizaje de Química General, orient
   - Bloque 4 — Números cuánticos y configuración electrónica
   - Bloque 5 — Propiedades periódicas
 
-## 🗂️ Estructura del repositorio
+## Estructura del repositorio
 
 ```
 quimica/
@@ -35,19 +35,18 @@ quimica/
     └── B5-complementos.html
 ```
 
-## 🚀 Cómo usar los recursos
+## Cómo usar los recursos
 
 1. Abre la portada general y elige un tema.
 2. Dentro del tema, empieza por las **presentaciones** (`Bx.html`) para estudiar la teoría.
 3. Continúa con los **complementos** (`Bx-complementos.html`) para practicar con calculadora, simulador y examen.
 4. Repite los exámenes en días distintos para consolidar el aprendizaje.
 
-## ➕ Próximos temas
+## Próximos temas
 
 Este repositorio está en crecimiento. Próximamente se agregarán nuevos temas de química general.
 
----
 
 **Materiales de Estudio — Química**  
 Recursos interactivos para el aprendizaje de la química general.
-```
+
