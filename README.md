@@ -4,9 +4,7 @@ Recursos educativos interactivos para el aprendizaje de Química General, orient
 
 ## Acceso al sitio
 
-**[https://gghona.github.io/quimica/](https://gghona.github.io/quimica/)**
-
-https://ggahona.github.io/quimica/
+**https://ggahona.github.io/quimica/**
 
 ## Temas disponibles
 
