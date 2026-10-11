@@ -1,4 +1,3 @@
-```markdown
 # Química — Materiales de Estudio
 
 Recursos educativos interactivos para el aprendizaje de Química General, orientados a estudiantes de primer semestre universitario.
