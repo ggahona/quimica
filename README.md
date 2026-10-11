@@ -3,8 +3,7 @@
 Recursos educativos interactivos para el aprendizaje de Química General, orientados a estudiantes de primer semestre universitario.
 
 ## Acceso al sitio
-
-**https://ggahona.github.io/quimica/**
+**Sitio web:** [https://gghona.github.io/quimica/](https://gghona.github.io/quimica/)
 
 ## Temas disponibles
 
